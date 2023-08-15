@@ -22,21 +22,21 @@ const StyledNav = styled.nav`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  div {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+  }
+  a {
+    text-decoration: none;
+    color: #444444;
+  }
 `;
 const Logo = styled(Link)`
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-`;
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: #444444;
-`;
-const StyledList = styled.ul`
-  display: flex;
-  gap: 10px;
-  list-style: none;
 `;
 
 export default function Header() {
@@ -47,14 +47,14 @@ export default function Header() {
           <Image src={logoText} width={202} height={34} alt="CompHub"/>
         </Logo>
         <StyledNav>
-          <StyledList>
-            <li><StyledLink href={"products/"}>Products</StyledLink></li>
-            <li><StyledLink href={"categories/"}>Categories</StyledLink></li>
-          </StyledList>
-          <StyledList>
-            <li><StyledLink href={"account/"}>Account</StyledLink></li>
-            <li><StyledLink href={"cart/"}>Cart (0)</StyledLink></li>
-          </StyledList>
+          <div>
+            <Link href={"products/"}>Products</Link>
+            <Link href={"categories/"}>Categories</Link>
+          </div>
+          <div>
+            <Link href={"account/"}>Account</Link>
+            <Link href={"cart/"}>Cart (0)</Link>
+          </div>
         </StyledNav>
       </Container>
     </StyledHeader>
