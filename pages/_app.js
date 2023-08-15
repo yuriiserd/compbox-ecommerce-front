@@ -11,6 +11,10 @@ const GlobalStyles = createGlobalStyle`
     margin: 0;
     padding: 0;
   }
+  button, 
+  input {
+      font-family: inherit;
+  }
   img {
     max-width: 100%;
     height: auto;

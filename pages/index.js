@@ -13,27 +13,27 @@ export default function HomePage() {
         </Container>
       </Banner>
       <Container>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
-        text2<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
+        text<br/>
       </Container>
     </div>
   )
