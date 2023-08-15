@@ -1,5 +1,6 @@
 import Banner from "@/components/Banner";
 import Container from "@/components/Container";
+import Featured from "@/components/Featured";
 import Header from "@/components/Header";
 
 export default function HomePage() {
@@ -8,7 +9,7 @@ export default function HomePage() {
       <Header/>
       <Banner>
         <Container>
-          text1
+          <Featured/>
         </Container>
       </Banner>
       <Container>
