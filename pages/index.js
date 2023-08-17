@@ -8,7 +8,7 @@ import { Product } from "@/models/Product";
 export default function HomePage({
   featuredProduct
 }) {
-  console.log(featuredProduct);
+  
   return (
     <div>
       <Header/>

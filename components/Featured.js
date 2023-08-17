@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components"
 import Button from "./Button";
+import ButtonLink from "./ButtonLink";
 
 const StyledDiv = styled.div`
   display: grid;
@@ -16,13 +17,14 @@ const StyledDiv = styled.div`
   }
 `;
 
-export default function Featured() {
+export default function Featured({product}) {
 
   return (
     <StyledDiv>
       <div>
-        <h1>MacBook Pro</h1>
-        <p>Supercharged by M2 Pro or M2 Max, MacBook Pro takes its power and efficiency further than ever. It delivers exceptional performance whether it’s plugged in or not, and now has even longer battery life. Combined with a stunning Liquid Retina XDR display and all the ports you need — this is a pro laptop without equal.</p>
+        <h1>{product.title}</h1>
+        <div dangerouslySetInnerHTML={{__html: product.description}}></div>
+        <ButtonLink href="/" $white>Read More</ButtonLink>
         <Button $white>Buy Now</Button>
       </div>
       <div>
