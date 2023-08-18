@@ -4,6 +4,7 @@ import Featured from "@/components/Featured";
 import Header from "@/components/Header";
 import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
+import { Category } from "@/models/Category"
 
 export default function HomePage({
   featuredProduct
@@ -27,7 +28,8 @@ export default function HomePage({
 export async function getServerSideProps() {
   const featuredProductId = "64c01598d32dc66f2104b454";
   await mongooseConnect();
-  const featuredProduct = await Product.findById(featuredProductId);
+  const categories = await Category.find();
+  const featuredProduct = await Product.findById(featuredProductId).populate('category');
   return {
     props: {
       featuredProduct: JSON.parse(JSON.stringify(featuredProduct)),
