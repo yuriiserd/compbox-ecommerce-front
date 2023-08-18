@@ -18,17 +18,16 @@ const StyledDiv = styled.div`
 `;
 
 export default function Featured({product}) {
-
   return (
     <StyledDiv>
       <div>
         <h1>{product.title}</h1>
-        <div dangerouslySetInnerHTML={{__html: product.description}}></div>
-        <ButtonLink href="/" $white>Read More</ButtonLink>
+        <p>{product.description}</p>
+        <ButtonLink href={`/product/${product.category.name.toLowerCase()}/${product._id}`} $white>Read More</ButtonLink>
         <Button $white>Buy Now</Button>
       </div>
       <div>
-        <Image src="https://images.macrumors.com/t/MwgTEggiztXrvIN2l8bZny1f93M=/1600x/article-new/2013/09/2023-macbook-pro-transparent.png" width={632} height={486}/>
+        <Image src={product.images[0]} width={632} height={486} alt="macbook"/>
       </div>
     </StyledDiv>
   )
