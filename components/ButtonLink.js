@@ -1,4 +1,4 @@
-import { styled, css } from "styled-components";
+import styled from "styled-components";
 import { ButtonStyle } from "./Button";
 import Link from "next/link";
 

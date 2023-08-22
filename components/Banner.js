@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { styled } from "styled-components";
+import styled from "styled-components";
 
 const StyledBanner = styled.div`
   width: 100%;
