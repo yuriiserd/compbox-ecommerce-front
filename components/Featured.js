@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
-import styled from "styled-components"
+import styled from "styled-components";
 import Button from "./Button";
 import ButtonLink from "./ButtonLink";
 
@@ -23,7 +22,7 @@ export default function Featured({product}) {
       <div>
         <h1>{product.title}</h1>
         <p>{product.description}</p>
-        <ButtonLink href={`/product/${product.category.name.toLowerCase()}/${product._id}`} $white>Read More</ButtonLink>
+        <ButtonLink href={`/product/${product._id}`} $white>Read More</ButtonLink>
         <Button $white>Buy Now</Button>
       </div>
       <div>

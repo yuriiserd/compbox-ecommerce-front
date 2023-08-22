@@ -1,4 +1,4 @@
-import { styled, css } from "styled-components";
+import styled, { css } from "styled-components";
 
 export const ButtonStyle = css`
   background: ${props => props.$white ? "#ffffff" : "linear-gradient(202deg, #2D1E1E 0%, #0A0A0A 100%)"};

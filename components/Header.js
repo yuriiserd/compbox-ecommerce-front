@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import logoText from "@/public/logo-text.svg";
-import { styled } from "styled-components";
+import logo from "@/public/logo.svg";
+import styled from "styled-components";
 import Container from "./Container";
 
 const StyledHeader = styled.header`
@@ -44,7 +44,7 @@ export default function Header() {
     <StyledHeader>
       <Container>
         <Logo href={"/"} >
-          <Image src={logoText} width={202} height={34} alt="CompHub"/>
+          <Image src={logo} width={202} height={34} alt="CompHub"/>
         </Logo>
         <StyledNav>
           <div>
