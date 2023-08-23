@@ -20,23 +20,34 @@ export default function ProductCard({product}) {
     box-shadow: 0px 14px 0px rgba(71, 82, 94, 0);
     color: #000;
     text-decoration: none;
-    &:hover {
-      box-shadow: 0px 14px 34px rgba(71, 82, 94, 0.21);
-    }
-    h3 {
-      text-align: center;
-    }
     img {
       display: block;
       margin: 0 auto 1rem;
       object-fit: contain;
       max-height: 150px;
+      transition: all 0.4s;
+      scale: 1;
     }
+    &:hover {
+      box-shadow: 0px 14px 34px rgba(71, 82, 94, 0.21);
+      img {
+        scale: 1.05;
+      }
+    }
+    h3 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    
     button {
       position: absolute;
       left: 1rem;
       top: 1rem;
       z-index: 2;
+      margin-right: 0;
+    }
+    svg {
+      width: 25px;
     }
     div {
       display: flex;
@@ -48,10 +59,18 @@ export default function ProductCard({product}) {
     }
   `
   const StyledPrice = styled.p`
-
+    font-size: 1.3rem;
+    margin-right: 0.5rem;
+    ${product.salePrice && `
+      color: #797878;
+      text-decoration: line-through;
+    `}
   `
-  const StyledSalePrice = styled.p`
 
+  const StyledSalePrice = styled.p`
+    font-size: 1.3rem;
+    margin-right: auto;
+    color: #f84147;
   `
 
   return (
@@ -66,8 +85,10 @@ export default function ProductCard({product}) {
       <h3>{product.title}</h3>
       <div>
         
-        <StyledPrice>{product.price}</StyledPrice>
-        <StyledSalePrice>{product.salePrice}</StyledSalePrice>
+        <StyledPrice>{product.price}$</StyledPrice>
+        {product.salePrice && (
+          <StyledSalePrice>{product.salePrice}$</StyledSalePrice>
+        )}
         <Button $white $icon onClick={(event) => {
           event.preventDefault();
           // setLiked(!liked);

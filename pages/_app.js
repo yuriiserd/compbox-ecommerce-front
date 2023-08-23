@@ -1,10 +1,14 @@
 import { createGlobalStyle } from "styled-components";
 import { Montserrat } from "next/font/google";
 
+import localFont from 'next/font/local';
+
 const montserrat = Montserrat({
   weight: ['400', '500', '700'],
   subsets: ['latin'],
 })
+
+const regularFont = localFont({src: '../fonts/CeraPro-Regular.woff2'})
 
 const GlobalStyles = createGlobalStyle`
   * {
@@ -25,7 +29,7 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <GlobalStyles/>
-      <main className={montserrat.className}>
+      <main className={regularFont.className}>
         <Component {...pageProps} />
       </main>
     </>

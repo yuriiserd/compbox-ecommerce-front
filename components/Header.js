@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Container from "./Container";
 import CartIcon from "./icons/CartIcon";
 import UserIcon from "./icons/UserIcon";
+import { primary } from "@/lib/colors";
 
 const StyledHeader = styled.header`
   background-color: #fff;
@@ -61,7 +62,7 @@ const Cart = styled(Link)`
     align-items: center;
     justify-content: center;
     font-size: 0.8rem;
-    background: #010c80;
+    background: ${primary};
     color: #fff
   }
 `

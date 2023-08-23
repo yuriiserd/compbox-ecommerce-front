@@ -7,7 +7,7 @@ export default function ProductsGrid({products}) {
     display: grid;
     gap: 20px;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    padding-top: 100px;
+    
     padding-bottom: 100px;
     @media (max-width: 1200px) {
       grid-template-columns: 1fr 1fr;
