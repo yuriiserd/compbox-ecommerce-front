@@ -3,6 +3,8 @@ import Link from "next/link";
 import logo from "@/public/logo.svg";
 import styled from "styled-components";
 import Container from "./Container";
+import CartIcon from "./icons/CartIcon";
+import UserIcon from "./icons/UserIcon";
 
 const StyledHeader = styled.header`
   background-color: #fff;
@@ -30,6 +32,14 @@ const StyledNav = styled.nav`
   a {
     text-decoration: none;
     color: #444444;
+    
+  }
+  svg {
+    width: 20px;
+    height: 20px;   
+    margin-left: 10px;
+    margin-right: 10px; 
+    
   }
 `;
 const Logo = styled(Link)`
@@ -38,13 +48,31 @@ const Logo = styled(Link)`
   top: 50%;
   transform: translate(-50%, -50%);
 `;
+const Cart = styled(Link)`
+  &::after {
+    content: '2';
+    position: absolute;
+    top: -0.5rem;
+    right: 1rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    background: #010c80;
+    color: #fff
+  }
+`
 
 export default function Header() {
+
   return (
     <StyledHeader>
       <Container>
         <Logo href={"/"} >
-          <Image src={logo} width={202} height={34} alt="CompHub"/>
+          <Image src={logo} width={150} height={50} alt="CompHub"/>
         </Logo>
         <StyledNav>
           <div>
@@ -52,8 +80,8 @@ export default function Header() {
             <Link href={"categories/"}>Categories</Link>
           </div>
           <div>
-            <Link href={"account/"}>Account</Link>
-            <Link href={"cart/"}>Cart (0)</Link>
+            <Link href={"account/"}><UserIcon/></Link>
+            <Cart href={"cart/"}><CartIcon/></Cart>
           </div>
         </StyledNav>
       </Container>
