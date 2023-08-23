@@ -32,7 +32,7 @@ export async function getServerSideProps() {
   await mongooseConnect();
   const categories = await Category.find();
   const featuredProduct = await Product.findById(featuredProductId);
-  const newProducts = await Product.find({}, null, {sort: {'_id': -1}, limit: 3});
+  const newProducts = await Product.find({}, null, {sort: {'_id': -1}, limit: 4});
 
   return {
     props: {
