@@ -5,13 +5,22 @@ import Header from "@/components/Header";
 import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
 import { Category } from "@/models/Category"
-import NewProducts from "@/components/ProductsGrid";
+import ProductsGrid from "@/components/ProductsGrid";
+import styled from "styled-components";
+import { primary } from "@/lib/colors";
+
+const StyledTitle = styled.h2`
+  margin-bottom: 2rem;
+  margin-top: 3rem;
+  font-size: 2rem;
+  color: ${primary};
+`
 
 export default function HomePage({
   featuredProduct,
   newProducts,
 }) {
-  
+
   return (
     <div>
       <Header/>
@@ -21,7 +30,8 @@ export default function HomePage({
         </Container>
       </Banner>
       <Container>
-        <NewProducts products={newProducts}/>
+        <StyledTitle>New Products</StyledTitle>
+        <ProductsGrid products={newProducts}/>
       </Container>
     </div>
   )

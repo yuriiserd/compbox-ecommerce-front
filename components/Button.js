@@ -1,10 +1,12 @@
+import { primary, primaryLight } from "@/lib/colors";
 import styled, { css } from "styled-components";
 
 export const ButtonStyle = css`
 
   background: ${props => props.$white ? "#ffffff" : props.$transparent ? "transparent" : "linear-gradient(202deg, #2D1E1E 0%, #0A0A0A 100%)"};
-  color: ${props => props.$white ? "#010c80" : props.$icon ? "inherit" : "#ffffff"};
+  color: ${props => props.$white ? primary : props.$icon ? "inherit" : "#ffffff"};
   padding: ${props => props.$icon ? "5px" : "10px 20px"};
+
 
   text-decoration: none;
   border-radius: 30px;
@@ -13,6 +15,9 @@ export const ButtonStyle = css`
   border: none;
   cursor: pointer;
   margin: 0 1rem 0 0;
+  &:hover {
+    background: ${props => props.$white ? primaryLight : props.$transparent ? "transparent" : "linear-gradient(202deg, #2D1E1E 0%, #0A0A0A 100%)"};
+  }
   svg {
     width: 20px;
     margin-right: ${props => props.$icon ? "0" : "0.5rem"};
