@@ -3,6 +3,8 @@ import styled from "styled-components";
 import Button from "./Button";
 import ButtonLink from "./ButtonLink";
 import CartIcon from "./icons/CartIcon";
+import { useContext } from "react";
+import { CartContext } from "./CartContext";
 
 const StyledDiv = styled.div`
   display: grid;
@@ -22,13 +24,16 @@ const StyledDiv = styled.div`
 `;
 
 export default function Featured({product}) {
+
+  const {addToCart} = useContext(CartContext);
+
   return (
     <StyledDiv>
       <div>
         <h1>{product.title}</h1>
         <p>{product.description}</p>
         <ButtonLink href={`/product/${product._id}`} $transparent>Read More</ButtonLink>
-        <Button $white><CartIcon/>Buy Now</Button>
+        <Button $white onClick={() => addToCart(product._id)}><CartIcon/>Buy Now</Button>
       </div>
       <div>
         <Image src={product.images[0]} width={632} height={486} alt="macbook"/>

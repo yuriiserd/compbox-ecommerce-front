@@ -1,14 +1,17 @@
 import styled from "styled-components"
 import HeartIcon from "./icons/HeartIcon"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import Button from "./Button";
 import Image from "next/image";
 import Link from "next/link";
 import CartIcon from "./icons/CartIcon";
+import { CartContext } from "./CartContext";
 
 export default function ProductCard({product}) {
 
   const [liked, setLiked] = useState(false);
+
+  const {addToCart} = useContext(CartContext);
 
   const StyledCard = styled(Link)`
     background-color: #ffffff;
@@ -66,7 +69,6 @@ export default function ProductCard({product}) {
       text-decoration: line-through;
     `}
   `
-
   const StyledSalePrice = styled.p`
     font-size: 1.3rem;
     margin-right: auto;
@@ -91,7 +93,7 @@ export default function ProductCard({product}) {
         )}
         <Button $white $icon onClick={(event) => {
           event.preventDefault();
-          // setLiked(!liked);
+          addToCart(product._id);
         }}>
           <CartIcon liked={liked} />
         </Button>
