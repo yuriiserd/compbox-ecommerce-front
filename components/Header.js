@@ -6,6 +6,8 @@ import Container from "./Container";
 import CartIcon from "./icons/CartIcon";
 import UserIcon from "./icons/UserIcon";
 import { primary } from "@/lib/colors";
+import { useContext } from "react";
+import { CartContext } from "./CartContext";
 
 const StyledHeader = styled.header`
   background-color: #fff;
@@ -50,8 +52,7 @@ const Logo = styled(Link)`
   transform: translate(-50%, -50%);
 `;
 const Cart = styled(Link)`
-  &::after {
-    content: '2';
+  span {
     position: absolute;
     top: -0.5rem;
     right: 1rem;
@@ -69,6 +70,8 @@ const Cart = styled(Link)`
 
 export default function Header() {
 
+  const {cartProducts} = useContext(CartContext);
+
   return (
     <StyledHeader>
       <Container>
@@ -82,7 +85,11 @@ export default function Header() {
           </div>
           <div>
             <Link href={"account/"}><UserIcon/></Link>
-            <Cart href={"cart/"}><CartIcon/></Cart>
+            <Cart href={"cart/"}>
+              <CartIcon/>
+              {cartProducts.length > 0 && (
+                <span>{cartProducts.length}</span>
+              )}</Cart>
           </div>
         </StyledNav>
       </Container>
