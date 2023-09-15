@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 
 import localFont from 'next/font/local';
 import { CartContextProvider } from "@/components/CartContext";
+import { LikedContextProvider } from "@/components/LikedContext";
 
 const montserrat = Montserrat({
   weight: ['400', '500', '700'],
@@ -31,9 +32,11 @@ export default function App({ Component, pageProps }) {
     <>
       <GlobalStyles/>
       <CartContextProvider>
-        <main className={regularFont.className}>
-          <Component {...pageProps} />
-        </main>
+        <LikedContextProvider>
+          <main className={regularFont.className}>
+            <Component {...pageProps} />
+          </main>
+        </LikedContextProvider>
       </CartContextProvider>
       
     </>

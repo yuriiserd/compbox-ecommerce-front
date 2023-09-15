@@ -19,6 +19,9 @@ const StyledHeader = styled.header`
   left: 0;
   width: 100%;
 `;
+const StyledMargin = styled.div`
+  height: 85px;
+`
 const StyledNav = styled.nav`
   display: flex;
   justify-content: space-between;
@@ -73,26 +76,30 @@ export default function Header() {
   const {cartProducts} = useContext(CartContext);
 
   return (
-    <StyledHeader>
-      <Container>
-        <Logo href={"/"} >
-          <Image src={logo} width={150} height={50} alt="CompHub"/>
-        </Logo>
-        <StyledNav>
-          <div>
-            <Link href={"products/"}>Products</Link>
-            <Link href={"categories/"}>Categories</Link>
-          </div>
-          <div>
-            <Link href={"account/"}><UserIcon/></Link>
-            <Cart href={"cart/"}>
-              <CartIcon/>
-              {cartProducts.length > 0 && (
-                <span>{cartProducts.length}</span>
-              )}</Cart>
-          </div>
-        </StyledNav>
-      </Container>
-    </StyledHeader>
+    <>
+      <StyledHeader>
+        <Container>
+          <Logo href={"/"} >
+            <Image src={logo} width={150} height={50} alt="CompHub"/>
+          </Logo>
+          <StyledNav>
+            <div>
+              <Link href={"products/"}>Products</Link>
+              <Link href={"categories/"}>Categories</Link>
+            </div>
+            <div>
+              <Link href={"account/"}><UserIcon/></Link>
+              <Cart href={"cart/"}>
+                <CartIcon/>
+                {cartProducts.length > 0 && (
+                  <span>{cartProducts.length}</span>
+                )}</Cart>
+            </div>
+          </StyledNav>
+        </Container>
+      </StyledHeader>
+      <StyledMargin></StyledMargin>
+    </>
+    
   )
 }
