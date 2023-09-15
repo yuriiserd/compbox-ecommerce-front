@@ -22,7 +22,7 @@ export default function HomePage({
 }) {
 
   return (
-    <div>
+    <>
       <Header/>
       <Banner>
         <Container>
@@ -33,7 +33,7 @@ export default function HomePage({
         <StyledTitle>New Products</StyledTitle>
         <ProductsGrid products={newProducts}/>
       </Container>
-    </div>
+    </>
   )
 }
 

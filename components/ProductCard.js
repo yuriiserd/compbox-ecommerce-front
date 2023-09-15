@@ -1,17 +1,20 @@
 import styled from "styled-components"
 import HeartIcon from "./icons/HeartIcon"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState, useMemo } from "react"
 import Button from "./Button";
 import Image from "next/image";
 import Link from "next/link";
 import CartIcon from "./icons/CartIcon";
 import { CartContext } from "./CartContext";
+import { LikedContext } from "./LikedContext";
 
 export default function ProductCard({product}) {
 
-  const [liked, setLiked] = useState(false);
-
   const {addToCart} = useContext(CartContext);
+  const {likedProducts, addToLiked} = useContext(LikedContext);
+  const [likedUpdate, setLikedUpdate] = useState(false);
+  
+  const liked = likedProducts.find(itemId => itemId === product._id);
 
   const StyledCard = styled(Link)`
     background-color: #ffffff;
@@ -79,11 +82,12 @@ export default function ProductCard({product}) {
     <StyledCard href={`/product/${product._id}`}>
       <Button $white $icon onClick={(event) => {
         event.preventDefault();
-        setLiked(!liked);
+        addToLiked(product._id);
+        setLikedUpdate(!likedUpdate);
       }}>
         <HeartIcon liked={liked} />
       </Button>
-      <Image src={product.images[0]} width={300} height={200}/>
+      <Image src={product.images[0]} width={300} height={200} alt={product.title}/>
       <h3>{product.title}</h3>
       <div>
         
@@ -95,7 +99,7 @@ export default function ProductCard({product}) {
           event.preventDefault();
           addToCart(product._id);
         }}>
-          <CartIcon liked={liked} />
+          <CartIcon/>
         </Button>
       </div>
     </StyledCard>
