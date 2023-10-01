@@ -39,10 +39,10 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 =======
-# comphub-ecommerce-front
-frontend app for comphub-ecommerce-admin
+# compbox-ecommerce-front
+frontend app for compbox-ecommerce-admin
 >>>>>>> 9731163c987a99195538811e9c9d56adf6051bc5
 =======
-# comphub-ecommerce-front
-frontend app for comphub-ecommerce-admin
+# compbox-ecommerce-front
+frontend app for compbox-ecommerce-admin
 >>>>>>> 9731163c987a99195538811e9c9d56adf6051bc5

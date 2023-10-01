@@ -80,7 +80,7 @@ export default function Header() {
       <StyledHeader>
         <Container>
           <Logo href={"/"} >
-            <Image src={logo} width={150} height={50} alt="CompHub"/>
+            <Image src={logo} width={150} height={60} alt="CompBox"/>
           </Logo>
           <StyledNav>
             <div>
