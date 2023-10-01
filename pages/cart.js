@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react"
 import { CartContext } from "@/components/CartContext"
 import axios from "axios"
 import CartList from "@/components/CartList"
+import OrderInfo from "@/components/OrderInfo"
 
 const StyledRow = styled.div`
   display: grid;
@@ -21,22 +22,27 @@ const StyledRow = styled.div`
       margin-bottom: 20px;
     }
     input {
-      margin-bottom: 20px;
+      width: 100%;
+    }
+    button {
       width: 100%;
     }
   }
 `
-
-const TitleH2 = styled.h2`
-  text-align: center;
-  margin-top: 50px;
-  margin-bottom: 50px;
+const Notice = styled.div`
+  height: calc(100vh - 85px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 `
 
 export default function CartPage() {
 
   const {cartProducts} = useContext(CartContext);
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]);
+  const [w, setW] = useState({});
 
   useEffect(() => {
     if (cartProducts?.length > 0) {
@@ -44,27 +50,44 @@ export default function CartPage() {
         .then(res => {
           setProducts(res.data);
         })
+    } else {
+      setProducts([]);
     }
+    setW(window);
   }, [cartProducts])
+
+  if (w.location?.href.includes('success')) {
+    return (
+      <>
+        <Header/>
+        <Container>
+          <Notice>
+            <h2>Thanks for your order!</h2>
+            <p>We will email you when your order will be sent.</p>
+          </Notice>
+        </Container>
+      </>
+    )
+  }
 
   return (
     <>
       <Header/>
       <Container>
         {!cartProducts?.length && (
-          <TitleH2>Your cart is empty</TitleH2>
+          <Notice>
+            <h2>Your cart is empty</h2>
+          </Notice>
         )}
         {!!products?.length && (
           <StyledRow>
             <div>
               <h2>Cart</h2>
-              <CartList products={products} />
+              <CartList products={products} cart={cartProducts} />
             </div>
             <div>
               <h2>Order information</h2>
-              <input type="text" placeholder="Address"/>
-              <input type="text" placeholder="Address2"/>
-              <Button>Continue to payment</Button>
+              <OrderInfo products={cartProducts}/>
             </div>
           </StyledRow>
         )}
