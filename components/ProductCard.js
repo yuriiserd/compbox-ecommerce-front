@@ -7,6 +7,7 @@ import Link from "next/link";
 import CartIcon from "./icons/CartIcon";
 import { CartContext } from "./CartContext";
 import { LikedContext } from "./LikedContext";
+import ProductIcon from "./icons/ProductIcon";
 
 export default function ProductCard({product}) {
 
@@ -77,6 +78,7 @@ export default function ProductCard({product}) {
     margin-right: auto;
     color: #f84147;
   `
+  
 
   return (
     <StyledCard href={`/product/${product._id}`}>
@@ -87,7 +89,12 @@ export default function ProductCard({product}) {
       }}>
         <HeartIcon liked={liked} />
       </Button>
-      <Image src={product.images[0]} width={300} height={200} alt={product.title}/>
+      {product.images[0] ? (
+        <Image src={product.images[0]} width={300} height={200} alt={product.title}/>
+      ) : (
+        <ProductIcon width={300} height={160}/>
+      )}
+      
       <h3>{product.title}</h3>
       <div>
         

@@ -4,6 +4,7 @@ import Image from "next/image"
 import Button from "./Button"
 import { useContext, useState } from "react"
 import { CartContext } from "./CartContext"
+import ProductIcon from "./icons/ProductIcon"
 
 export default function CartList({products, cart}) {
 
@@ -16,7 +17,7 @@ export default function CartList({products, cart}) {
     grid-template-columns: 1.25fr 0.3fr 0.3fr 0.15fr;
     gap: 10px;
     text-align: right;
-    padding: 0 0.5rem 0 0;
+    padding: 0.5rem 0.5rem 0.5rem 0;
     div:first-child {
       text-align: left;
     }
@@ -42,7 +43,7 @@ export default function CartList({products, cart}) {
     ${RowSize}
     background: #ffffff;
     border-radius: 1rem;
-    
+    min-height: 90px;
     /* transition: 0.2s; */
     &:hover {
       background: #CCDBE4;
@@ -60,7 +61,7 @@ export default function CartList({products, cart}) {
       width: 25px;
     }
     img {
-      padding: 10px;
+      padding: 0 10px;
     }
     button {
       margin: 0 auto;
@@ -92,6 +93,17 @@ export default function CartList({products, cart}) {
       padding-right: 0.4rem;
     }
   `
+  const DefaultThumbnail = styled.div`
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 90px;
+    svg {
+      width: 100%;
+      scale: 2.5;
+    }
+  `
   function increaseQuantity(id) {
     addToCart(id);
   }
@@ -114,7 +126,14 @@ export default function CartList({products, cart}) {
         return (
           <Item key={product._id}>
             <div>
-              <Image src={product.images[0]} width={90} height={90} alt={product.title}/>
+              
+              {product.images[0] ? (
+                <Image src={product.images[0]} width={90} height={90} alt={product.title}/>
+              ) : (
+                <DefaultThumbnail>
+                  <ProductIcon width={90} height={90}/>
+                </DefaultThumbnail>
+              )}
               <h3>{product.title}</h3>
             </div>
             <div>
