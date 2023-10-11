@@ -11,7 +11,7 @@ export function CartContextProvider({children}) {
   useEffect(() => {
     if (cartProducts?.length > 0) {
       lStorage?.setItem('cart', JSON.stringify(cartProducts));
-    } 
+    }
   }, [cartProducts]);
 
   useEffect(() => {
@@ -39,9 +39,13 @@ export function CartContextProvider({children}) {
       }
     })
   }
+  function clearCart() {
+    setCartProducts([]);
+    lStorage.removeItem('cart')
+  }
 
   return (
-    <CartContext.Provider value={{cartProducts, addToCart, removeItemFromCart, removeProduct}}>
+    <CartContext.Provider value={{cartProducts, addToCart, removeItemFromCart, removeProduct, clearCart}}>
       {children}
     </CartContext.Provider>
   )
