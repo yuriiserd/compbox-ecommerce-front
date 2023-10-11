@@ -55,8 +55,8 @@ export default function OrderInfo({products}) {
         </div>
       </Flex>
       <div>
-        <Input type="text" name="Adress" onChange={(event) => setOrderInfo(info => {
-          return {...info, adress: event.target.value}
+        <Input type="text" name="Address" onChange={(event) => setOrderInfo(info => {
+          return {...info, address: event.target.value}
         })}/>
         <label>Adress</label>
       </div>

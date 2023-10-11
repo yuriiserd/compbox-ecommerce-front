@@ -1,7 +1,6 @@
 import Header from "@/components/Header"
 import Container from "@/components/Container"
 import styled from "styled-components"
-import Button from "@/components/Button"
 import { useContext, useEffect, useState } from "react"
 import { CartContext } from "@/components/CartContext"
 import axios from "axios"
@@ -40,9 +39,9 @@ const Notice = styled.div`
 
 export default function CartPage() {
 
-  const {cartProducts} = useContext(CartContext);
+  const {cartProducts, clearCart} = useContext(CartContext);
   const [products, setProducts] = useState([]);
-  const [w, setW] = useState({});
+  const [w, setW] = useState({}); //window object
 
   useEffect(() => {
     if (cartProducts?.length > 0) {
@@ -57,6 +56,7 @@ export default function CartPage() {
   }, [cartProducts])
 
   if (w.location?.href.includes('success')) {
+    clearCart();
     return (
       <>
         <Header/>
