@@ -15,7 +15,7 @@ export default function OrderInfo({products}) {
   const [orderInfo, setOrderInfo] = useState({})
 
   async function goToPayment() {
-    console.log('test');
+    
     const data = {...orderInfo, products}; 
     const response = await axios.post('/api/checkout', data);
 
