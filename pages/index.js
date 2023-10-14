@@ -6,15 +6,7 @@ import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
 import { Category } from "@/models/Category"
 import ProductsGrid from "@/components/ProductsGrid";
-import styled from "styled-components";
-import { primary } from "@/lib/colors";
-
-const StyledTitle = styled.h2`
-  margin-bottom: 2rem;
-  margin-top: 3rem;
-  font-size: 2rem;
-  color: ${primary};
-`
+import Title from "@/components/Title";
 
 export default function HomePage({
   featuredProduct,
@@ -30,7 +22,7 @@ export default function HomePage({
         </Container>
       </Banner>
       <Container>
-        <StyledTitle>New Products</StyledTitle>
+        <Title>New Products</Title>
         <ProductsGrid products={newProducts}/>
       </Container>
     </>

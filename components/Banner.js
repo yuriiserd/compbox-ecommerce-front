@@ -7,6 +7,7 @@ const StyledBanner = styled.div`
   /* margin-top: 80px; */
   padding-top: 70px;
   padding-bottom: 80px;
+  margin-bottom: 60px;
   color: #ffffff;
 `
 

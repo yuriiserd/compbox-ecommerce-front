@@ -84,12 +84,12 @@ export default function Header() {
           </Logo>
           <StyledNav>
             <div>
-              <Link href={"products/"}>Products</Link>
-              <Link href={"categories/"}>Categories</Link>
+              <Link href={"/products/"}>Products</Link>
+              <Link href={"/categories/"}>Categories</Link>
             </div>
             <div>
-              <Link href={"account/"}><UserIcon/></Link>
-              <Cart href={"cart/"}>
+              <Link href={"/account/"}><UserIcon/></Link>
+              <Cart href={"/cart/"}>
                 <CartIcon/>
                 {cartProducts.length > 0 && (
                   <span>{cartProducts.length}</span>
