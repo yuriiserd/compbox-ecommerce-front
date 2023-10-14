@@ -30,7 +30,7 @@ export default function Featured({product}) {
   return (
     <StyledDiv>
       <div>
-        <h1>{product.title}</h1>
+        <h1>{product.properties["Brand"]} {product.title}</h1>
         <p>{product.description}</p>
         <ButtonLink href={`/product/${product._id}`} $transparent>Read More</ButtonLink>
         <Button $white onClick={() => addToCart(product._id)}><CartIcon/>Buy Now</Button>

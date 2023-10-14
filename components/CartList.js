@@ -5,6 +5,7 @@ import Button from "./Button"
 import { useContext, useState } from "react"
 import { CartContext } from "./CartContext"
 import ProductIcon from "./icons/ProductIcon"
+import Link from "next/link"
 
 export default function CartList({products, cart}) {
 
@@ -48,14 +49,20 @@ export default function CartList({products, cart}) {
     &:hover {
       background: #CCDBE4;
     }
+    a,
     div {
       display: flex;
       align-items: center;
       justify-content: flex-end;
       width: 100%;
     }
-    div:first-child {
+    a:first-child {
       justify-content: flex-start;
+      color: #000;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
     }
     svg {
       width: 25px;
@@ -125,7 +132,7 @@ export default function CartList({products, cart}) {
         totalPrice = totalPrice + total;
         return (
           <Item key={product._id}>
-            <div>
+            <Link href={'/product/'+product._id}>
               
               {product.images[0] ? (
                 <Image src={product.images[0]} width={90} height={90} alt={product.title}/>
@@ -135,7 +142,7 @@ export default function CartList({products, cart}) {
                 </DefaultThumbnail>
               )}
               <h3>{product.title}</h3>
-            </div>
+            </Link>
             <div>
               <StyledQuantity>
                 <button onClick={() => decreaseQuantity(product._id)}>-</button>

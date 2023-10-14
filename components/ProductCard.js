@@ -94,8 +94,7 @@ export default function ProductCard({product}) {
       ) : (
         <ProductIcon width={300} height={160}/>
       )}
-      
-      <h3>{product.title}</h3>
+      <h3>{product.properties["Brand"]} {product.title}</h3>
       <div>
         
         <StyledPrice>{product.price}$</StyledPrice>

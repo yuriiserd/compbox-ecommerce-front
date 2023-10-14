@@ -6,21 +6,22 @@ import ProductsGrid from "@/components/ProductsGrid";
 import { Product } from "@/models/Product";
 import { Category } from "@/models/Category";
 import { mongooseConnect } from "@/lib/mongoose";
+import Title from "@/components/Title";
 
 export default function ProductsPage({products}) {
 
-  const StyledTitle = styled.h2`
-    margin-bottom: 2rem;
-    margin-top: 3rem;
-    font-size: 2rem;
-    color: ${primary};
+  const Main = styled.div`
+    margin-top: 70px;
   `
   
   return (
     <>
       <Header/>
       <Container>
-        <StyledTitle>Products</StyledTitle>
+        <Main>
+
+        </Main>
+        <Title>Products</Title>
         <ProductsGrid products={products}/>
       </Container>
     </>
