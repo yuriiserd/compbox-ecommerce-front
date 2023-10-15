@@ -25,6 +25,9 @@ const GlobalStyles = createGlobalStyle`
     max-width: 100%;
     height: auto;
   }
+  p {
+    line-height: 160%;
+  }
 `
 
 export default function App({ Component, pageProps }) {

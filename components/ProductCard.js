@@ -13,7 +13,6 @@ export default function ProductCard({product}) {
 
   const {addToCart} = useContext(CartContext);
   const {likedProducts, addToLiked} = useContext(LikedContext);
-  const [likedUpdate, setLikedUpdate] = useState(false);
   
   const liked = likedProducts.find(itemId => itemId === product._id);
 
@@ -82,10 +81,9 @@ export default function ProductCard({product}) {
 
   return (
     <StyledCard href={`/product/${product._id}`}>
-      <Button $white $icon onClick={(event) => {
+      <Button $white $icon $size={'sm'} onClick={(event) => {
         event.preventDefault();
         addToLiked(product._id);
-        setLikedUpdate(!likedUpdate);
       }}>
         <HeartIcon liked={liked} />
       </Button>
