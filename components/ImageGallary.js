@@ -31,6 +31,7 @@ export default function ImageGallary({images}) {
     justify-content: left;
     flex-wrap: wrap;
     gap: 0.4rem;
+    margin-bottom: 2.5rem;
     button {
       max-height: 90px;
       border: 1px solid #CCDBE4;
@@ -57,13 +58,13 @@ export default function ImageGallary({images}) {
           </div>
         )}
         {!!images.length && (
-          <Image src={mainImage} width={400} height={400}/>
+          <Image src={mainImage} width={400} height={400} alt="main image"/>
         )}
       </MainImage>
       <ImageButtons>
         {images.map((image => (
           <button key={image} onMouseOver={() => setMainImage(image)}>
-            <Image src={image} width={70} height={70} alt=""/>
+            <Image src={image} width={70} height={70} alt="gallary image"/>
           </button>
         )))}
       </ImageButtons>
