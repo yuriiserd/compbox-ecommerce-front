@@ -7,7 +7,7 @@ import { buffer } from "micro";
 export default async function handler(req, res) {
   await mongooseConnect();
 
-  const endpointSecret = "whsec_f26c56714fadc73623cdde7cc65e2e09ea06fc15444f7a70bee51bc5187d7a96";
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   const sig = req.headers['stripe-signature'];
 
