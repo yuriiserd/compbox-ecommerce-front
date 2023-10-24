@@ -49,6 +49,9 @@ export default function CartList({products, cart}) {
     &:hover {
       background: #CCDBE4;
     }
+    h3 {
+      text-align: left;
+    }
     a,
     div {
       display: flex;

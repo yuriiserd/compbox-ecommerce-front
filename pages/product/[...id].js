@@ -135,8 +135,6 @@ export default function ProductPage({product}) {
 
   const liked = likedProducts.find(itemId => itemId === product._id);
   
-
-  console.log(product)
   return (
     <>
       <Header/>

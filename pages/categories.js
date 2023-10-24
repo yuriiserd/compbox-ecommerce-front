@@ -1,21 +1,19 @@
 import Header from "@/components/Header";
 import styled from "styled-components";
-import { primary } from "@/lib/colors";
 import Container from "@/components/Container";
-import ProductsGrid from "@/components/ProductsGrid";
-import { Product } from "@/models/Product";
 import { Category } from "@/models/Category";
 import { mongooseConnect } from "@/lib/mongoose";
 import Title from "@/components/Title";
+import CategoriesGrid from "@/components/CategoriesGrid";
 
-export default function ProductsPage({products}) {
+export default function CategoriesPage({categories}) {
   
   return (
     <>
       <Header/>
       <Container>
-        <Title>New Products</Title>
-        <ProductsGrid products={products}/>
+        <Title>Categories</Title>
+        <CategoriesGrid categories={categories}/>
       </Container>
     </>
   )
@@ -23,12 +21,11 @@ export default function ProductsPage({products}) {
 
 export async function getServerSideProps() {
   await mongooseConnect();
-  const categories = await Category.find();
-  const products = await Product.find({}, null, {sort: {'_id': -1}});
+  const categories = await Category.find({parent: {_id: '64bac2f697faffcc04671e3c'}});
 
   return {
     props: {
-      products: JSON.parse(JSON.stringify(products)),
+      categories: JSON.parse(JSON.stringify(categories)),
     }
   }
 }
