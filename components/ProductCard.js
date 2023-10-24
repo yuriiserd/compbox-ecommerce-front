@@ -26,11 +26,14 @@ export default function ProductCard({product}) {
     box-shadow: 0px 14px 0px rgba(71, 82, 94, 0);
     color: #000;
     text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     img {
       display: block;
       margin: 0 auto 1rem;
       object-fit: contain;
-      max-height: 150px;
+      height: 150px;
       transition: all 0.4s;
       scale: 1;
     }
@@ -59,6 +62,7 @@ export default function ProductCard({product}) {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-top: auto;
       button {
         position: static;
       }

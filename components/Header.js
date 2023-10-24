@@ -26,13 +26,13 @@ const StyledNav = styled.nav`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  font-size: 16px;
+  font-size: 1rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
   div {
     display: flex;
-    gap: 10px;
+    gap: 1rem;
     list-style: none;
   }
   a {
@@ -84,7 +84,7 @@ export default function Header() {
           </Logo>
           <StyledNav>
             <div>
-              <Link href={"/products/"}>Products</Link>
+              <Link href={"/products/"}>New Products</Link>
               <Link href={"/categories/"}>Categories</Link>
             </div>
             <div>
