@@ -46,6 +46,7 @@ export default function ProductCard({product}) {
     h3 {
       text-align: center;
       margin-bottom: 1rem;
+      font-size: 1rem;
     }
     
     button {

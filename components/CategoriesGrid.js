@@ -2,6 +2,7 @@ import { url } from "@/lib/colors"
 import Image from "next/image"
 import Link from "next/link"
 import styled from "styled-components"
+import ProductIcon from "./icons/ProductIcon";
 
 export default function CategoriesGrid({categories, colums}) {
 
@@ -43,12 +44,25 @@ export default function CategoriesGrid({categories, colums}) {
       object-fit: contain;
     }
   `
+  const DefaultThambnail = styled.div`
+    height: ${colums >= 6 ? '150px' : '200px'};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `
   
   return (
     <StyledGrid>
       {categories.map(category => (
-        <Link href={`/category/${category._id}`}>
-          <Image src={category.image} width={400} height={400} alt={category.name}/>
+        <Link key={category._id} href={`/category/${category._id}`}>
+          {category.image && (
+            <Image src={category.image} width={400} height={400} alt={category.name}/>
+          )}
+          {!category.image && (
+            <DefaultThambnail>
+              <ProductIcon/>
+            </DefaultThambnail>
+          )}
           <h3>{category.name}</h3>
         </Link>
       ))}
