@@ -26,7 +26,7 @@ export default function ProductsGrid({products}) {
   return (
     <StyledGrid>
       {!products.length && (
-        <NotFound>No items found :(</NotFound>
+        <NotFound>No products found :(</NotFound>
       )}
       {products.map(product => <ProductCard key={product._id} product={product}/>)}
     </StyledGrid>
