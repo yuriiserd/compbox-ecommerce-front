@@ -66,9 +66,10 @@ const Cart = styled(Link)`
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     background: ${primary};
-    color: #fff
+    color: #fff;
+    font-weight: 400;
   }
 `
 

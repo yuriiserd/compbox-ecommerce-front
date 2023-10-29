@@ -21,7 +21,7 @@ export default function CategoriesPage({categories}) {
 
 export async function getServerSideProps() {
   await mongooseConnect();
-  const categories = await Category.find({parent: {_id: '64bac2f697faffcc04671e3c'}});
+  const categories = await Category.find({parent: {_id: '64bac2f697faffcc04671e3c'}}, null, {sort: {order: 1}});
 
   return {
     props: {

@@ -14,6 +14,7 @@ export default function ProductCard({product}) {
   const {addToCart} = useContext(CartContext);
   const {likedProducts, addToLiked} = useContext(LikedContext);
   
+  //TODO make liked with no rerender other products
   const liked = likedProducts.find(itemId => itemId === product._id);
 
   const StyledCard = styled(Link)`
