@@ -41,33 +41,16 @@ const Row = styled.div`
   align-items: flex-start;
 `
 
-export default function CategoryPage({category, products, categoryChildrens, properties}) {
+export default function CategoryPage({category, initialProducts, categoryChildrens, properties}) {
 
-  // console.log(mainCategory)
 
+  const [products, setProducts] = useState([]);
   const topLevelCategoryId = '64bac2f697faffcc04671e3c';
 
-  // const [properties, setProperties] = useState({});
+  useEffect(() => {
+    setProducts(initialProducts)
+  }, [category])
 
-  // useEffect(() => {
-  //   setProperties((filter) => {
-  //     // console.log(mainCategory.properties)
-  //     const mainCategoryFilters = {};
-  //     const categoryFilters = {};
-      
-  //     mainCategory.properties.forEach(property => {
-  //       mainCategoryFilters[property.name] = property.values;
-  //     })
-  //     category.properties.forEach(property => {
-  //       categoryFilters[property.name] = property.values
-  //     })
-  //     return {
-  //       ...mainCategoryFilters,
-  //       ...categoryFilters
-  //     }
-  //   })
-  // },[category.name]);
-  
   return (
     <>
       <Header/>
@@ -86,7 +69,7 @@ export default function CategoryPage({category, products, categoryChildrens, pro
           <Devider/>
         )}
         <Row>
-          <ProductFilters properties={properties} category={category}/>
+          <ProductFilters properties={properties} category={category} filterProducts={filtered => setProducts(filtered)}/>
           <ProductsGrid products={products}/>
         </Row>
       </Container>
@@ -97,11 +80,19 @@ export default function CategoryPage({category, products, categoryChildrens, pro
 export async function getServerSideProps(context) {
   await mongooseConnect();
   const id = context.query.id;
+  const searchQuery = context.query;
+  delete searchQuery.id;
+  console.log(searchQuery)
+  Object.keys(searchQuery).forEach(key => {
+    searchQuery['properties.'+key] = searchQuery[key].split(',')
+    delete searchQuery[key];
+  })
+  console.log(searchQuery)
 
   const mainCategory = await Category.findOne({_id: '64bac2f697faffcc04671e3c'});
   const category = await Category.findOne({_id: id});
-  const parentCategory = await Category.findOne({_id: category.parent});
-  const categoryChildrens = await Category.find({_id: category.childrens});
+  // const parentCategory = await Category.findOne({_id: category.parent});
+  const categoryChildrens = await Category.find({_id: category.childrens}, null, {sort: {order: 1}});
 
   const productsIds = [];
 
@@ -124,10 +115,10 @@ export async function getServerSideProps(context) {
     }
   }))
 
+  // properties: {$elemMatch: searchQuery}
 
-  const allProducts = await Product.find({_id: productsIds}, null, {sort: {'_id': -1}});
+  const allProducts = await Product.find({_id: productsIds, ...searchQuery}, null, {sort: {'_id': -1}});
 
-  // const mainCategoryFilters = [];
   const categoryFilters = [];
 
   mainCategory.properties.forEach(property => {
@@ -138,9 +129,6 @@ export async function getServerSideProps(context) {
     categoryFilters.push(property.name)
   })
   
-
-  console.log(categoryFilters)
-
   let properties = {};
 
   allProducts.forEach(product => {
@@ -153,13 +141,11 @@ export async function getServerSideProps(context) {
       }
     })
   })
-  // console.log(properties)
 
   return {
     props: {
-      mainCategory: JSON.parse(JSON.stringify(mainCategory)),
       category: JSON.parse(JSON.stringify(category)),
-      products: JSON.parse(JSON.stringify(allProducts)),
+      initialProducts: JSON.parse(JSON.stringify(allProducts)),
       categoryChildrens: JSON.parse(JSON.stringify(categoryChildrens)),
       properties,
     }

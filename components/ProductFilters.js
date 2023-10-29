@@ -1,4 +1,5 @@
 import { primary } from "@/lib/colors"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 
@@ -75,18 +76,24 @@ const MoreBtn = styled.button`
   cursor: pointer;
 `
 
-export default function ProductFilters({properties, category}) {
+export default function ProductFilters({properties, category, filterProducts}) {
 
   
   const [categoryName, setCategoryName] = useState('')
   const [filters, setFilters] = useState({});
+  const [selectedFilters, setSelectedFilters] = useState({});
+
+  // [{Brand: [values]}, {Color: [values]}]
+
+  const router = useRouter();
 
   useEffect(() => {
     setCategoryName(category.name)
   },[category])
 
   useEffect(() => {
-    setFilters({})
+    setFilters({});
+    setSelectedFilters({});
     Object.keys(properties).forEach(property => {
       setFilters(filters => {
         const arr = properties[property];
@@ -96,7 +103,6 @@ export default function ProductFilters({properties, category}) {
         } else {
           updatedFilter = {main: arr, hidden: false};
         }
-        console.log(property, updatedFilter)
         return {
           ...filters,
           [property]: updatedFilter
@@ -119,6 +125,44 @@ export default function ProductFilters({properties, category}) {
     })
   }
 
+  function getUpdatedFilters(selected, filter, item) {
+    if(!selected[filter]) {
+      selected[filter] = item
+    } else if (!selected[filter].includes(item)) {
+      selected[filter] += ',' + item
+    } else if (selected[filter].includes(item)) {
+      selected[filter] = selected[filter].split(',').filter(curentItem => curentItem !== item).join(',')
+    }
+    if (selected[filter].length === 0) {
+      delete selected[filter]
+    }
+    return selected
+  }
+
+  function runFilter(filter, item) {
+    const filters = getUpdatedFilters(selectedFilters, filter, item);
+    console.log(filters)
+    setSelectedFilters(filters);
+
+    router.push({
+      ...router,
+      pathname: '/category/' + category._id, 
+      query: {
+        ...filters
+      }
+    },
+    undefined,
+    { shallow: true },
+    )
+
+    
+
+  //   filterProducts([{
+  //     "_id": "653813c9d0d45f52e2933858",
+  //     ......
+  // }])
+  }
+
   return (
     <StyledFilters>
       {Object.keys(filters).map(filter => (
@@ -126,13 +170,13 @@ export default function ProductFilters({properties, category}) {
           <h4>{filter}</h4>
           {filters[filter].main.map((item, i) => (
             <Checkbox key={item + i}>
-              <input type="checkbox" id={item + i}/>
+              <input type="checkbox" onChange={() => runFilter(filter, item)} id={item + i}/>
               <label htmlFor={item + i}>{item}</label>
             </Checkbox>
           ))} 
           {!filters[filter].hidden && filters[filter]?.other && filters[filter].other.map(item => (
             <Checkbox key={item}>
-              <input type="checkbox" id={item}/>
+              <input type="checkbox" checked onChange={() => runFilter(item)} id={item}/>
               <label htmlFor={item}>{item}</label>
             </Checkbox>
           ))}

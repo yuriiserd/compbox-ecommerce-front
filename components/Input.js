@@ -3,6 +3,7 @@ import styled from "styled-components"
 const StyledInput = styled.input`
   border: none;
   border-bottom: 1px solid #8793B0;
+  background: none;
   outline: none;
   padding: 0.3rem 0;
   width: 100%;
@@ -14,6 +15,7 @@ const StyledInput = styled.input`
     position: relative;
     top: -1.6rem;
     padding: 0.3rem 0;
+    z-index: -1;
   }
   &:focus + label,
   &:not(:placeholder-shown) + label {
