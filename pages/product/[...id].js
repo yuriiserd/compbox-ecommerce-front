@@ -139,6 +139,7 @@ export default function ProductPage({product}) {
     <>
       <Header/>
       <Container>
+        
         <Row>
           <div>
             <ImageGallary images={product.images}/>

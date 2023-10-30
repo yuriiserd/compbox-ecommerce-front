@@ -1,4 +1,5 @@
 import { primary } from "@/lib/colors"
+import axios from "axios"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
@@ -76,24 +77,46 @@ const MoreBtn = styled.button`
   cursor: pointer;
 `
 
-export default function ProductFilters({properties, category, filterProducts}) {
+export default function ProductFilters({properties, initialProperties, category, filterProducts}) {
 
   
   const [categoryName, setCategoryName] = useState('')
   const [filters, setFilters] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
 
-  // [{Brand: [values]}, {Color: [values]}]
-
   const router = useRouter();
 
+
   useEffect(() => {
-    setCategoryName(category.name)
+    setCategoryName(category.name);
+    setSelectedFilters({})
   },[category])
 
   useEffect(() => {
+    
+    setSelectedFilters((prev) => {
+      const newQuery = router.query;
+
+      Object.keys(newQuery).forEach(key => {
+        if (key.split('.')[1]) {
+          const newKey = key.split('.')[1];
+          console.log(newKey, key, ' test')
+          newQuery[newKey] = newQuery[key].join(',');
+          delete newQuery[key];
+        }
+        if (newQuery.id) {
+          delete newQuery.id
+        }
+      })
+      console.log(newQuery)
+      return newQuery
+    })
+  }, []);
+
+  
+
+  useEffect(() => {
     setFilters({});
-    setSelectedFilters({});
     Object.keys(properties).forEach(property => {
       setFilters(filters => {
         const arr = properties[property];
@@ -139,9 +162,9 @@ export default function ProductFilters({properties, category, filterProducts}) {
     return selected
   }
 
-  function runFilter(filter, item) {
+  async function runFilter(filter, item) {
     const filters = getUpdatedFilters(selectedFilters, filter, item);
-    console.log(filters)
+    
     setSelectedFilters(filters);
 
     router.push({
@@ -155,31 +178,38 @@ export default function ProductFilters({properties, category, filterProducts}) {
     { shallow: true },
     )
 
-    
+    const products = await axios.post('/api/products/', {query: filters, category})
 
-  //   filterProducts([{
-  //     "_id": "653813c9d0d45f52e2933858",
-  //     ......
-  // }])
-  }
+    filterProducts(products.data)
+  } 
 
   return (
     <StyledFilters>
       {Object.keys(filters).map(filter => (
         <Filter key={filter}>
           <h4>{filter}</h4>
-          {filters[filter].main.map((item, i) => (
-            <Checkbox key={item + i}>
-              <input type="checkbox" onChange={() => runFilter(filter, item)} id={item + i}/>
-              <label htmlFor={item + i}>{item}</label>
-            </Checkbox>
-          ))} 
-          {!filters[filter].hidden && filters[filter]?.other && filters[filter].other.map(item => (
-            <Checkbox key={item}>
-              <input type="checkbox" checked onChange={() => runFilter(item)} id={item}/>
-              <label htmlFor={item}>{item}</label>
-            </Checkbox>
-          ))}
+          {filters[filter].main.map((item, i) => {
+            let checked = false;
+            if (selectedFilters[filter]) {
+              checked = selectedFilters[filter].split(',').includes(item);
+            } 
+            // const checked = false;
+            return (
+              <Checkbox key={item + i}>
+                <input type="checkbox" checked={checked} onChange={() => runFilter(filter, item)} id={item + i}/>
+                <label htmlFor={item + i}>{item}</label>
+              </Checkbox>
+            )
+          })} 
+          {!filters[filter].hidden && filters[filter]?.other && filters[filter].other.map(item => {
+            // const checked = query[filter].split(',').includes(item);
+            return (
+              <Checkbox key={item}>
+                <input type="checkbox" checked={checked} onChange={() => runFilter(item)} id={item}/>
+                <label htmlFor={item}>{item}</label>
+              </Checkbox>
+            )
+          })}
           {filters[filter].hidden && (
             <MoreBtn onClick={() => showOthers(filter)}>show more</MoreBtn>
           )}

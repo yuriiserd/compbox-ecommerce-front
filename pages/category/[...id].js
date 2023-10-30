@@ -41,7 +41,7 @@ const Row = styled.div`
   align-items: flex-start;
 `
 
-export default function CategoryPage({category, initialProducts, categoryChildrens, properties}) {
+export default function CategoryPage({category, initialProducts, categoryChildrens, allProperties, initialProperties}) {
 
 
   const [products, setProducts] = useState([]);
@@ -69,7 +69,7 @@ export default function CategoryPage({category, initialProducts, categoryChildre
           <Devider/>
         )}
         <Row>
-          <ProductFilters properties={properties} category={category} filterProducts={filtered => setProducts(filtered)}/>
+          <ProductFilters properties={allProperties} initialProperties={initialProperties} category={category} filterProducts={filtered => setProducts(filtered)}/>
           <ProductsGrid products={products}/>
         </Row>
       </Container>
@@ -82,12 +82,10 @@ export async function getServerSideProps(context) {
   const id = context.query.id;
   const searchQuery = context.query;
   delete searchQuery.id;
-  console.log(searchQuery)
   Object.keys(searchQuery).forEach(key => {
     searchQuery['properties.'+key] = searchQuery[key].split(',')
     delete searchQuery[key];
   })
-  console.log(searchQuery)
 
   const mainCategory = await Category.findOne({_id: '64bac2f697faffcc04671e3c'});
   const category = await Category.findOne({_id: id});
@@ -117,7 +115,9 @@ export async function getServerSideProps(context) {
 
   // properties: {$elemMatch: searchQuery}
 
-  const allProducts = await Product.find({_id: productsIds, ...searchQuery}, null, {sort: {'_id': -1}});
+  const allProducts = await Product.find({_id: productsIds}, null, {sort: {'_id': -1}});
+
+  const initialProducts = await Product.find({_id: productsIds, ...searchQuery}, null, {sort: {'_id': -1}});
 
   const categoryFilters = [];
 
@@ -142,12 +142,26 @@ export async function getServerSideProps(context) {
     })
   })
 
+  let initialProperties = {};
+
+  initialProducts.forEach(product => {
+    Object.keys(product.properties).forEach(property => {
+      if (!initialProperties[property] && categoryFilters.includes(property)) {
+        initialProperties[property] = []
+      }
+      if (categoryFilters.includes(property) && !initialProperties[property].includes(product.properties[property])) {
+        initialProperties[property].push(product.properties[property])
+      }
+    })
+  })
+
   return {
     props: {
       category: JSON.parse(JSON.stringify(category)),
-      initialProducts: JSON.parse(JSON.stringify(allProducts)),
+      initialProducts: JSON.parse(JSON.stringify(initialProducts)),
       categoryChildrens: JSON.parse(JSON.stringify(categoryChildrens)),
-      properties,
+      allProperties: JSON.parse(JSON.stringify(properties)),
+      initialProperties: JSON.parse(JSON.stringify(initialProperties)),
     }
   }
 }
