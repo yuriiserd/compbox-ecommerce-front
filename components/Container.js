@@ -5,6 +5,7 @@ const StyledDiv = styled.div`
   margin: 0 auto;
   padding: 0 15px;
   position: relative;
+  width: calc(100% - 30px);
 `
 
 export default function Container({children}) {

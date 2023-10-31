@@ -6,6 +6,7 @@ import { CartContext } from "@/components/CartContext"
 import axios from "axios"
 import CartList from "@/components/CartList"
 import OrderInfo from "@/components/OrderInfo"
+import Footer from "@/components/Footer"
 
 const StyledRow = styled.div`
   display: grid;
@@ -66,6 +67,7 @@ export default function CartPage() {
             <p>We will email you when your order will be sent.</p>
           </Notice>
         </Container>
+        <Footer/>
       </>
     )
   }
@@ -93,6 +95,7 @@ export default function CartPage() {
         )}
         
       </Container>
+      <Footer/>
     </>
   )
 }

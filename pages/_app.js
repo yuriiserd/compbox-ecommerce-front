@@ -4,6 +4,7 @@ import { Montserrat } from "next/font/google";
 import localFont from 'next/font/local';
 import { CartContextProvider } from "@/components/CartContext";
 import { LikedContextProvider } from "@/components/LikedContext";
+import Head from "next/head";
 
 const montserrat = Montserrat({
   weight: ['400', '500', '700'],
@@ -21,6 +22,12 @@ const GlobalStyles = createGlobalStyle`
   input {
       font-family: inherit;
   }
+  main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
   img {
     max-width: 100%;
     height: auto;
@@ -33,6 +40,9 @@ const GlobalStyles = createGlobalStyle`
 export default function App({ Component, pageProps }) {
   return (
     <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
       <GlobalStyles/>
       <CartContextProvider>
         <LikedContextProvider>

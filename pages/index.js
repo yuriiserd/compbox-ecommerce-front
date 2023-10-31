@@ -7,6 +7,7 @@ import { Product } from "@/models/Product";
 import { Category } from "@/models/Category"
 import ProductsGrid from "@/components/ProductsGrid";
 import Title from "@/components/Title";
+import Footer from "@/components/Footer";
 
 export default function HomePage({
   featuredProduct,
@@ -25,6 +26,7 @@ export default function HomePage({
         <Title>New Products</Title>
         <ProductsGrid products={newProducts}/>
       </Container>
+      <Footer/>
     </>
   )
 }

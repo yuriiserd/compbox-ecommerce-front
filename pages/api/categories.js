@@ -1,8 +1,10 @@
 import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
+import { Category } from "@/models/Category";
 
 export default async function handler(req,res) {
   await mongooseConnect();
-  const ids = req.body.ids;
-  res.json(await Product.find({_id: ids}));
+  const id = req.body.id;
+  
+  res.json(await Category.findOne({_id: id}));
 }

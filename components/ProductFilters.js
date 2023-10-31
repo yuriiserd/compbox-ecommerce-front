@@ -77,7 +77,7 @@ const MoreBtn = styled.button`
   cursor: pointer;
 `
 
-export default function ProductFilters({properties, initialProperties, category, filterProducts}) {
+export default function ProductFilters({properties, category, filterProducts}) {
 
   
   const [categoryName, setCategoryName] = useState('')
@@ -100,7 +100,6 @@ export default function ProductFilters({properties, initialProperties, category,
       Object.keys(newQuery).forEach(key => {
         if (key.split('.')[1]) {
           const newKey = key.split('.')[1];
-          console.log(newKey, key, ' test')
           newQuery[newKey] = newQuery[key].join(',');
           delete newQuery[key];
         }
@@ -108,7 +107,6 @@ export default function ProductFilters({properties, initialProperties, category,
           delete newQuery.id
         }
       })
-      console.log(newQuery)
       return newQuery
     })
   }, []);

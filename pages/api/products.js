@@ -3,7 +3,7 @@ import { Product } from "@/models/Product";
 import { Category } from "@/models/Category";
 
 export default async function handler(req,res) {
-  await mongooseConnect;
+  await mongooseConnect();
   const query = req.body.query;
   const category = req.body.category;
   Object.keys(query).forEach(key => {
@@ -17,7 +17,6 @@ export default async function handler(req,res) {
 
   if (categoryChildrens) {
     categoryChildrens.forEach(cat => {
-      console.log(cat.childrens)
       if (cat.childrens) {
         cat.childrens.forEach(id => {
           categories.push(id.toString())
@@ -25,7 +24,5 @@ export default async function handler(req,res) {
       }
     })
   }
-  // console.log(categories)
   res.json(await Product.find({category: { $in: categories}, ...query}));
-  // res.json(await Product.find({_id: ids}));
 }
