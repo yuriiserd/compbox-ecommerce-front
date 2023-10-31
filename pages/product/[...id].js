@@ -1,3 +1,4 @@
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Button from "@/components/Button";
 import { CartContext } from "@/components/CartContext";
 import Container from "@/components/Container";
@@ -5,6 +6,7 @@ import Header from "@/components/Header";
 import ImageGallary from "@/components/ImageGallary";
 import { LikedContext } from "@/components/LikedContext";
 import Title from "@/components/Title";
+import Footer from "@/components/Footer";
 import CartIcon from "@/components/icons/CartIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
 import { mongooseConnect } from "@/lib/mongoose";
@@ -23,7 +25,7 @@ export default function ProductPage({product}) {
   const Row = styled.div`
     display: flex;
     gap: 2rem;
-    margin-top: 70px;
+    margin-top: 2rem;
     & > div {
       width: 50%;
     } 
@@ -139,7 +141,7 @@ export default function ProductPage({product}) {
     <>
       <Header/>
       <Container>
-        
+        <Breadcrumbs product={product}/>
         <Row>
           <div>
             <ImageGallary images={product.images}/>
@@ -199,6 +201,7 @@ export default function ProductPage({product}) {
           </ProductInfo>
         </Row>
       </Container>
+      <Footer/>
     </>
   )
 }

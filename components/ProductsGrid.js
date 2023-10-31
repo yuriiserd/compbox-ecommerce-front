@@ -22,13 +22,15 @@ export default function ProductsGrid({products}) {
   const NotFound = styled.p`
     font-size: 1.5rem;
   `
-  
   return (
-    <StyledGrid>
+    <>
+    
       {!products.length && (
         <NotFound>No products found :(</NotFound>
       )}
-      {products.map(product => <ProductCard key={product._id} product={product}/>)}
-    </StyledGrid>
+      <StyledGrid>
+        {products.map(product => <ProductCard key={product._id} product={product}/>)}
+      </StyledGrid>
+    </>
   )
 }

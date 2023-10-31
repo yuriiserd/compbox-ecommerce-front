@@ -5,6 +5,7 @@ import { Category } from "@/models/Category";
 import { mongooseConnect } from "@/lib/mongoose";
 import Title from "@/components/Title";
 import CategoriesGrid from "@/components/CategoriesGrid";
+import Footer from "@/components/Footer";
 
 export default function CategoriesPage({categories}) {
   
@@ -15,6 +16,7 @@ export default function CategoriesPage({categories}) {
         <Title>Categories</Title>
         <CategoriesGrid categories={categories}/>
       </Container>
+      <Footer/>
     </>
   )
 }

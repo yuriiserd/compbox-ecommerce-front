@@ -19,12 +19,11 @@ export default function CategoriesGrid({categories, colums}) {
     gap: 20px;
     grid-template-columns: ${columsString};
     @media (max-width: 1200px) {
-      grid-template-columns: 1fr 1fr;
-      max-width: 700px;
+      grid-template-columns:  ${colums >= 6 ? '1fr 1fr 1fr 1fr' : '1fr 1fr 1fr'};
       margin: 0 auto;
     }
     @media (max-width: 768px) {
-      grid-template-columns: 1fr;
+      grid-template-columns: ${colums >= 6 ? '1fr 1fr' : '1fr'};
       max-width: 400px;
     }
     a {
@@ -42,6 +41,9 @@ export default function CategoriesGrid({categories, colums}) {
     img {
       height: ${colums >= 6 ? '150px' : '200px'};
       object-fit: contain;
+      @media (max-width: 992px) {
+        height: ${colums >= 6 ? '100px' : '150px'};
+      }
     }
   `
   const DefaultThambnail = styled.div`

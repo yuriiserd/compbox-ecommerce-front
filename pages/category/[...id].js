@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import ProductFilters from "@/components/ProductFilters";
 import ProductsGrid from "@/components/ProductsGrid";
 import Title from "@/components/Title";
+import Footer from "@/components/Footer";
 import BackArrowIcon from "@/components/icons/BackArrowIcon";
 import { primaryLight, url } from "@/lib/colors";
 import { mongooseConnect } from "@/lib/mongoose";
@@ -13,6 +14,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useRouter } from "next/router";
 
 const StyledTitle = styled.div`
   a {
@@ -39,17 +41,35 @@ const Row = styled.div`
   grid-template-columns: 3fr 9fr;
   grid-gap: 1.3rem;
   align-items: flex-start;
+  margin-bottom: 3rem;
 `
 
-export default function CategoryPage({category, initialProducts, categoryChildrens, allProperties, initialProperties}) {
+export default function CategoryPage({category, initialProducts, categoryChildrens, properties}) {
 
 
   const [products, setProducts] = useState([]);
   const topLevelCategoryId = '64bac2f697faffcc04671e3c';
+  const [showFilters, setShowFilters] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
-    setProducts(initialProducts)
+    setProducts(initialProducts); 
+
+    const query = router.query;
+
+    delete query.id;
+
+    if (initialProducts.length > 0) {
+      setShowFilters(true)
+    } else if (Object.keys(query).length > 0) {
+      setShowFilters(true)
+    } else {
+      setShowFilters(false)
+    }
   }, [category])
+  
+  // const showFilters = !!products.length && !!Object.keys(router.query).length
 
   return (
     <>
@@ -69,10 +89,13 @@ export default function CategoryPage({category, initialProducts, categoryChildre
           <Devider/>
         )}
         <Row>
-          <ProductFilters properties={allProperties} initialProperties={initialProperties} category={category} filterProducts={filtered => setProducts(filtered)}/>
+          {showFilters && (
+            <ProductFilters properties={properties} category={category} filterProducts={filtered => setProducts(filtered)}/>
+          )}
           <ProductsGrid products={products}/>
         </Row>
       </Container>
+      <Footer/>
     </>
   )
 }
@@ -160,8 +183,7 @@ export async function getServerSideProps(context) {
       category: JSON.parse(JSON.stringify(category)),
       initialProducts: JSON.parse(JSON.stringify(initialProducts)),
       categoryChildrens: JSON.parse(JSON.stringify(categoryChildrens)),
-      allProperties: JSON.parse(JSON.stringify(properties)),
-      initialProperties: JSON.parse(JSON.stringify(initialProperties)),
+      properties: JSON.parse(JSON.stringify(properties)),
     }
   }
 }
