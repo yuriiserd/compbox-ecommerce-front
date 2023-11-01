@@ -3,6 +3,7 @@ import axios from "axios"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
+import Range from "./Range"
 
 const StyledFilters = styled.div`
   background-color: #f4f4f4;
@@ -77,7 +78,7 @@ const MoreBtn = styled.button`
   cursor: pointer;
 `
 
-export default function ProductFilters({properties, category, filterProducts}) {
+export default function ProductFilters({properties, range, category, filterProducts}) {
 
   
   const [categoryName, setCategoryName] = useState('')
@@ -89,7 +90,7 @@ export default function ProductFilters({properties, category, filterProducts}) {
 
   useEffect(() => {
     setCategoryName(category.name);
-    setSelectedFilters({})
+    setSelectedFilters({});
   },[category])
 
   useEffect(() => {
@@ -147,20 +148,23 @@ export default function ProductFilters({properties, category, filterProducts}) {
   }
 
   function getUpdatedFilters(selected, filter, item) {
-    if(!selected[filter]) {
+    if(!selected[filter] || filter === "Range") { // add if not exist
       selected[filter] = item
-    } else if (!selected[filter].includes(item)) {
+    } else if (!selected[filter].includes(item)) { // add new item
       selected[filter] += ',' + item
-    } else if (selected[filter].includes(item)) {
+    } else if (selected[filter].includes(item)) { // remove item
       selected[filter] = selected[filter].split(',').filter(curentItem => curentItem !== item).join(',')
     }
-    if (selected[filter].length === 0) {
-      delete selected[filter]
+    if (selected[filter].length === 0) { // remove filter if have no items 
+      delete selected[filter] 
     }
     return selected
   }
 
   async function runFilter(filter, item) {
+    
+    console.log(filter, item);
+
     const filters = getUpdatedFilters(selectedFilters, filter, item);
     
     setSelectedFilters(filters);
@@ -176,13 +180,17 @@ export default function ProductFilters({properties, category, filterProducts}) {
     { shallow: true },
     )
 
+
     const products = await axios.post('/api/products/', {query: filters, category})
 
     filterProducts(products.data)
   } 
-
   return (
     <StyledFilters>
+      <Filter>
+        <h4>Price</h4>
+        <Range range={range} filter={runFilter}/>
+      </Filter>
       {Object.keys(filters).map(filter => (
         <Filter key={filter}>
           <h4>{filter}</h4>
