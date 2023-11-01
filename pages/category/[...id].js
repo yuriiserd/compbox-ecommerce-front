@@ -50,6 +50,7 @@ export default function CategoryPage({category, initialProducts, categoryChildre
   const [products, setProducts] = useState([]);
   const topLevelCategoryId = '64bac2f697faffcc04671e3c';
   const [showFilters, setShowFilters] = useState(false);
+  const [priceRange, setPriceRange] = useState('')
 
   const router = useRouter();
 
@@ -68,8 +69,22 @@ export default function CategoryPage({category, initialProducts, categoryChildre
       setShowFilters(false)
     }
   }, [category])
-  
-  // const showFilters = !!products.length && !!Object.keys(router.query).length
+
+  useEffect(() => {
+    setPriceRange(() => {
+      let sorted = JSON.parse(JSON.stringify(products));
+      sorted = sorted.sort((product1, product2) => {
+        const price1 = product1.salePrice ? product1.salePrice : product1.price;
+        const price2 = product2.salePrice ? product2.salePrice : product2.price;
+
+        return price1 - price2;
+      } )
+      const lastIndex = sorted.length - 1; 
+      const min = sorted[0]?.salePrice ? sorted[0]?.salePrice : sorted[0]?.price,
+            max = sorted[lastIndex]?.salePrice ? sorted[lastIndex]?.salePrice : sorted[lastIndex]?.price;
+      return `${min}-${max}`
+    })
+  }, [products])
 
   return (
     <>
@@ -90,7 +105,7 @@ export default function CategoryPage({category, initialProducts, categoryChildre
         )}
         <Row>
           {showFilters && (
-            <ProductFilters properties={properties} category={category} filterProducts={filtered => setProducts(filtered)}/>
+            <ProductFilters range={priceRange} properties={properties} category={category} filterProducts={filtered => setProducts(filtered)}/>
           )}
           <ProductsGrid products={products}/>
         </Row>
