@@ -6,8 +6,10 @@ export default async function handler(req,res) {
   await mongooseConnect();
   const query = req.body.query;
   const category = req.body.category;
-  const min = query["Range"]?.split('-')[0]
-  const max = query["Range"]?.split('-')[1]
+  const min = query["Range"]?.split('-')[0] || 0;
+  const max = query["Range"]?.split('-')[1] || 99999999999999999999;
+
+  console.log(max)
   
   Object.keys(query).forEach(key => {
     if (key !== "Range") {
@@ -33,13 +35,9 @@ export default async function handler(req,res) {
     category: { $in: categories}, 
     ...query, 
     $and: [{ 
-      salePrice: {$gt: min - 1} 
-    }, { 
-      salePrice: {$lt: max + 1} 
-    }, { 
-      price: {$gt: min - 1} 
-    }, { 
-      price: {$lt: max + 1} 
+      $or: [{salePrice: {$gte: min}}, {price: {$gte: min}},] 
+    },{ 
+      $or: [{salePrice: {$lte: max}}, {price: {$lte: max}},] 
     }]
   }));
 }

@@ -1,5 +1,5 @@
 import { blue, primary, primaryLight, url } from "@/lib/colors"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useReducer, useRef, useState } from "react"
 import ReactSlider from "react-slider"
 import styled from "styled-components"
 import css from "@/components/Range.module.css"
@@ -43,7 +43,6 @@ export default function Range({range, filter}) {
   useEffect(() => {
     setMin(parseInt(range.split('-')[0]));
     setMax(parseInt(range.split('-')[1]));
-    
   }, [range])
 
   return (
@@ -63,7 +62,8 @@ export default function Range({range, filter}) {
           type="text" value={newMax ? newMax : max}
         />
         <Ok type="button" value="ok" onClick={() => {
-          filter("Range", `${newMin}-${newMax}`);
+          
+          filter("Range", `${newMin || min}-${newMax || max}`);
         }}/>
       </Flex>
       {!!min && (
@@ -74,9 +74,10 @@ export default function Range({range, filter}) {
           defaultValue={[min, max]}
           min={min}
           max={max}
+          withTracks
           ariaLabel={['Lower thumb', 'Upper thumb']}
           ariaValuetext={state => `Thumb value ${state.valueNow}`}
-          renderThumb={(props, state) => <div {...props}></div>}
+          renderThumb={(props, state) =>  <div {...props}></div>}
           minDistance={10}
           onChange={(event) => {
             setNewMin(event[0]);

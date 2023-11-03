@@ -78,7 +78,7 @@ const MoreBtn = styled.button`
   cursor: pointer;
 `
 
-export default function ProductFilters({properties, range, category, filterProducts}) {
+export default function ProductFilters({properties, range, category, filterProducts, setProductsCount}) {
 
   
   const [categoryName, setCategoryName] = useState('')
@@ -162,8 +162,6 @@ export default function ProductFilters({properties, range, category, filterProdu
   }
 
   async function runFilter(filter, item) {
-    
-    console.log(filter, item);
 
     const filters = getUpdatedFilters(selectedFilters, filter, item);
     
@@ -183,7 +181,9 @@ export default function ProductFilters({properties, range, category, filterProdu
 
     const products = await axios.post('/api/products/', {query: filters, category})
 
-    filterProducts(products.data)
+    filterProducts(products.data);
+    setProductsCount(products.data.length)
+    
   } 
   return (
     <StyledFilters>

@@ -16,3 +16,7 @@
   transform: translateY(-50%);
   height: 2px;
 }
+.slider-track:nth-child(1), 
+.slider-track:nth-child(3) {
+  background: #a1a4c3;
+}
