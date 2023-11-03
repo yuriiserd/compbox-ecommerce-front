@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
+import SelectedFilters from "@/components/SelectedFilters";
 
 const StyledTitle = styled.div`
   a {
@@ -44,18 +45,28 @@ const Row = styled.div`
   margin-bottom: 3rem;
 `
 
-export default function CategoryPage({category, initialProducts, categoryChildrens, properties}) {
+export default function CategoryPage({category, initialProducts, allInitialProducts, initialCount, categoryChildrens, properties}) {
 
 
   const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+
   const topLevelCategoryId = '64bac2f697faffcc04671e3c';
   const [showFilters, setShowFilters] = useState(false);
-  const [priceRange, setPriceRange] = useState('')
+  const [priceRange, setPriceRange] = useState('');
+  const [productsCount, setProductsCount] = useState(0)
 
   const router = useRouter();
 
+  console.log(initialCount)
+
   useEffect(() => {
+
+    setProductsCount(initialCount);
+
     setProducts(initialProducts); 
+
+    setAllProducts(allInitialProducts); 
 
     const query = router.query;
 
@@ -72,7 +83,7 @@ export default function CategoryPage({category, initialProducts, categoryChildre
 
   useEffect(() => {
     setPriceRange(() => {
-      let sorted = JSON.parse(JSON.stringify(products));
+      let sorted = JSON.parse(JSON.stringify(allProducts));
       sorted = sorted.sort((product1, product2) => {
         const price1 = product1.salePrice ? product1.salePrice : product1.price;
         const price2 = product2.salePrice ? product2.salePrice : product2.price;
@@ -84,7 +95,7 @@ export default function CategoryPage({category, initialProducts, categoryChildre
             max = sorted[lastIndex]?.salePrice ? sorted[lastIndex]?.salePrice : sorted[lastIndex]?.price;
       return `${min}-${max}`
     })
-  }, [products])
+  }, [allProducts])
 
   return (
     <>
@@ -103,9 +114,16 @@ export default function CategoryPage({category, initialProducts, categoryChildre
         {!!category.childrens.length && (
           <Devider/>
         )}
+        <SelectedFilters productsCount={productsCount}/>
         <Row>
           {showFilters && (
-            <ProductFilters range={priceRange} properties={properties} category={category} filterProducts={filtered => setProducts(filtered)}/>
+            <ProductFilters 
+              range={priceRange} 
+              setProductsCount={setProductsCount} 
+              properties={properties} 
+              category={category} 
+              filterProducts={filtered => setProducts(filtered)}
+            />
           )}
           <ProductsGrid products={products}/>
         </Row>
@@ -119,7 +137,11 @@ export async function getServerSideProps(context) {
   await mongooseConnect();
   const id = context.query.id;
   const searchQuery = context.query;
+  const range = searchQuery.Range;
+  const min = range?.split('-')[0] || 0;
+  const max = range?.split('-')[1] || 99999999999999999999;
   delete searchQuery.id;
+  delete searchQuery.Range;
   Object.keys(searchQuery).forEach(key => {
     searchQuery['properties.'+key] = searchQuery[key].split(',')
     delete searchQuery[key];
@@ -155,7 +177,15 @@ export async function getServerSideProps(context) {
 
   const allProducts = await Product.find({_id: productsIds}, null, {sort: {'_id': -1}});
 
-  const initialProducts = await Product.find({_id: productsIds, ...searchQuery}, null, {sort: {'_id': -1}});
+  const initialProducts = await Product.find({
+    _id: productsIds, 
+    ...searchQuery, 
+    $and: [{ 
+      $or: [{salePrice: {$gte: min}}, {price: {$gte: min}},] 
+    },{ 
+      $or: [{salePrice: {$lte: max}}, {price: {$lte: max}},] 
+    }]
+  }, null, {sort: {'_id': -1}});
 
   const categoryFilters = [];
 
@@ -197,6 +227,8 @@ export async function getServerSideProps(context) {
     props: {
       category: JSON.parse(JSON.stringify(category)),
       initialProducts: JSON.parse(JSON.stringify(initialProducts)),
+      allInitialProducts: JSON.parse(JSON.stringify(allProducts)),
+      initialCount: initialProducts?.length || 0,
       categoryChildrens: JSON.parse(JSON.stringify(categoryChildrens)),
       properties: JSON.parse(JSON.stringify(properties)),
     }
