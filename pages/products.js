@@ -8,25 +8,67 @@ import { Category } from "@/models/Category";
 import { mongooseConnect } from "@/lib/mongoose";
 import Title from "@/components/Title";
 import Footer from "@/components/Footer";
+import { useRouter } from "next/router";
+import LoadMoreBtn from "@/components/LoadMoreBtn";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function ProductsPage({products}) {
+
+  const [productsToShow, setProductsToShow] = useState(products);
+  
+  const router = useRouter();
+
+  const [pageNumber, setPageNumber] = useState(router.query.page || 1);
+
+  useEffect(() => {
+    if (pageNumber !== 1) {
+      router.push({
+        ...router,
+        pathname: '/products/', 
+        query: {
+          page: pageNumber
+        }
+      },
+      undefined,
+      { shallow: true },
+      )
+      
+    }
+    
+  },[pageNumber])
+
+  async function LoadProducts() {
+    setPageNumber(prev => parseInt(prev) + 1);
+    axios.get("/api/products?page=" + pageNumber).then(res => {
+      setProductsToShow(prev => {
+        return [
+          ...prev,
+          ...res.data
+        ]
+      })
+    })
+  }
   
   return (
     <>
       <Header/>
       <Container>
         <Title>New Products</Title>
-        <ProductsGrid products={products}/>
+        <ProductsGrid products={productsToShow}/>
+        <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>
       </Container>
       <Footer/>
     </>
   )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   await mongooseConnect();
+  console.log();
+  const limit = process.env.PRODUCTS_PER_PAGE * parseInt(context.query.page || 1);
   const categories = await Category.find();
-  const products = await Product.find({}, null, {sort: {'_id': -1}});
+  const products = await Product.find().sort({'_id': -1}).limit(limit);
 
   return {
     props: {

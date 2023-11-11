@@ -1,14 +1,12 @@
 import styled from "styled-components"
 import ProductCard from "./ProductCard"
 
-export default function ProductsGrid({products}) {
-
-  const StyledGrid = styled.div`
+const StyledGrid = styled.div`
     display: grid;
     width: 100%;
     gap: 20px;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    padding-bottom: 100px;
+    padding-bottom: 50px;
     @media (max-width: 1200px) {
       grid-template-columns: 1fr 1fr;
       max-width: 700px;
@@ -22,11 +20,13 @@ export default function ProductsGrid({products}) {
   const NotFound = styled.p`
     font-size: 1.5rem;
   `
+
+export default function ProductsGrid({products}) {
+  
   return (
     <>
-    
       {!products.length && (
-        <NotFound>No products found :(</NotFound>
+        <NotFound>No products found &#9785;</NotFound>
       )}
       <StyledGrid>
         {products.map(product => <ProductCard key={product._id} product={product}/>)}
