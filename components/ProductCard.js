@@ -9,15 +9,7 @@ import { CartContext } from "./CartContext";
 import { LikedContext } from "./LikedContext";
 import ProductIcon from "./icons/ProductIcon";
 
-export default function ProductCard({product}) {
-
-  const {addToCart} = useContext(CartContext);
-  const {likedProducts, addToLiked} = useContext(LikedContext);
-  
-  //TODO make liked with no rerender other products
-  const liked = likedProducts.find(itemId => itemId === product._id);
-
-  const StyledCard = styled(Link)`
+const StyledCard = styled(Link)`
     background-color: #ffffff;
     padding: 20px;
     position: relative;
@@ -73,7 +65,7 @@ export default function ProductCard({product}) {
   const StyledPrice = styled.p`
     font-size: 1.3rem;
     margin-right: 0.5rem;
-    ${product.salePrice && `
+    ${props => props.sale && `
       color: #797878;
       text-decoration: line-through;
     `}
@@ -83,6 +75,16 @@ export default function ProductCard({product}) {
     margin-right: auto;
     color: #f84147;
   `
+
+export default function ProductCard({product}) {
+
+  const {addToCart} = useContext(CartContext);
+  const {likedProducts, addToLiked} = useContext(LikedContext);
+  
+  //TODO make liked with no rerender other products
+  const liked = likedProducts.find(itemId => itemId === product._id);
+
+  
   
 
   return (
@@ -101,7 +103,7 @@ export default function ProductCard({product}) {
       <h3>{product.properties["Brand"]} {product.title}</h3>
       <div>
         
-        <StyledPrice>{product.price}$</StyledPrice>
+        <StyledPrice sale={product.salePrice}>{product.price}$</StyledPrice>
         {product.salePrice && (
           <StyledSalePrice>{product.salePrice}$</StyledSalePrice>
         )}
