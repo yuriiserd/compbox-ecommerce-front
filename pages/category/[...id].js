@@ -58,8 +58,6 @@ export default function CategoryPage({category, initialProducts, allInitialProdu
 
   const router = useRouter();
 
-  console.log(initialCount)
-
   useEffect(() => {
 
     setProductsCount(initialCount);

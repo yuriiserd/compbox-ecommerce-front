@@ -1,13 +1,19 @@
 import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
 import { Category } from "@/models/Category";
+import ProductPage from "../product/[...id]";
 
 export default async function handler(req,res) {
   await mongooseConnect();
   const {method} = req;
   if (method === "GET") {
+    if (req.query.count) {
+      const productsCount = await Product.count();
+      res.json(productsCount)
+    }
     const limit = process.env.PRODUCTS_PER_PAGE;
     const skip = parseInt(req.query.page) * limit;
+    
     const products = await Product.find().sort({'_id': -1}).limit(limit).skip(skip);
     res.json(products);
   }

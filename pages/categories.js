@@ -6,11 +6,15 @@ import { mongooseConnect } from "@/lib/mongoose";
 import Title from "@/components/Title";
 import CategoriesGrid from "@/components/CategoriesGrid";
 import Footer from "@/components/Footer";
+import Head from "next/head";
 
 export default function CategoriesPage({categories}) {
   
   return (
     <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
       <Header/>
       <Container>
         <Title>Categories</Title>
