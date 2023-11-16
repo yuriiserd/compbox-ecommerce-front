@@ -16,10 +16,17 @@ import axios from "axios";
 export default function ProductsPage({products}) {
 
   const [productsToShow, setProductsToShow] = useState(products);
+  const [productsCount, setProductsCount] = useState(0)
   
   const router = useRouter();
 
   const [pageNumber, setPageNumber] = useState(router.query.page || 1);
+
+  useEffect(() => {
+    axios.get('/api/products?count='+'true').then(res => {
+      setProductsCount(res.data)
+    })
+  },[])
 
   useEffect(() => {
     if (pageNumber !== 1) {
@@ -56,7 +63,9 @@ export default function ProductsPage({products}) {
       <Container>
         <Title>New Products</Title>
         <ProductsGrid products={productsToShow}/>
-        <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>
+        {productsCount > productsToShow.length && (
+          <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>
+        )}
       </Container>
       <Footer/>
     </>
@@ -65,7 +74,6 @@ export default function ProductsPage({products}) {
 
 export async function getServerSideProps(context) {
   await mongooseConnect();
-  console.log();
   const limit = process.env.PRODUCTS_PER_PAGE * parseInt(context.query.page || 1);
   const categories = await Category.find();
   const products = await Product.find().sort({'_id': -1}).limit(limit);

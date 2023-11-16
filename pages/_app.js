@@ -14,6 +14,9 @@ const montserrat = Montserrat({
 const regularFont = localFont({src: '../fonts/CeraPro-Regular.woff2'})
 
 const GlobalStyles = createGlobalStyle`
+  html {
+    overflow-x: hidden;
+  }
   * {
     margin: 0;
     padding: 0;
@@ -40,9 +43,6 @@ const GlobalStyles = createGlobalStyle`
 export default function App({ Component, pageProps }) {
   return (
     <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
       <GlobalStyles/>
       <CartContextProvider>
         <LikedContextProvider>

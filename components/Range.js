@@ -37,12 +37,14 @@ export default function Range({range, filter}) {
 
   const [newMin, setNewMin] = useState(null);
   const [newMax, setNewMax] = useState(null);
+  const [sliderKey, setSliderKey] = useState();
 
-  console.log(range, min, max, newMin, newMax)
+  // console.log(range, min, max, newMin, newMax)
 
   useEffect(() => {
     setMin(parseInt(range.split('-')[0]));
     setMax(parseInt(range.split('-')[1]));
+    setSliderKey(`slider-${Math.random()}`)
   }, [range])
 
   return (
@@ -68,6 +70,7 @@ export default function Range({range, filter}) {
       </Flex>
       {!!min && (
         <ReactSlider
+          key={sliderKey}
           className={css["slider"]}
           thumbClassName={css["slider-thumb"]}
           trackClassName={css["slider-track"]}
