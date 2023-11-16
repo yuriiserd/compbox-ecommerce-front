@@ -6,7 +6,7 @@ import ProductPage from "../product/[...id]";
 export default async function handler(req,res) {
   await mongooseConnect();
   const {method} = req;
-  if (method === "GET") {
+  if (method === "GET") { // for new products page
     if (req.query.count) {
       const productsCount = await Product.count();
       res.json(productsCount)
@@ -17,11 +17,13 @@ export default async function handler(req,res) {
     const products = await Product.find().sort({'_id': -1}).limit(limit).skip(skip);
     res.json(products);
   }
-  if (method === "POST") {
+  if (method === "POST") { // for filters on single category page
     const query = req.body.query;
     const category = req.body.category;
     const min = query["Range"]?.split('-')[0] || 0;
     const max = query["Range"]?.split('-')[1] || 99999999999999999999;
+    const limit = process.env.PRODUCTS_PER_PAGE;
+    const skip = parseInt(req.body.page) * limit;
 
     
     Object.keys(query).forEach(key => {
@@ -44,6 +46,22 @@ export default async function handler(req,res) {
         }
       })
     }
+    //send all queried products count to show count and hide load more
+    if (req.body.all) {
+      res.json(await Product.find({ 
+        category: { $in: categories}, 
+        ...query, 
+        $and: [{ 
+          $or: [{salePrice: {$gte: min}}, {price: {$gte: min}},] 
+        },{ 
+          $or: [{salePrice: {$lte: max}}, {price: {$lte: max}},] 
+        }]
+      }, 
+      null, 
+      {sort: {'_id': -1}}
+      ).count());
+    }
+    //send queried products
     res.json(await Product.find({ 
       category: { $in: categories}, 
       ...query, 
@@ -52,6 +70,9 @@ export default async function handler(req,res) {
       },{ 
         $or: [{salePrice: {$lte: max}}, {price: {$lte: max}},] 
       }]
-    }));
+    }, 
+    null, 
+    {sort: {'_id': -1}}
+    ).limit(limit).skip(skip));
   }
 }

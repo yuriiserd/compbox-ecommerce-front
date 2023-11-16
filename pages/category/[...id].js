@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import SelectedFilters from "@/components/SelectedFilters";
+import LoadMoreBtn from "@/components/LoadMoreBtn";
 
 const StyledTitle = styled.div`
   a {
@@ -45,29 +46,37 @@ const Row = styled.div`
   margin-bottom: 3rem;
 `
 
-export default function CategoryPage({category, initialProducts, allInitialProducts, initialCount, categoryChildrens, properties}) {
-
+export default function CategoryPage({
+  category,
+  initialProducts,
+  allInitialProducts,
+  initialCount,
+  categoryChildrens,
+  properties,
+}) {
 
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
 
-  const topLevelCategoryId = '64bac2f697faffcc04671e3c';
   const [showFilters, setShowFilters] = useState(false);
   const [priceRange, setPriceRange] = useState('');
-  const [productsCount, setProductsCount] = useState(0)
-
+  const [productsCount, setProductsCount] = useState(0);
+  
   const router = useRouter();
+  
+  const [pageNumber, setPageNumber] = useState(router.query.page || 1);
+  
+  const topLevelCategoryId = '64bac2f697faffcc04671e3c';
+
+
 
   useEffect(() => {
 
     setProductsCount(initialCount);
-
     setProducts(initialProducts); 
-
     setAllProducts(allInitialProducts); 
 
     const query = router.query;
-
     delete query.id;
 
     if (initialProducts.length > 0) {
@@ -93,7 +102,40 @@ export default function CategoryPage({category, initialProducts, allInitialProdu
             max = sorted[lastIndex]?.salePrice ? sorted[lastIndex]?.salePrice : sorted[lastIndex]?.price;
       return `${min}-${max}`
     })
-  }, [allProducts])
+  }, [allProducts]);
+
+  //set router query on pageNumber change
+  useEffect(() => {
+    if (pageNumber !== 1) {
+      
+      router.push({
+        
+        pathname: '/category/' + category._id, 
+        query: {
+          page: pageNumber,
+          ...router.query
+        }
+      },
+      undefined,
+      { shallow: true },
+      )
+    }
+  },[pageNumber])
+
+  async function LoadProducts() {
+    setPageNumber(prev => parseInt(prev) + 1);
+    const filters = router.query;
+    delete filters.page;
+    delete filters.id;
+    axios.post('/api/products/', {query: filters, category, page: pageNumber}).then(res => {
+      setProducts(prev => {
+        return [
+          ...prev,
+          ...res.data
+        ]
+      })
+    })
+  }
 
   return (
     <>
@@ -120,10 +162,18 @@ export default function CategoryPage({category, initialProducts, allInitialProdu
               setProductsCount={setProductsCount} 
               properties={properties} 
               category={category} 
-              filterProducts={filtered => setProducts(filtered)}
+              filterProducts={filtered => {
+                setPageNumber(1)
+                setProducts(filtered)
+              }}
             />
           )}
-          <ProductsGrid products={products}/>
+          <div>
+            <ProductsGrid products={products}/>
+            {products.length < productsCount && (
+              <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>
+            )}
+          </div>
         </Row>
       </Container>
       <Footer/>
@@ -136,32 +186,42 @@ export async function getServerSideProps(context) {
   const id = context.query.id;
   const searchQuery = context.query;
   const range = searchQuery.Range;
+  const page = searchQuery.page;
   const min = range?.split('-')[0] || 0;
   const max = range?.split('-')[1] || 99999999999999999999;
+  const limit = process.env.PRODUCTS_PER_PAGE * parseInt(page || 1);
+
+  //delete keys that dont use in mongo search query
   delete searchQuery.id;
   delete searchQuery.Range;
+  delete searchQuery.page;
+
+  //normalize query for mongodb 
   Object.keys(searchQuery).forEach(key => {
-    searchQuery['properties.'+key] = searchQuery[key].split(',')
+    searchQuery['properties.'+key] = searchQuery[key].split(',');
     delete searchQuery[key];
   })
 
+  //get main category , current category , category childrens
   const mainCategory = await Category.findOne({_id: '64bac2f697faffcc04671e3c'});
   const category = await Category.findOne({_id: id});
-  // const parentCategory = await Category.findOne({_id: category.parent});
   const categoryChildrens = await Category.find({_id: category.childrens}, null, {sort: {order: 1}});
 
+  //array for get products 
   const productsIds = [];
-
+  //get products by current category 
   const products = await Product.find({category});
   products.forEach(product => {
     productsIds.push(product._id)
   })
 
+  //get products from children category
   const productsChildrens = await Product.find({category: categoryChildrens});
   productsChildrens.forEach(product => {
     productsIds.push(product._id);
   })
 
+  //get products from children of childrens categories LOL
   await Promise.all(categoryChildrens.map(async cat => {
     if (cat.childrens.length > 0) {
       const deepLevelProducts = await Product.find({category: cat.childrens});
@@ -171,32 +231,56 @@ export async function getServerSideProps(context) {
     }
   }))
 
-  // properties: {$elemMatch: searchQuery}
-
+  //get all products from ids array
   const allProducts = await Product.find({_id: productsIds}, null, {sort: {'_id': -1}});
 
-  const initialProducts = await Product.find({
-    _id: productsIds, 
-    ...searchQuery, 
-    $and: [{ 
-      $or: [{salePrice: {$gte: min}}, {price: {$gte: min}},] 
-    },{ 
-      $or: [{salePrice: {$lte: max}}, {price: {$lte: max}},] 
-    }]
-  }, null, {sort: {'_id': -1}});
+  // get products from ids array , searchQuery , price range , limit
+  const initialProducts = await Product.find(
+    {
+      _id: productsIds, 
+      ...searchQuery, 
+      $and: [{ 
+        $or: [{salePrice: {$gte: min}}, {price: {$gte: min}},] 
+      },{ 
+        $or: [{salePrice: {$lte: max}}, {price: {$lte: max}},] 
+      }]
+    }, 
+    null, 
+    {sort: {'_id': -1}} // sort to show latest 
+  ).limit(limit); // set limit of products to show - depends on env value and page query 
+
+  const initialCount = await Product.find(
+    {
+      _id: productsIds, 
+      ...searchQuery, 
+      $and: [{ 
+        $or: [{salePrice: {$gte: min}}, {price: {$gte: min}},] 
+      },{ 
+        $or: [{salePrice: {$lte: max}}, {price: {$lte: max}},] 
+      }]
+    }, 
+    null, 
+    {sort: {'_id': -1}} // sort to show latest 
+  ).count();
+
+  console.log(initialCount)
 
   const categoryFilters = [];
 
+  //get filters from main category
   mainCategory.properties.forEach(property => {
     categoryFilters.push(property.name)
   })
   
+  //get filters from current category
   category.properties.forEach(property => {
     categoryFilters.push(property.name)
   })
   
-  let properties = {};
 
+  // check if product include property from categories 
+  // AND add this property to list that will be rendered
+  let properties = {};
   allProducts.forEach(product => {
     Object.keys(product.properties).forEach(property => {
       if (!properties[property] && categoryFilters.includes(property)) {
@@ -208,25 +292,25 @@ export async function getServerSideProps(context) {
     })
   })
 
-  let initialProperties = {};
+  // let initialProperties = {};
 
-  initialProducts.forEach(product => {
-    Object.keys(product.properties).forEach(property => {
-      if (!initialProperties[property] && categoryFilters.includes(property)) {
-        initialProperties[property] = []
-      }
-      if (categoryFilters.includes(property) && !initialProperties[property].includes(product.properties[property])) {
-        initialProperties[property].push(product.properties[property])
-      }
-    })
-  })
+  // initialProducts.forEach(product => {
+  //   Object.keys(product.properties).forEach(property => {
+  //     if (!initialProperties[property] && categoryFilters.includes(property)) {
+  //       initialProperties[property] = []
+  //     }
+  //     if (categoryFilters.includes(property) && !initialProperties[property].includes(product.properties[property])) {
+  //       initialProperties[property].push(product.properties[property])
+  //     }
+  //   })
+  // })
 
   return {
     props: {
       category: JSON.parse(JSON.stringify(category)),
       initialProducts: JSON.parse(JSON.stringify(initialProducts)),
       allInitialProducts: JSON.parse(JSON.stringify(allProducts)),
-      initialCount: initialProducts?.length || 0,
+      initialCount: initialCount || 0,
       categoryChildrens: JSON.parse(JSON.stringify(categoryChildrens)),
       properties: JSON.parse(JSON.stringify(properties)),
     }

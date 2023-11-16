@@ -82,7 +82,7 @@ export default function Footer() {
             </Col>
           </Row>
           <hr/>
-          <p>©2023 CompBox. All Rights Reserved.</p>
+          <p>&#169;{new Date().getFullYear()} CompBox. All Rights Reserved.</p>
         </Container>
       </div>
     </StyledFooter>

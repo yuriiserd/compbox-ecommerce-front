@@ -112,7 +112,7 @@ export default function ProductFilters({properties, range, category, filterProdu
     })
   }, []);
 
-  
+  console.log(router)
 
   useEffect(() => {
     setFilters({});
@@ -168,10 +168,10 @@ export default function ProductFilters({properties, range, category, filterProdu
     setSelectedFilters(filters);
 
     router.push({
-      ...router,
+      
       pathname: '/category/' + category._id, 
       query: {
-        ...filters
+        ...filters,
       }
     },
     undefined,
@@ -180,9 +180,10 @@ export default function ProductFilters({properties, range, category, filterProdu
 
 
     const products = await axios.post('/api/products/', {query: filters, category})
+    const allProductsCount = await axios.post('/api/products/', {query: filters, category, all: true})
 
     filterProducts(products.data);
-    setProductsCount(products.data.length)
+    setProductsCount(allProductsCount.data)
     
   } 
   return (
