@@ -17,8 +17,9 @@ const StyledGrid = styled.div`
       max-width: 400px;
     }
   `
-  const NotFound = styled.p`
+  export const NotFound = styled.p`
     font-size: 1.5rem;
+    opacity: 0.5;
   `
 
 export default function ProductsGrid({products}) {

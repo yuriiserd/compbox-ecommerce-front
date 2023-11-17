@@ -263,8 +263,6 @@ export async function getServerSideProps(context) {
     {sort: {'_id': -1}} // sort to show latest 
   ).count();
 
-  console.log(initialCount)
-
   const categoryFilters = [];
 
   //get filters from main category

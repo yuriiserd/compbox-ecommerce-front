@@ -6,18 +6,23 @@ import Container from "./Container";
 import CartIcon from "./icons/CartIcon";
 import UserIcon from "./icons/UserIcon";
 import { primary } from "@/lib/colors";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from "./CartContext";
+import SearchIcon from "./icons/SearchIcon";
+import Button from "./Button";
+import Search from "./Search";
 
 const StyledHeader = styled.header`
   background-color: #fff;
   border-bottom: 1px solid #ffffff;
-  padding: 30px 0;
   position: fixed;
   z-index: 100;
   top: 0;
   left: 0;
   width: 100%;
+  &>div {
+    padding: 30px 0;
+  }
 `;
 const StyledMargin = styled.div`
   height: 85px;
@@ -34,6 +39,14 @@ const StyledNav = styled.nav`
     display: flex;
     gap: 1rem;
     list-style: none;
+    align-items: center;
+    button {
+      margin-right: 0;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
   }
   a {
     text-decoration: none;
@@ -56,10 +69,11 @@ const Logo = styled(Link)`
   transform: translate(-50%, -50%);
 `;
 const Cart = styled(Link)`
+  position: relative;
   span {
     position: absolute;
     top: -0.5rem;
-    right: 1rem;
+    right: 0;
     width: 1rem;
     height: 1rem;
     border-radius: 50%;
@@ -72,10 +86,19 @@ const Cart = styled(Link)`
     font-weight: 400;
   }
 `
+const SearchOverlay = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 100;
+`
 
 export default function Header() {
 
   const {cartProducts} = useContext(CartContext);
+  const [showSearch, setShowSearch] = useState(false);
 
   return (
     <>
@@ -90,6 +113,9 @@ export default function Header() {
               <Link href={"/categories/"}>Categories</Link>
             </div>
             <div>
+              <button onClick={() => setShowSearch(!showSearch)}>
+                <SearchIcon/>
+              </button>
               <Link href={"/account/"}><UserIcon/></Link>
               <Cart href={"/cart/"}>
                 <CartIcon/>
@@ -98,9 +124,11 @@ export default function Header() {
                 )}</Cart>
             </div>
           </StyledNav>
+          {showSearch && <Search focus/>}
+          {showSearch && <SearchOverlay onClick={() => setShowSearch(false)}></SearchOverlay>} {/* SearchOverlay close search if click target is not search */}
         </Container>
       </StyledHeader>
-      <StyledMargin></StyledMargin>
+      <StyledMargin></StyledMargin> {/* dont delete - use for mrgin because header if fixed  */}
     </>
     
   )
