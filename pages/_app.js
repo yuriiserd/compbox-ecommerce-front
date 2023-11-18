@@ -1,10 +1,12 @@
 import { createGlobalStyle } from "styled-components";
 import { Montserrat } from "next/font/google";
+import { Provider } from "react-redux";
 
 import localFont from 'next/font/local';
 import { CartContextProvider } from "@/components/CartContext";
 import { LikedContextProvider } from "@/components/LikedContext";
 import Head from "next/head";
+import { store } from "@/store";
 
 const montserrat = Montserrat({
   weight: ['400', '500', '700'],
@@ -44,14 +46,15 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <GlobalStyles/>
-      <CartContextProvider>
-        <LikedContextProvider>
-          <main className={regularFont.className}>
-            <Component {...pageProps} />
-          </main>
-        </LikedContextProvider>
-      </CartContextProvider>
-      
+      <Provider store={store}>
+        <CartContextProvider>
+          <LikedContextProvider>
+            <main className={regularFont.className}>
+              <Component {...pageProps} />
+            </main>
+          </LikedContextProvider>
+        </CartContextProvider>
+      </Provider>
     </>
   )
 }

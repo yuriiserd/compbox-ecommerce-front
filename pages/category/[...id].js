@@ -17,6 +17,9 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 import SelectedFilters from "@/components/SelectedFilters";
 import LoadMoreBtn from "@/components/LoadMoreBtn";
+import { useDispatch } from "react-redux";
+import { updateFilters } from "@/slices/filtersSlice";
+import useNormalizeFilterQuery from "@/hooks/useNormalizeFilterQuery";
 
 const StyledTitle = styled.div`
   a {
@@ -68,9 +71,14 @@ export default function CategoryPage({
   
   const topLevelCategoryId = '64bac2f697faffcc04671e3c';
 
-
+  const dispatch = useDispatch();
 
   useEffect(() => {
+
+    // check info in hook file
+    const newQuery = useNormalizeFilterQuery(router?.query); 
+    
+    dispatch(updateFilters(newQuery)) // set filters from query
 
     setProductsCount(initialCount);
     setProducts(initialProducts); 
@@ -154,7 +162,15 @@ export default function CategoryPage({
         {!!category.childrens.length && (
           <Devider/>
         )}
-        <SelectedFilters productsCount={productsCount}/>
+        <SelectedFilters
+          productsCount={productsCount}
+          setProductsCount={setProductsCount} 
+          category={category} 
+          filterProducts={filtered => {
+            setPageNumber(1)
+            setProducts(filtered)
+          }}
+        />
         <Row>
           {showFilters && (
             <ProductFilters 
@@ -184,11 +200,11 @@ export default function CategoryPage({
 export async function getServerSideProps(context) {
   await mongooseConnect();
   const id = context.query.id;
-  const searchQuery = context.query;
+  const searchQuery = JSON.parse(JSON.stringify(context.query)); 
   const range = searchQuery.Range;
   const page = searchQuery.page;
   const min = range?.split('-')[0] || 0;
-  const max = range?.split('-')[1] || 99999999999999999999;
+  const max = range?.split('-')[1] || 999999999999999;
   const limit = process.env.PRODUCTS_PER_PAGE * parseInt(page || 1);
 
   //delete keys that dont use in mongo search query
@@ -289,19 +305,6 @@ export async function getServerSideProps(context) {
       }
     })
   })
-
-  // let initialProperties = {};
-
-  // initialProducts.forEach(product => {
-  //   Object.keys(product.properties).forEach(property => {
-  //     if (!initialProperties[property] && categoryFilters.includes(property)) {
-  //       initialProperties[property] = []
-  //     }
-  //     if (categoryFilters.includes(property) && !initialProperties[property].includes(product.properties[property])) {
-  //       initialProperties[property].push(product.properties[property])
-  //     }
-  //   })
-  // })
 
   return {
     props: {

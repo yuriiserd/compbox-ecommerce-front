@@ -4,6 +4,9 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import Range from "./Range"
+import { useDispatch, useSelector } from "react-redux"
+import { selectFilters, updateFilters } from "@/slices/filtersSlice"
+import useUpdateFilters from "@/hooks/useUpdateFilters"
 
 const StyledFilters = styled.div`
   background-color: #f4f4f4;
@@ -82,42 +85,23 @@ export default function ProductFilters({properties, range, category, filterProdu
 
   
   const [categoryName, setCategoryName] = useState('')
-  const [filters, setFilters] = useState({});
+  const [allFilters, setAllFilters] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
 
   const router = useRouter();
 
+  const dispatch = useDispatch()
+  const filtersState = useSelector(selectFilters);
 
   useEffect(() => {
     setCategoryName(category.name);
-    setSelectedFilters({});
-  },[category])
+    setSelectedFilters(filtersState);
+  },[category, filtersState])
 
   useEffect(() => {
-    
-    setSelectedFilters((prev) => {
-      const newQuery = router.query;
 
-      Object.keys(newQuery).forEach(key => {
-        if (key.split('.')[1]) {
-          const newKey = key.split('.')[1];
-          newQuery[newKey] = newQuery[key].join(',');
-          delete newQuery[key];
-        }
-        if (newQuery.id) {
-          delete newQuery.id
-        }
-      })
-      return newQuery
-    })
-  }, []);
-
-  console.log(router)
-
-  useEffect(() => {
-    setFilters({});
     Object.keys(properties).forEach(property => {
-      setFilters(filters => {
+      setAllFilters(filters => {
         const arr = properties[property];
         let updatedFilter = {}
         if (arr.length > 10) {
@@ -133,9 +117,10 @@ export default function ProductFilters({properties, range, category, filterProdu
     }) 
     
   },[categoryName])
+  //TODO why i use categoryName instead of just category - check if it works with category
  
   function showOthers(filter) {
-    setFilters(old => {
+    setAllFilters(old => {
       const updatedFilter = {
         ...old[filter],
         hidden: false
@@ -147,58 +132,57 @@ export default function ProductFilters({properties, range, category, filterProdu
     })
   }
 
-  function getUpdatedFilters(selected, filter, item) {
-    if(!selected[filter] || filter === "Range") { // add if not exist
-      selected[filter] = item
-    } else if (!selected[filter].includes(item)) { // add new item
-      selected[filter] += ',' + item
-    } else if (selected[filter].includes(item)) { // remove item
-      selected[filter] = selected[filter].split(',').filter(curentItem => curentItem !== item).join(',')
-    }
-    if (selected[filter].length === 0) { // remove filter if have no items 
-      delete selected[filter] 
-    }
-    return selected
-  }
-
   async function runFilter(filter, item) {
+    
+    const filters = useUpdateFilters(selectedFilters, filter, item);
 
-    const filters = getUpdatedFilters(selectedFilters, filter, item);
+    const queryFilters = {};
+
+    Object.keys(filters).forEach(key => { //key is a filter name
+      if (filters[key].length > 1) {
+        queryFilters[key] = filters[key].join(',')
+      } else {
+        queryFilters[key] = filters[key][0]
+      }
+    })
     
     setSelectedFilters(filters);
+    dispatch(updateFilters(filters))
+
+    console.log(filters)
+    console.log(queryFilters)
 
     router.push({
       
       pathname: '/category/' + category._id, 
       query: {
-        ...filters,
+        ...queryFilters,
       }
     },
     undefined,
     { shallow: true },
     )
 
-
-    const products = await axios.post('/api/products/', {query: filters, category})
-    const allProductsCount = await axios.post('/api/products/', {query: filters, category, all: true})
+    const products = await axios.post('/api/products/', {query: queryFilters, category})
+    const allProductsCount = await axios.post('/api/products/', {query: queryFilters, category, all: true})
 
     filterProducts(products.data);
     setProductsCount(allProductsCount.data)
-    
   } 
+
   return (
     <StyledFilters>
       <Filter>
         <h4>Price</h4>
         <Range range={range} filter={runFilter}/>
       </Filter>
-      {Object.keys(filters).map(filter => (
+      {Object.keys(allFilters).map(filter => (
         <Filter key={filter}>
           <h4>{filter}</h4>
-          {filters[filter].main.map((item, i) => {
+          {allFilters[filter].main.map((item, i) => {
             let checked = false;
-            if (selectedFilters[filter]) {
-              checked = selectedFilters[filter].split(',').includes(item);
+            if (!!selectedFilters[filter]?.length) {
+              checked = selectedFilters[filter].includes(item);
             } 
             // const checked = false;
             return (
@@ -208,16 +192,19 @@ export default function ProductFilters({properties, range, category, filterProdu
               </Checkbox>
             )
           })} 
-          {!filters[filter].hidden && filters[filter]?.other && filters[filter].other.map(item => {
-            // const checked = query[filter].split(',').includes(item);
+          {!allFilters[filter].hidden && allFilters[filter]?.other && allFilters[filter].other.map((item, i) => {
+            let checked = false;
+            if (selectedFilters[filter]) {
+              checked = selectedFilters[filter].includes(item);
+            } 
             return (
               <Checkbox key={item}>
-                <input type="checkbox" checked={checked} onChange={() => runFilter(item)} id={item}/>
+                <input type="checkbox" checked={checked} onChange={() => runFilter(filter, item)} id={item + i}/>
                 <label htmlFor={item}>{item}</label>
               </Checkbox>
             )
           })}
-          {filters[filter].hidden && (
+          {allFilters[filter].hidden && (
             <MoreBtn onClick={() => showOthers(filter)}>show more</MoreBtn>
           )}
         </Filter>
