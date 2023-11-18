@@ -7,15 +7,28 @@ export default async function handler(req,res) {
   await mongooseConnect();
   const {method} = req;
   if (method === "GET") { // for new products page
-    if (req.query.count) {
+    if (req.query?.count) {
       const productsCount = await Product.count();
+      console.log('count')
       res.json(productsCount)
     }
-    const limit = process.env.PRODUCTS_PER_PAGE;
-    const skip = parseInt(req.query.page) * limit;
+    if (req.query?.search) {
+      const search = req.query.search;
+      const regex = new RegExp(search,'i'); // make case-insensitive query
+      console.log('search')
+
+      res.json(await Product.find({searchQuery: {$regex: regex}}, null, {sort: {'createdAt': -1}}).populate('category'));
+    }
+    if (req.query?.page) {
+      const limit = process.env.PRODUCTS_PER_PAGE;
+      const skip = parseInt(req.query.page) * limit;
+      
+      const products = await Product.find().sort({'_id': -1}).limit(limit).skip(skip);
+      console.log('page')
+
+      res.json(products);
+    }
     
-    const products = await Product.find().sort({'_id': -1}).limit(limit).skip(skip);
-    res.json(products);
   }
   if (method === "POST") { // for filters on single category page
     const query = req.body.query;

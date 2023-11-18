@@ -1,11 +1,13 @@
-import { primary, primaryLight } from "@/lib/colors";
+import { primary, primaryLight, redLight, url } from "@/lib/colors";
 import styled, { css } from "styled-components";
 
 export const ButtonStyle = css`
   padding: 10px 20px;
   font-size: 1rem;
+  border: none;
   background: linear-gradient(202deg, #2D1E1E 0%, #0A0A0A 100%);
   color: #ffffff;
+  margin: 0 1rem 0 0;
   &:hover {
     background: linear-gradient(202deg, #2D1E1E 0%, #0A0A0A 100%);
   }
@@ -20,9 +22,39 @@ export const ButtonStyle = css`
     if (props.$white) {
       return `
         background: #ffffff;
+        border: 1px solid ${primary};
         color: ${primary};
         &:hover {
           background: ${primaryLight};
+        }
+      `
+    }
+  }}
+  ${props => {
+    if (props.$filter) {
+      return `
+        background: #fff;
+        padding: 4px 4px 4px 18px;
+        margin-right: 0;
+        border: 1px solid ${primaryLight};
+        color: ${primary};
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+        &:hover {
+          background: ${primaryLight};
+          svg {
+            background: #fff;
+            color: red;
+            opacity: 0.7;
+          }
+        }
+        svg {
+          margin-right: -0.1rem;
+          margin-bottom: 0;
+          border-radius: 1rem;
+          padding: 2px;
+
         }
       `
     }
@@ -67,24 +99,16 @@ export const ButtonStyle = css`
       return `
         padding: 5px; 
         color: inherit;
+        border: none;
       `
     }
   }}
 
-  /* background: ${props => props.$white ? "#ffffff" : props.$transparent ? "transparent" : "linear-gradient(202deg, #2D1E1E 0%, #0A0A0A 100%)"};
-  color: ${props => props.$white ? primary : props.$icon ? "inherit" : "#ffffff"};
-  padding: ${props => props.$icon ? "5px" : "10px 20px"}; */
-
-
   text-decoration: none;
   border-radius: 100px;
   font-weight: 500;
-  border: none;
   cursor: pointer;
-  margin: 0 1rem 0 0;
-  /* &:hover {
-    background: ${props => props.$white ? primaryLight : props.$transparent ? "transparent" : "linear-gradient(202deg, #2D1E1E 0%, #0A0A0A 100%)"};
-  } */
+  
   
 `
 

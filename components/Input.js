@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react"
 import styled from "styled-components"
 
 const StyledInput = styled.input`
@@ -18,12 +19,21 @@ const StyledInput = styled.input`
     z-index: -1;
   }
   &:focus + label,
-  &:not(:placeholder-shown) + label {
+  &:placeholder-shown + label {
     top: -3.2rem;
     font-size: 0.9rem;
   } 
 `
 
 export default function Input(props) {
-  return <StyledInput placeholder=" " {...props}/> // empty placeholder for label animation
+
+  const search = useRef();
+  
+  useEffect(() => {
+    if (props.$focus) {
+      search.current.focus()
+    }
+  },[])
+
+  return <StyledInput ref={search} {...props}/> // empty placeholder for label animation
 } 
