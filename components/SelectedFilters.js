@@ -33,28 +33,6 @@ export default function SelectedFilters({productsCount, category, filterProducts
   useEffect(() => {
 
     setSelectedFilters(filtersState)
-
-    // if (router?.query) {
-    //   const filters = router?.query;
-    //   delete filters.id;
-    //   const readyFilters = {}
-    //   Object.keys(filters).forEach(key => {
-    //     if(filters[key].includes(',')) {
-    //       if (key.includes('.')) {
-    //         readyFilters[key.split('.')[1]] = filters[key].split(',')
-    //       } else {
-    //         readyFilters[key] = filters[key].split(',')
-    //       }
-    //     } else {
-    //       if (key.includes('.')) {
-    //         readyFilters[key.split('.')[1]] = filters[key]
-    //       } else {
-    //         readyFilters[key.split('.')[1]] = filters[key].split(',')
-    //       }
-    //     }
-    //   })
-      
-    // }
   
   }, [productsCount, filtersState])
 
