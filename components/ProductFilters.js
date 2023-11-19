@@ -84,7 +84,6 @@ const MoreBtn = styled.button`
 export default function ProductFilters({properties, range, category, filterProducts, setProductsCount}) {
 
   
-  const [categoryName, setCategoryName] = useState('')
   const [allFilters, setAllFilters] = useState({});
   const [selectedFilters, setSelectedFilters] = useState({});
 
@@ -94,30 +93,24 @@ export default function ProductFilters({properties, range, category, filterProdu
   const filtersState = useSelector(selectFilters);
 
   useEffect(() => {
-    setCategoryName(category.name);
     setSelectedFilters(filtersState);
-  },[category, filtersState])
+  },[filtersState])
 
   useEffect(() => {
-
+    //set properties as filters AND split in half 
+    const initialFilters = {}
     Object.keys(properties).forEach(property => {
-      setAllFilters(filters => {
-        const arr = properties[property];
-        let updatedFilter = {}
-        if (arr.length > 10) {
-          updatedFilter = {main: arr.slice(0, 10), other: arr.slice(10, arr.length), hidden: true};
-        } else {
-          updatedFilter = {main: arr, hidden: false};
-        }
-        return {
-          ...filters,
-          [property]: updatedFilter
-        }
-      })
+      const arr = properties[property];
+      let updatedFilter = {}
+      if (arr.length > 10) {
+        updatedFilter = {main: arr.slice(0, 10), other: arr.slice(10, arr.length), hidden: true};
+      } else {
+        updatedFilter = {main: arr, hidden: false};
+      }
+      initialFilters[property] = updatedFilter
     }) 
-    
-  },[categoryName])
-  //TODO why i use categoryName instead of just category - check if it works with category
+    setAllFilters(initialFilters)
+  }, [properties])
  
   function showOthers(filter) {
     setAllFilters(old => {
@@ -147,10 +140,7 @@ export default function ProductFilters({properties, range, category, filterProdu
     })
     
     setSelectedFilters(filters);
-    dispatch(updateFilters(filters))
-
-    console.log(filters)
-    console.log(queryFilters)
+    dispatch(updateFilters(filters));
 
     router.push({
       
