@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import localFont from 'next/font/local';
 import { CartContextProvider } from "@/components/CartContext";
 import { LikedContextProvider } from "@/components/LikedContext";
-import Head from "next/head";
+import { SessionProvider } from "next-auth/react";
 import { store } from "@/store";
 
 const montserrat = Montserrat({
@@ -42,19 +42,21 @@ const GlobalStyles = createGlobalStyle`
   }
 `
 
-export default function App({ Component, pageProps }) {
+export default function App({ Component, pageProps: {session, ...pageProps} }) {
   return (
     <>
       <GlobalStyles/>
-      <Provider store={store}>
-        <CartContextProvider>
-          <LikedContextProvider>
-            <main className={regularFont.className}>
-              <Component {...pageProps} />
-            </main>
-          </LikedContextProvider>
-        </CartContextProvider>
-      </Provider>
+      <SessionProvider session={session}>
+        <Provider store={store}>
+          <CartContextProvider>
+            <LikedContextProvider>
+              <main className={regularFont.className}>
+                <Component {...pageProps} />
+              </main>
+            </LikedContextProvider>
+          </CartContextProvider>
+        </Provider>
+      </SessionProvider>
     </>
   )
 }

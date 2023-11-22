@@ -1,4 +1,5 @@
 import { mongooseConnect } from "@/lib/mongoose";
+import { Customer } from "@/models/Customer";
 import { Order } from "@/models/Order";
 import { Product } from "@/models/Product";
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -10,7 +11,7 @@ export default async function handler(req, res) {
   }
 
   const {
-    name, email, city,
+    name, phone, email, city,
     zip, address, country,
     products
   } = req.body;
@@ -31,6 +32,7 @@ export default async function handler(req, res) {
           currency: 'USD',
           product_data: {
             name: info.title,
+            images: info.images,
             id: info._id
           },
           unit_amount: info.salePrice ? info.salePrice * 100 : info.price * 100
@@ -42,6 +44,7 @@ export default async function handler(req, res) {
   const orderDoc = await Order.create({
     product_items, 
     name, 
+    phone,
     email, 
     city, 
     zip, 
@@ -49,6 +52,9 @@ export default async function handler(req, res) {
     country, 
     paid: false,
   })
+
+  //add oreder to customer
+  await Customer.updateOne({email}, {$push: {orders: orderDoc._id}})
 
   const session = await stripe.checkout.sessions.create({
     line_items: product_items,
