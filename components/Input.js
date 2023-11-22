@@ -19,7 +19,7 @@ const StyledInput = styled.input`
     z-index: -1;
   }
   &:focus + label,
-  &:placeholder-shown + label {
+  &:not(:placeholder-shown) + label {
     top: -3.2rem;
     font-size: 0.9rem;
   } 

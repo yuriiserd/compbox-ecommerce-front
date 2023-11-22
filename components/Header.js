@@ -5,12 +5,14 @@ import styled from "styled-components";
 import Container from "./Container";
 import CartIcon from "./icons/CartIcon";
 import UserIcon from "./icons/UserIcon";
-import { primary } from "@/lib/colors";
+import { primary, primaryLight } from "@/lib/colors";
 import { useContext, useState } from "react";
 import { CartContext } from "./CartContext";
 import SearchIcon from "./icons/SearchIcon";
 import Button from "./Button";
 import Search from "./Search";
+import { signIn, signOut, useSession } from "next-auth/react";
+import LogoutIcon from "./icons/LogoutIcon";
 
 const StyledHeader = styled.header`
   background-color: #fff;
@@ -52,7 +54,9 @@ const StyledNav = styled.nav`
     text-decoration: none;
     font-weight: 600;
     color: #444444;
-    
+    img {
+      border-radius: 30px;
+    }
   }
   svg {
     width: 20px;
@@ -94,11 +98,69 @@ const SearchOverlay = styled.div`
   top: 0;
   z-index: 100;
 `
+const Profile = styled.div`
+  position: relative;
+  margin: 0 10px;
+  button {
+    margin-right: 0;
+    cursor: pointer;
+    position: absolute;
+    background-color: #fff !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.1s ease-in-out;
+    box-shadow: 0px 5px 10px rgba(71, 82, 94, 0.1);
+    border: 1px solid ${primaryLight} !important;
+    top: 100%;
+    right: -1rem;
+    background: #fff;
+    border-radius: 0.5rem;
+    display: flex;
+    padding: 0.5rem 1rem 0.5rem 0.1rem !important;
+  }
+  &:hover button {
+    opacity: 1;
+    visibility: visible;
+  }
+`;
+const LoginModal = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.1s ease-in-out;
+  box-shadow: 0px 5px 10px rgba(71, 82, 94, 0.1);
+  border: 1px solid ${primaryLight} !important;
+  background-color: #fff;
+  padding: 2rem 1rem;
+  div {
+    button {
+      padding: 0.5rem 1rem;
+    }
+    button:first-child {
+      background-color: #3B5999;
+    }
+    button:last-child {
+      background-color: #CB4023;
+    }
+  }
+`
 
 export default function Header() {
 
   const {cartProducts} = useContext(CartContext);
   const [showSearch, setShowSearch] = useState(false);
+  const {data: session} = useSession();
+  const [loginModal, setLoginModal] = useState(false);
+  
+  async function login(provider) {
+    await signIn(provider, {callbackUrl: '/account'});
+  }
+  async function logout() {
+    await signOut({callbackUrl: '/account'});
+  }
 
   return (
     <>
@@ -116,12 +178,34 @@ export default function Header() {
               <button onClick={() => setShowSearch(!showSearch)}>
                 <SearchIcon/>
               </button>
-              <Link href={"/account/"}><UserIcon/></Link>
               <Cart href={"/cart/"}>
                 <CartIcon/>
                 {cartProducts.length > 0 && (
                   <span>{cartProducts.length}</span>
                 )}</Cart>
+              {session ? (
+                <Profile>
+                  <Link href={"/account/"}><Image src={session?.user?.image} width={30} height={30} alt={session?.user?.name}/></Link>
+                  <button onClick={logout}>
+                    <LogoutIcon/>
+                    Logout
+                  </button>
+                </Profile>
+              ) : (
+                <>
+                  <button onClick={() => setLoginModal(true)}><UserIcon/></button>
+                  {loginModal && (
+                    <LoginModal>
+                      <p>Login with:</p>
+                      <div>
+                        <Button onClick={() => login('facebook')}>Facebook</Button>
+                        <Button onClick={() => login('google')}>Google</Button>
+                      </div>
+                    </LoginModal>
+                  )}
+                </>
+              )}
+              
             </div>
           </StyledNav>
           {showSearch && <Search focus/>}
