@@ -9,13 +9,11 @@ export default async function handler(req,res) {
   if (method === "GET") { // for new products page
     if (req.query?.count) {
       const productsCount = await Product.count();
-      console.log('count')
       res.json(productsCount)
     }
     if (req.query?.search) {
       const search = req.query.search;
       const regex = new RegExp(search,'i'); // make case-insensitive query
-      console.log('search')
 
       res.json(await Product.find({searchQuery: {$regex: regex}}, null, {sort: {'createdAt': -1}}).populate('category'));
     }
@@ -24,7 +22,6 @@ export default async function handler(req,res) {
       const skip = parseInt(req.query.page) * limit;
       
       const products = await Product.find().sort({'_id': -1}).limit(limit).skip(skip);
-      console.log('page')
 
       res.json(products);
     }

@@ -8,7 +8,10 @@ export default async function handler(req,res) {
   
   if (method === 'GET') {
     const customer = await Customer.findOne({email: req.query.email})
-    const orders = await Order.find({_id: {$in: customer.orders}})
+    let orders = [];
+    if (customer) {
+      orders = await Order.find({_id: {$in: customer.orders}}).sort({createdAt: -1});
+    }
     res.json(orders);
   }
   if (method === 'DELETE') {

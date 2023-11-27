@@ -39,8 +39,6 @@ export default function Range({range, filter}) {
   const [newMax, setNewMax] = useState(null);
   const [sliderKey, setSliderKey] = useState();
 
-  // console.log(range, min, max, newMin, newMax)
-
   useEffect(() => {
     setMin(parseInt(range.split('-')[0]));
     setMax(parseInt(range.split('-')[1]));
