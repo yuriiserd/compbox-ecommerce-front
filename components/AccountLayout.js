@@ -88,11 +88,10 @@ export default function AccountLayout(props) {
   const router = useRouter();
 
   function logout() {
-    signOut();
+    signOut({callbackUrl: '/'});
   }
 
   useEffect(() => {
-    console.log(session);
     if (session?.expires && session?.expires < Date.now() / 1000) {
       router.push("/");
     }

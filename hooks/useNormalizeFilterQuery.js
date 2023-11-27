@@ -4,7 +4,6 @@
 // useNormalize for update string values to array for maping render each propery value
 export default function useNormalizeFilterQuery(query) {
   const newQuery = {}
-  // console.log(query)
   delete query.id;
   delete query.page;
   if (query) {
@@ -25,6 +24,5 @@ export default function useNormalizeFilterQuery(query) {
       }
     })
   }
-  // console.log(newQuery)
   return newQuery
 }

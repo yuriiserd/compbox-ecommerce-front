@@ -7,6 +7,7 @@ import axios from "axios"
 import CartList from "@/components/CartList"
 import OrderInfo from "@/components/OrderInfo"
 import Footer from "@/components/Footer"
+import { useSession } from "next-auth/react"
 
 const StyledRow = styled.div`
   display: grid;
@@ -35,7 +36,9 @@ const Notice = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  h2 {
+    margin-bottom: 1rem;
+  }
 `
 
 export default function CartPage() {
@@ -43,6 +46,28 @@ export default function CartPage() {
   const {cartProducts, clearCart} = useContext(CartContext);
   const [products, setProducts] = useState([]);
   const [w, setW] = useState({}); //window object
+  const [accountInfo, setAccountInfo] = useState(false);
+
+
+  const {data: session} = useSession();
+
+  useEffect(() => {
+    if (session?.user) {
+      axios.get('/api/account?email=' + session?.user?.email).then(response => {
+        setAccountInfo(response.data);
+        if (!response.data) {
+          axios.post('/api/account', {
+            email: session?.user?.email,
+            name: session?.user?.name,
+            orders: []
+          }).then(response => {
+            setAccountInfo(response.data);
+          })
+        }
+      })
+    }
+  }, [session])
+  
 
   useEffect(() => {
     if (cartProducts?.length > 0) {
@@ -54,10 +79,13 @@ export default function CartPage() {
       setProducts([]);
     }
     setW(window);
-  }, [cartProducts])
+  }, [cartProducts]);
 
   if (w.location?.href.includes('success')) {
-    clearCart();
+    if (cartProducts?.length > 0) {
+      clearCart();
+      w.localStorage.removeItem('cart');
+    }
     return (
       <>
         <Header/>
@@ -65,6 +93,9 @@ export default function CartPage() {
           <Notice>
             <h2>Thanks for your order!</h2>
             <p>We will email you when your order will be sent.</p>
+            {accountInfo && (
+              <p>You can also check your order in your <a href="/account/orders">account</a>.</p>
+            )}
           </Notice>
         </Container>
         <Footer/>

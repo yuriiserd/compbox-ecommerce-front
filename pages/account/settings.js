@@ -27,13 +27,14 @@ export default function SettingsPage() {
         setAccountInfo(response.data);
       })
     }
-  }, [])
+  }, [session])
 
   useEffect(() => {
     setSaved(false);
   }, [accountInfo])
 
   async function saveInfo() {
+
     await axios.post('/api/account', accountInfo).then(() => {
       setSaved(true);
     });
@@ -47,7 +48,7 @@ export default function SettingsPage() {
           <Input placeholder=" " type="text" name="Name" onChange={(event) => setAccountInfo(info => {
             return {...info, name: event.target.value}
           })}
-          value={accountInfo.name || ''}
+          value={accountInfo?.name || ''}
           />
           <label>Name</label>
         </div>
@@ -55,7 +56,7 @@ export default function SettingsPage() {
           <Input placeholder=" " type="email" name="Phone" onChange={(event) => setAccountInfo(info => {
             return {...info, phone: event.target.value}
           })}
-          value={accountInfo.phone || ''}
+          value={accountInfo?.phone || ''}
           />
           <label>Phone</label>
         </div>
@@ -63,7 +64,7 @@ export default function SettingsPage() {
           <Input placeholder=" " type="email" name="Email" onChange={(event) => setAccountInfo(info => {
             return {...info, email: event.target.value}
           })}
-          value={accountInfo.email || ''}
+          value={accountInfo?.email || ''}
           />
           <label>Email</label>
         </div>
@@ -72,7 +73,7 @@ export default function SettingsPage() {
             <Input placeholder=" " type="text" name="City" onChange={(event) => setAccountInfo(info => {
               return {...info, city: event.target.value}
             })}
-            value={accountInfo.city || ''}
+            value={accountInfo?.city || ''}
             />
             <label>City</label>
           </div>
@@ -80,7 +81,7 @@ export default function SettingsPage() {
             <Input placeholder=" " type="text" name="Zip" onChange={(event) => setAccountInfo(info => {
               return {...info, zip: event.target.value}
             })}
-            value={accountInfo.zip || ''}
+            value={accountInfo?.zip || ''}
             />
             <label>ZiP code</label>
           </div>
@@ -89,7 +90,7 @@ export default function SettingsPage() {
           <Input placeholder=" " type="text" name="Address" onChange={(event) => setAccountInfo(info => {
             return {...info, address: event.target.value}
           })}
-          value={accountInfo.address || ''}
+          value={accountInfo?.address || ''}
           />
           <label>Adress</label>
         </div>
@@ -97,7 +98,7 @@ export default function SettingsPage() {
           <Input placeholder=" " type="text" name="Country" onChange={(event) => setAccountInfo(info => {
             return {...info, country: event.target.value}
           })}
-          value={accountInfo.country || ''}
+          value={accountInfo?.country || ''}
           />
           <label>Country</label>
         </div>

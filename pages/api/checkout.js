@@ -51,6 +51,7 @@ export default async function handler(req, res) {
     address, 
     country, 
     paid: false,
+    status: 'Pending'
   })
 
   //add oreder to customer

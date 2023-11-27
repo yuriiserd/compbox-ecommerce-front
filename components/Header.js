@@ -159,7 +159,7 @@ export default function Header() {
     await signIn(provider, {callbackUrl: '/account'});
   }
   async function logout() {
-    await signOut({callbackUrl: '/account'});
+    await signOut({callbackUrl: '/'});
   }
 
   return (
