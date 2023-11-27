@@ -20,6 +20,7 @@ import LoadMoreBtn from "@/components/LoadMoreBtn";
 import { useDispatch } from "react-redux";
 import { updateFilters } from "@/slices/filtersSlice";
 import useNormalizeFilterQuery from "@/hooks/useNormalizeFilterQuery";
+import Layout from "@/components/Layout";
 
 const StyledTitle = styled.div`
   a {
@@ -146,54 +147,50 @@ export default function CategoryPage({
   }
 
   return (
-    <>
-      <Header/>
-      <Container>
-        <StyledTitle>
-          {category.parent === topLevelCategoryId && (
-            <Link href={`/categories`}><BackArrowIcon/> Back</Link>
-          )}
-          {category.parent !== topLevelCategoryId && (
-            <Link href={`/category/${category.parent}`}><BackArrowIcon/> Back</Link>
-          )}
-          <Title>{category.name}</Title>
-        </StyledTitle>
-        <CategoriesGrid colums={7} categories={categoryChildrens}/>
-        {!!category.childrens.length && (
-          <Devider/>
+    <Layout>
+      <StyledTitle>
+        {category.parent === topLevelCategoryId && (
+          <Link href={`/categories`}><BackArrowIcon/> Back</Link>
         )}
-        <SelectedFilters
-          productsCount={productsCount}
-          setProductsCount={setProductsCount} 
-          category={category} 
-          filterProducts={filtered => {
-            setPageNumber(1)
-            setProducts(filtered)
-          }}
-        />
-        <Row>
-          {showFilters && (
-            <ProductFilters 
-              range={priceRange} 
-              setProductsCount={setProductsCount} 
-              properties={properties} 
-              category={category} 
-              filterProducts={filtered => {
-                setPageNumber(1)
-                setProducts(filtered)
-              }}
-            />
+        {category.parent !== topLevelCategoryId && (
+          <Link href={`/category/${category.parent}`}><BackArrowIcon/> Back</Link>
+        )}
+        <Title>{category.name}</Title>
+      </StyledTitle>
+      <CategoriesGrid colums={7} categories={categoryChildrens}/>
+      {!!category.childrens.length && (
+        <Devider/>
+      )}
+      <SelectedFilters
+        productsCount={productsCount}
+        setProductsCount={setProductsCount} 
+        category={category} 
+        filterProducts={filtered => {
+          setPageNumber(1)
+          setProducts(filtered)
+        }}
+      />
+      <Row>
+        {showFilters && (
+          <ProductFilters 
+            range={priceRange} 
+            setProductsCount={setProductsCount} 
+            properties={properties} 
+            category={category} 
+            filterProducts={filtered => {
+              setPageNumber(1)
+              setProducts(filtered)
+            }}
+          />
+        )}
+        <div>
+          <ProductsGrid products={products}/>
+          {products.length < productsCount && (
+            <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>
           )}
-          <div>
-            <ProductsGrid products={products}/>
-            {products.length < productsCount && (
-              <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>
-            )}
-          </div>
-        </Row>
-      </Container>
-      <Footer/>
-    </>
+        </div>
+      </Row>
+    </Layout>
   )
 }
 

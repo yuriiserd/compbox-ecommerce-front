@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import LoadMoreBtn from "@/components/LoadMoreBtn";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Layout from "@/components/Layout";
 
 export default function ProductsPage({products}) {
 
@@ -58,17 +59,13 @@ export default function ProductsPage({products}) {
   }
   
   return (
-    <>
-      <Header/>
-      <Container>
-        <Title>New Products</Title>
-        <ProductsGrid products={productsToShow}/>
-        {productsCount > productsToShow.length && (
-          <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>
-        )}
-      </Container>
-      <Footer/>
-    </>
+    <Layout>
+      <Title>New Products</Title>
+      <ProductsGrid products={productsToShow}/>
+      {productsCount > productsToShow.length && (
+        <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>
+      )}
+    </Layout>
   )
 }
 

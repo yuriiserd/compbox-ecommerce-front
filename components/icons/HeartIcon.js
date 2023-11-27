@@ -7,8 +7,10 @@ export default function({liked}) {
   useEffect(() => {
     if (liked) {
       setColor("#010c80")
+    } else {
+      setColor("none")
     }
-  }, [])
+  }, [liked])
 
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill={color} viewBox="0 0 24 24" strokeWidth={1.5} stroke={liked ? color : "currentColor"} className="w-6 h-6">

@@ -13,6 +13,7 @@ import Button from "./Button";
 import Search from "./Search";
 import { signIn, signOut, useSession } from "next-auth/react";
 import LogoutIcon from "./icons/LogoutIcon";
+import HeartIcon from "./icons/HeartIcon";
 
 const StyledHeader = styled.header`
   background-color: #fff;
@@ -135,6 +136,7 @@ const LoginModal = styled.div`
   border: 1px solid ${primaryLight} !important;
   background-color: #fff;
   padding: 2rem 1rem;
+  z-index: 101;
   div {
     button {
       padding: 0.5rem 1rem;
@@ -146,6 +148,14 @@ const LoginModal = styled.div`
       background-color: #CB4023;
     }
   }
+`
+const ModalOverlay = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 100;
 `
 
 export default function Header() {
@@ -182,7 +192,9 @@ export default function Header() {
                 <CartIcon/>
                 {cartProducts.length > 0 && (
                   <span>{cartProducts.length}</span>
-                )}</Cart>
+                )}
+              </Cart>
+              <Link href={"/liked/"}><HeartIcon/></Link>
               {session ? (
                 <Profile>
                   <Link href={"/account/"}><Image src={session?.user?.image} width={30} height={30} alt={session?.user?.name}/></Link>
@@ -195,13 +207,16 @@ export default function Header() {
                 <>
                   <button onClick={() => setLoginModal(true)}><UserIcon/></button>
                   {loginModal && (
-                    <LoginModal>
-                      <p>Login with:</p>
-                      <div>
-                        <Button onClick={() => login('facebook')}>Facebook</Button>
-                        <Button onClick={() => login('google')}>Google</Button>
-                      </div>
-                    </LoginModal>
+                    <>
+                      <LoginModal>
+                        <p>Login with:</p>
+                        <div>
+                          <Button onClick={() => login('facebook')}>Facebook</Button>
+                          <Button onClick={() => login('google')}>Google</Button>
+                        </div>
+                      </LoginModal>
+                      <ModalOverlay onClick={() => setLoginModal(false)}></ModalOverlay>
+                    </>
                   )}
                 </>
               )}

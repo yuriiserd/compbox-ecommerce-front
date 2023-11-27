@@ -8,6 +8,7 @@ import CartList from "@/components/CartList"
 import OrderInfo from "@/components/OrderInfo"
 import Footer from "@/components/Footer"
 import { useSession } from "next-auth/react"
+import Layout from "@/components/Layout"
 
 const StyledRow = styled.div`
   display: grid;
@@ -87,46 +88,37 @@ export default function CartPage() {
       w.localStorage.removeItem('cart');
     }
     return (
-      <>
-        <Header/>
-        <Container>
-          <Notice>
-            <h2>Thanks for your order!</h2>
-            <p>We will email you when your order will be sent.</p>
-            {accountInfo && (
-              <p>You can also check your order in your <a href="/account/orders">account</a>.</p>
-            )}
-          </Notice>
-        </Container>
-        <Footer/>
-      </>
+      <Layout>
+        <Notice>
+          <h2>Thanks for your order!</h2>
+          <p>We will email you when your order will be sent.</p>
+          {accountInfo && (
+            <p>You can also check your order in your <a href="/account/orders">account</a>.</p>
+          )}
+        </Notice>
+      </Layout>
     )
   }
 
   return (
-    <>
-      <Header/>
-      <Container>
-        {!cartProducts?.length && (
-          <Notice>
-            <h2>Your cart is empty</h2>
-          </Notice>
-        )}
-        {!!products?.length && (
-          <StyledRow>
-            <div>
-              <h2>Cart</h2>
-              <CartList products={products} cart={cartProducts} />
-            </div>
-            <div>
-              <h2>Order information</h2>
-              <OrderInfo products={cartProducts}/>
-            </div>
-          </StyledRow>
-        )}
-        
-      </Container>
-      <Footer/>
-    </>
+    <Layout>
+      {!cartProducts?.length && (
+        <Notice>
+          <h2>Your cart is empty</h2>
+        </Notice>
+      )}
+      {!!products?.length && (
+        <StyledRow>
+          <div>
+            <h2>Cart</h2>
+            <CartList products={products} cart={cartProducts} />
+          </div>
+          <div>
+            <h2>Order information</h2>
+            <OrderInfo products={cartProducts}/>
+          </div>
+        </StyledRow>
+      )}
+    </Layout>
   )
 }

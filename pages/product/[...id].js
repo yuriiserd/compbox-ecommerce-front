@@ -13,6 +13,7 @@ import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
 import { useContext, useState } from "react";
 import styled from "styled-components";
+import Layout from "@/components/Layout";
 
 
 
@@ -138,71 +139,67 @@ export default function ProductPage({product}) {
   const liked = likedProducts.find(itemId => itemId === product._id);
   
   return (
-    <>
-      <Header/>
-      <Container>
-        <Breadcrumbs product={product}/>
-        <Row>
+    <Layout>
+      <Breadcrumbs product={product}/>
+      <Row>
+        <div>
+          <ImageGallary images={product.images}/>
+          <hr/>
+          <Title>Reviews</Title>
+          TODO
+        </div>
+        <ProductInfo>
+          <Title>{product.properties["Brand"]} {product.title}</Title>
+
+          {product.salePrice && (
+            <Sale><span>${product.price}</span>${product.salePrice}</Sale>
+          )}
+          {!product.salePrice && (
+            <b>${product.price}</b>
+          )}
+          
           <div>
-            <ImageGallary images={product.images}/>
-            <hr/>
-            <Title>Reviews</Title>
-            TODO
+            <Button $size={'md'} onClick={(event) => {
+              event.preventDefault();
+              addToCart(product._id);
+            }}>
+              <CartIcon/> Buy Now
+            </Button>
+            <Button $white $icon $size={'md'} onClick={() => {
+              addToLiked(product._id);
+            }}>
+              <HeartIcon liked={liked}/>
+            </Button>
           </div>
-          <ProductInfo>
-            <Title>{product.properties["Brand"]} {product.title}</Title>
-
-            {product.salePrice && (
-              <Sale><span>${product.price}</span>${product.salePrice}</Sale>
-            )}
-            {!product.salePrice && (
-              <b>${product.price}</b>
-            )}
-            
-            <div>
-              <Button $size={'md'} onClick={(event) => {
-                event.preventDefault();
-                addToCart(product._id);
-              }}>
-                <CartIcon/> Buy Now
-              </Button>
-              <Button $white $icon $size={'md'} onClick={() => {
-                addToLiked(product._id);
-              }}>
-                <HeartIcon liked={liked}/>
-              </Button>
-            </div>
+          <hr/>
+          <Properties>
+            {/* {product.properties.map(property => )} */}
+            {Object.keys(product.properties).map(property => (
+              <li key={property}>
+                <div><span>{property}</span></div>
+                <div>{product.properties[property]}</div>
+              </li>
+            ))}
+          </Properties>
+          {!!Object.keys(product.properties).length && (
             <hr/>
-            <Properties>
-              {/* {product.properties.map(property => )} */}
-              {Object.keys(product.properties).map(property => (
-                <li key={property}>
-                  <div><span>{property}</span></div>
-                  <div>{product.properties[property]}</div>
-                </li>
-              ))}
-            </Properties>
-            {!!Object.keys(product.properties).length && (
-              <hr/>
+          )}
+          <Description>
+            {product.description}
+            {contentHidden && (
+              <>
+                <span></span>
+                <button onClick={() => setContentHidden(false)}>read more</button>
+              </>
             )}
-            <Description>
-              {product.description}
-              {contentHidden && (
-                <>
-                  <span></span>
-                  <button onClick={() => setContentHidden(false)}>read more</button>
-                </>
-              )}
 
-            </Description>
-            {!contentHidden && (
-              <div dangerouslySetInnerHTML={{ __html: product.content }} />
-            )}
-          </ProductInfo>
-        </Row>
-      </Container>
-      <Footer/>
-    </>
+          </Description>
+          {!contentHidden && (
+            <div dangerouslySetInnerHTML={{ __html: product.content }} />
+          )}
+        </ProductInfo>
+      </Row>
+    </Layout>
   )
 }
 
