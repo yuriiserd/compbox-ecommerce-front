@@ -1,5 +1,7 @@
 import styled from "styled-components"
 import ProductCard from "./ProductCard"
+import { use, useEffect, useState } from "react";
+import Spinner from "./Spinner";
 
 const StyledGrid = styled.div`
     display: grid;
@@ -23,15 +25,30 @@ const StyledGrid = styled.div`
   `
 
 export default function ProductsGrid({products}) {
-  
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (products.length > 0) {
+      setLoading(false);
+    } else {
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000)
+    }
+  }, [products])
+
   return (
     <>
-      {!products.length && (
+      {products.length === 0 && !loading && (
         <NotFound>No products found &#9785;</NotFound>
       )}
       <StyledGrid>
         {products.map(product => <ProductCard key={product._id} product={product}/>)}
       </StyledGrid>
+      {loading && (
+        <Spinner/>
+      )}
     </>
   )
 }

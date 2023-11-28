@@ -81,7 +81,6 @@ export default function ProductCard({product}) {
   const {addToCart} = useContext(CartContext);
   const {likedProducts, addToLiked} = useContext(LikedContext);
   
-  //TODO make liked with no rerender other products
   const liked = likedProducts.find(itemId => itemId === product._id);
 
   
@@ -89,6 +88,7 @@ export default function ProductCard({product}) {
 
   return (
     <StyledCard href={`/product/${product._id}`}>
+      
       <Button $white $icon $size={'sm'} onClick={(event) => {
         event.preventDefault();
         addToLiked(product._id);
@@ -113,7 +113,9 @@ export default function ProductCard({product}) {
         }}>
           <CartIcon/>
         </Button>
+        
       </div>
+      {/* <small>{product._id}</small> */}
     </StyledCard>
   )
 }

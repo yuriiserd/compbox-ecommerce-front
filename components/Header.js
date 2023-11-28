@@ -6,7 +6,7 @@ import Container from "./Container";
 import CartIcon from "./icons/CartIcon";
 import UserIcon from "./icons/UserIcon";
 import { primary, primaryLight } from "@/lib/colors";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { CartContext } from "./CartContext";
 import SearchIcon from "./icons/SearchIcon";
 import Button from "./Button";
@@ -27,9 +27,6 @@ const StyledHeader = styled.header`
     padding: 30px 0;
   }
 `;
-const StyledMargin = styled.div`
-  height: 85px;
-`
 const StyledNav = styled.nav`
   display: flex;
   justify-content: space-between;
@@ -164,6 +161,8 @@ export default function Header() {
   const [showSearch, setShowSearch] = useState(false);
   const {data: session} = useSession();
   const [loginModal, setLoginModal] = useState(false);
+
+  const headerRef = useRef(null); // for sticky header
   
   async function login(provider) {
     await signIn(provider, {callbackUrl: '/account'});
@@ -172,9 +171,14 @@ export default function Header() {
     await signOut({callbackUrl: '/'});
   }
 
+  //set margin height base on header height
+  const StyledMargin = styled.div`
+    height: ${headerRef.current?.offsetHeight}px;
+  `
+
   return (
     <>
-      <StyledHeader>
+      <StyledHeader ref={headerRef}>
         <Container>
           <Logo href={"/"} >
             <Image src={logo} width={150} height={60} alt="CompBox"/>
@@ -194,7 +198,7 @@ export default function Header() {
                   <span>{cartProducts.length}</span>
                 )}
               </Cart>
-              <Link href={"/liked/"}><HeartIcon/></Link>
+              <Link href={session?.user ? "/account/liked/" : "/liked/"}><HeartIcon/></Link>
               {session ? (
                 <Profile>
                   <Link href={"/account/"}><Image src={session?.user?.image} width={30} height={30} alt={session?.user?.name}/></Link>

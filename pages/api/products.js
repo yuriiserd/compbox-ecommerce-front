@@ -25,6 +25,11 @@ export default async function handler(req,res) {
 
       res.json(products);
     }
+    if (req.query?.ids) {
+      const ids = req.query.ids.split(',');
+      const products = await Product.find({_id: {$in: ids}});
+      res.json(products);
+    }
     
   }
   if (method === "POST") { // for filters on single category page

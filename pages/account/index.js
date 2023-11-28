@@ -60,7 +60,8 @@ export default function AccountPage() {
           axios.post('/api/account', {
             name: session?.user?.name,
             email: session?.user?.email,
-            orders: []
+            orders: [],
+            likedProducts: [],
           }).then(response => {
             setAccountInfo(response.data);
           })
@@ -83,8 +84,12 @@ export default function AccountPage() {
           
           <h3>Info</h3>
           <p><b>Email:</b>  {accountInfo?.email}</p>
-          <p><b>Phone:</b>  {accountInfo?.phone}</p>
-          <p><b>Address:</b>  {accountInfo?.country}, {accountInfo?.city}, {accountInfo?.address}</p>
+          {accountInfo?.phone && (
+            <p><b>Phone:</b>  {accountInfo?.phone}</p>
+          )}
+          {accountInfo?.country && accountInfo?.city && accountInfo?.address && (
+             <p><b>Address:</b>  {accountInfo?.country}, {accountInfo?.city}, {accountInfo?.address}</p>
+          )}
           <Link href="/account/settings" $white>Edit</Link>
         </div>
         <div>

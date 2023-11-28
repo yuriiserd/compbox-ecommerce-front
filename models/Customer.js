@@ -8,7 +8,8 @@ const CustomerSchema = new Schema({
   zip: {type: String},
   address: {type: String},
   country: {type: String},
-  orders: []
+  orders: [],
+  likedProducts: [],
 });
 
 export const Customer = models?.Customer || model('Customer', CustomerSchema);
