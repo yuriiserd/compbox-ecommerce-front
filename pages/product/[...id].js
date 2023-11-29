@@ -132,11 +132,12 @@ export default function ProductPage({product}) {
   `
 
   
-  const {addToCart} = useContext(CartContext);
+  const {cartProducts, addToCart} = useContext(CartContext);
   const {likedProducts, addToLiked} = useContext(LikedContext);
   const [contentHidden, setContentHidden] = useState(true);
 
   const liked = likedProducts.find(itemId => itemId === product._id);
+  const cart = cartProducts.find(itemId => itemId === product._id);
   
   return (
     <Layout>
@@ -163,7 +164,7 @@ export default function ProductPage({product}) {
               event.preventDefault();
               addToCart(product._id);
             }}>
-              <CartIcon/> Buy Now
+              <CartIcon inCart={cart} color={"#ffffff"}/> Add to Cart
             </Button>
             <Button $white $icon $size={'md'} onClick={() => {
               addToLiked(product._id);

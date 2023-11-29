@@ -21,6 +21,7 @@ import { useDispatch } from "react-redux";
 import { updateFilters } from "@/slices/filtersSlice";
 import useNormalizeFilterQuery from "@/hooks/useNormalizeFilterQuery";
 import Layout from "@/components/Layout";
+import Spinner from "@/components/Spinner";
 
 const StyledTitle = styled.div`
   a {
@@ -65,6 +66,7 @@ export default function CategoryPage({
   const [showFilters, setShowFilters] = useState(false);
   const [priceRange, setPriceRange] = useState('');
   const [productsCount, setProductsCount] = useState(0);
+  const [loading, setLoading] = useState(false);
   
   const router = useRouter();
   
@@ -132,6 +134,7 @@ export default function CategoryPage({
   },[pageNumber])
 
   async function LoadProducts() {
+    setLoading(true);
     setPageNumber(prev => parseInt(prev) + 1);
     const filters = router.query;
     delete filters.page;
@@ -143,6 +146,7 @@ export default function CategoryPage({
           ...res.data
         ]
       })
+      setLoading(false);
     })
   }
 
@@ -186,7 +190,9 @@ export default function CategoryPage({
         <div>
           <ProductsGrid products={products}/>
           {products.length < productsCount && (
-            <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>
+            <>
+              {loading ? <Spinner/> : <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>}
+            </>
           )}
         </div>
       </Row>

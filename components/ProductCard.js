@@ -78,11 +78,11 @@ const StyledCard = styled(Link)`
 
 export default function ProductCard({product}) {
 
-  const {addToCart} = useContext(CartContext);
+  const {cartProducts, addToCart} = useContext(CartContext);
   const {likedProducts, addToLiked} = useContext(LikedContext);
   
   const liked = likedProducts.find(itemId => itemId === product._id);
-
+  const cart = cartProducts.find(itemId => itemId === product._id); 
   
   
 
@@ -111,7 +111,7 @@ export default function ProductCard({product}) {
           event.preventDefault();
           addToCart(product._id);
         }}>
-          <CartIcon/>
+          <CartIcon inCart={cart}/>
         </Button>
         
       </div>

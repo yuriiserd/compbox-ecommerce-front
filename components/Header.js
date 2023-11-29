@@ -173,7 +173,7 @@ export default function Header() {
 
   //set margin height base on header height
   const StyledMargin = styled.div`
-    height: ${headerRef.current?.offsetHeight}px;
+    height: ${headerRef.current?.offsetHeight || 95}px;
   `
 
   return (

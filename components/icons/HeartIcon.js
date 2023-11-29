@@ -1,3 +1,4 @@
+import { url } from "@/lib/colors";
 import { useEffect, useState } from "react"
 
 export default function({liked}) {
@@ -6,7 +7,7 @@ export default function({liked}) {
 
   useEffect(() => {
     if (liked) {
-      setColor("#010c80")
+      setColor(url)
     } else {
       setColor("none")
     }
