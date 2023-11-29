@@ -12,11 +12,14 @@ import { useRouter } from "next/router";
 import LoadMoreBtn from "@/components/LoadMoreBtn";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Layout from "@/components/Layout";
+import Spinner from "@/components/Spinner";
 
 export default function ProductsPage({products}) {
 
   const [productsToShow, setProductsToShow] = useState(products);
-  const [productsCount, setProductsCount] = useState(0)
+  const [productsCount, setProductsCount] = useState(0);
+  const [loading, setLoading] = useState(false);
   
   const router = useRouter();
 
@@ -46,6 +49,7 @@ export default function ProductsPage({products}) {
   },[pageNumber])
 
   async function LoadProducts() {
+    setLoading(true);
     setPageNumber(prev => parseInt(prev) + 1);
     axios.get("/api/products?page=" + pageNumber).then(res => {
       setProductsToShow(prev => {
@@ -54,21 +58,20 @@ export default function ProductsPage({products}) {
           ...res.data
         ]
       })
+      setLoading(false);
     })
   }
   
   return (
-    <>
-      <Header/>
-      <Container>
-        <Title>New Products</Title>
-        <ProductsGrid products={productsToShow}/>
-        {productsCount > productsToShow.length && (
-          <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>
-        )}
-      </Container>
-      <Footer/>
-    </>
+    <Layout>
+      <Title>New Products</Title>
+      <ProductsGrid products={productsToShow}/>
+      {productsCount > productsToShow.length && (
+        <>
+          {loading ? <Spinner/> : <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>}
+        </>
+      )}
+    </Layout>
   )
 }
 

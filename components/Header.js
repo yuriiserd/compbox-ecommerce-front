@@ -6,13 +6,14 @@ import Container from "./Container";
 import CartIcon from "./icons/CartIcon";
 import UserIcon from "./icons/UserIcon";
 import { primary, primaryLight } from "@/lib/colors";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { CartContext } from "./CartContext";
 import SearchIcon from "./icons/SearchIcon";
 import Button from "./Button";
 import Search from "./Search";
 import { signIn, signOut, useSession } from "next-auth/react";
 import LogoutIcon from "./icons/LogoutIcon";
+import HeartIcon from "./icons/HeartIcon";
 
 const StyledHeader = styled.header`
   background-color: #fff;
@@ -26,9 +27,6 @@ const StyledHeader = styled.header`
     padding: 30px 0;
   }
 `;
-const StyledMargin = styled.div`
-  height: 85px;
-`
 const StyledNav = styled.nav`
   display: flex;
   justify-content: space-between;
@@ -135,6 +133,7 @@ const LoginModal = styled.div`
   border: 1px solid ${primaryLight} !important;
   background-color: #fff;
   padding: 2rem 1rem;
+  z-index: 101;
   div {
     button {
       padding: 0.5rem 1rem;
@@ -147,6 +146,14 @@ const LoginModal = styled.div`
     }
   }
 `
+const ModalOverlay = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 100;
+`
 
 export default function Header() {
 
@@ -154,6 +161,8 @@ export default function Header() {
   const [showSearch, setShowSearch] = useState(false);
   const {data: session} = useSession();
   const [loginModal, setLoginModal] = useState(false);
+
+  const headerRef = useRef(null); // for sticky header
   
   async function login(provider) {
     await signIn(provider, {callbackUrl: '/account'});
@@ -162,9 +171,14 @@ export default function Header() {
     await signOut({callbackUrl: '/'});
   }
 
+  //set margin height base on header height
+  const StyledMargin = styled.div`
+    height: ${headerRef.current?.offsetHeight || 95}px;
+  `
+
   return (
     <>
-      <StyledHeader>
+      <StyledHeader ref={headerRef}>
         <Container>
           <Logo href={"/"} >
             <Image src={logo} width={150} height={60} alt="CompBox"/>
@@ -182,7 +196,9 @@ export default function Header() {
                 <CartIcon/>
                 {cartProducts.length > 0 && (
                   <span>{cartProducts.length}</span>
-                )}</Cart>
+                )}
+              </Cart>
+              <Link href={session?.user ? "/account/liked/" : "/liked/"}><HeartIcon/></Link>
               {session ? (
                 <Profile>
                   <Link href={"/account/"}><Image src={session?.user?.image} width={30} height={30} alt={session?.user?.name}/></Link>
@@ -195,13 +211,16 @@ export default function Header() {
                 <>
                   <button onClick={() => setLoginModal(true)}><UserIcon/></button>
                   {loginModal && (
-                    <LoginModal>
-                      <p>Login with:</p>
-                      <div>
-                        <Button onClick={() => login('facebook')}>Facebook</Button>
-                        <Button onClick={() => login('google')}>Google</Button>
-                      </div>
-                    </LoginModal>
+                    <>
+                      <LoginModal>
+                        <p>Login with:</p>
+                        <div>
+                          <Button onClick={() => login('facebook')}>Facebook</Button>
+                          <Button onClick={() => login('google')}>Google</Button>
+                        </div>
+                      </LoginModal>
+                      <ModalOverlay onClick={() => setLoginModal(false)}></ModalOverlay>
+                    </>
                   )}
                 </>
               )}

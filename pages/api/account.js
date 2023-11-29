@@ -5,11 +5,11 @@ export default async function handler(req,res) {
   await mongooseConnect();
   const method = req.method;
   if (method === 'POST') {
-    if (req.body?._id) {
-      const customer = await Customer.updateOne({_id: req.body._id}, {...req.body});
+    if (req.body?.email) {
+      const customer = await Customer.updateOne({email: req.body.email}, {...req.body});
       res.json(customer);
     } else {
-      const customer = await Customer.create({...req.body, orders: []});
+      const customer = await Customer.create({...req.body, orders: [], likedProducts: []});
       res.json(customer);
     }
   }

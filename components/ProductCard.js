@@ -78,17 +78,17 @@ const StyledCard = styled(Link)`
 
 export default function ProductCard({product}) {
 
-  const {addToCart} = useContext(CartContext);
+  const {cartProducts, addToCart} = useContext(CartContext);
   const {likedProducts, addToLiked} = useContext(LikedContext);
   
-  //TODO make liked with no rerender other products
   const liked = likedProducts.find(itemId => itemId === product._id);
-
+  const cart = cartProducts.find(itemId => itemId === product._id); 
   
   
 
   return (
     <StyledCard href={`/product/${product._id}`}>
+      
       <Button $white $icon $size={'sm'} onClick={(event) => {
         event.preventDefault();
         addToLiked(product._id);
@@ -111,9 +111,11 @@ export default function ProductCard({product}) {
           event.preventDefault();
           addToCart(product._id);
         }}>
-          <CartIcon/>
+          <CartIcon inCart={cart}/>
         </Button>
+        
       </div>
+      {/* <small>{product._id}</small> */}
     </StyledCard>
   )
 }

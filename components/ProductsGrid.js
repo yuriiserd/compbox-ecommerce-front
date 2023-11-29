@@ -23,10 +23,10 @@ const StyledGrid = styled.div`
   `
 
 export default function ProductsGrid({products}) {
-  
+
   return (
     <>
-      {!products.length && (
+      {products.length === 0 && (
         <NotFound>No products found &#9785;</NotFound>
       )}
       <StyledGrid>

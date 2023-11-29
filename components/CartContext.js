@@ -8,18 +8,21 @@ export function CartContextProvider({children}) {
   const [cartProducts, setCartProducts] = useState([]);
 
   useEffect(() => {
-    if (cartProducts?.length > 0) {
-      lStorage?.setItem('cart', JSON.stringify(cartProducts));
-    } else {
-      lStorage?.removeItem('cart');
-    }
-  }, [cartProducts]);
-
-  useEffect(() => {
     if (lStorage && lStorage.getItem('cart')) {
       setCartProducts(JSON.parse(lStorage?.getItem('cart')))
     }
   }, [])
+
+  useEffect(() => {
+    if (cartProducts?.length > 0) {
+      lStorage?.setItem('cart', JSON.stringify(cartProducts));
+    } else {
+      console.log('remove')
+      lStorage?.removeItem('cart');
+    }
+  }, [cartProducts]);
+
+  
 
   function addToCart(id) {
     setCartProducts(prev => [...prev, id])

@@ -13,6 +13,7 @@ import UserIcon from "./icons/UserIcon";
 import SettingsIcon from "./icons/SettingsIcon";
 import OrdersIcon from "./icons/OrdersIcon";
 import LogoutIcon from "./icons/LogoutIcon";
+import HeartIcon from "./icons/HeartIcon";
 
 const Row = styled.div`
   display: flex;
@@ -116,6 +117,11 @@ export default function AccountLayout(props) {
                 <Link href="/account/orders">
                   <OrdersIcon/>
                   Orders</Link>
+              </li>
+              <li>
+                <Link href="/account/liked">
+                  <HeartIcon/>
+                  Liked</Link>
               </li>
               <li>
                 <Link href="/account/settings">
