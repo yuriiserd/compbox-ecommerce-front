@@ -12,6 +12,7 @@ import CategoriesGrid from "@/components/CategoriesGrid";
 import Link from "next/link";
 import styled from "styled-components";
 import { url } from "@/lib/colors";
+import { Setting } from "@/models/Setting";
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -69,16 +70,17 @@ export default function HomePage({
 }
 
 export async function getServerSideProps() {
-  const featuredProductId = "64c01598d32dc66f2104b454";
+  const featuredProduct = await Setting.findOne({name: 'featuredProduct'});
+  const featuredProductId = featuredProduct.value;
   await mongooseConnect();
   const categories = await Category.find({parent: {_id: '64bac2f697faffcc04671e3c'}}, null, {sort: {order: 1}}).limit(4);
-  const featuredProduct = await Product.findById(featuredProductId);
+  const featuredProductDoc = await Product.findById(featuredProductId);
   const newProducts = await Product.find({}, null, {sort: {'_id': -1}}).limit(4);
 
 
   return {
     props: {
-      featuredProduct: JSON.parse(JSON.stringify(featuredProduct)),
+      featuredProduct: JSON.parse(JSON.stringify(featuredProductDoc)),
       categories: JSON.parse(JSON.stringify(categories)),
       newProducts: JSON.parse(JSON.stringify(newProducts)),
     }
