@@ -20,8 +20,8 @@ import LoadMoreBtn from "@/components/LoadMoreBtn";
 import { useDispatch } from "react-redux";
 import { updateFilters } from "@/slices/filtersSlice";
 import useNormalizeFilterQuery from "@/hooks/useNormalizeFilterQuery";
-import Layout from "@/components/Layout";
 import Spinner from "@/components/Spinner";
+import LayoutNoPreloader from "@/components/LayoutNoPreloader";
 
 const StyledTitle = styled.div`
   a {
@@ -151,7 +151,7 @@ export default function CategoryPage({
   }
 
   return (
-    <Layout>
+    <LayoutNoPreloader>
       <StyledTitle>
         {category.parent === topLevelCategoryId && (
           <Link href={`/categories`}><BackArrowIcon/> Back</Link>
@@ -196,7 +196,7 @@ export default function CategoryPage({
           )}
         </div>
       </Row>
-    </Layout>
+    </LayoutNoPreloader>
   )
 }
 

@@ -1,19 +1,15 @@
-import Header from "@/components/Header";
-import styled from "styled-components";
-import { primary } from "@/lib/colors";
-import Container from "@/components/Container";
 import ProductsGrid from "@/components/ProductsGrid";
 import { Product } from "@/models/Product";
 import { Category } from "@/models/Category";
 import { mongooseConnect } from "@/lib/mongoose";
 import Title from "@/components/Title";
-import Footer from "@/components/Footer";
 import { useRouter } from "next/router";
 import LoadMoreBtn from "@/components/LoadMoreBtn";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Layout from "@/components/Layout";
 import Spinner from "@/components/Spinner";
+import LayoutNoPreloader from "@/components/LayoutNoPreloader";
+import usePreloader from "@/hooks/usePreloader";
 
 export default function ProductsPage({products}) {
 
@@ -63,7 +59,7 @@ export default function ProductsPage({products}) {
   }
   
   return (
-    <Layout>
+    <LayoutNoPreloader>
       <Title>New Products</Title>
       <ProductsGrid products={productsToShow}/>
       {productsCount > productsToShow.length && (
@@ -71,7 +67,7 @@ export default function ProductsPage({products}) {
           {loading ? <Spinner/> : <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>}
         </>
       )}
-    </Layout>
+    </LayoutNoPreloader>
   )
 }
 

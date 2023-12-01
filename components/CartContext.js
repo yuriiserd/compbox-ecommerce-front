@@ -17,7 +17,6 @@ export function CartContextProvider({children}) {
     if (cartProducts?.length > 0) {
       lStorage?.setItem('cart', JSON.stringify(cartProducts));
     } else {
-      console.log('remove')
       lStorage?.removeItem('cart');
     }
   }, [cartProducts]);

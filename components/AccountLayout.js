@@ -14,6 +14,8 @@ import SettingsIcon from "./icons/SettingsIcon";
 import OrdersIcon from "./icons/OrdersIcon";
 import LogoutIcon from "./icons/LogoutIcon";
 import HeartIcon from "./icons/HeartIcon";
+import usePreloader from "@/hooks/usePreloader";
+import PageLoading from "./PageLoading";
 
 const Row = styled.div`
   display: flex;
@@ -98,47 +100,50 @@ export default function AccountLayout(props) {
     }
   }, [session]);
 
-
+  const loading = usePreloader();
 
   return (
     <>
       <Header/>
       <Container>
         <Title>Account</Title>
-        <Row>
-          <Navigation>
-            <ul>
-              <li>
-                <Link href="/account">
-                  <UserIcon/>
-                  Account</Link>
-              </li>
-              <li>
-                <Link href="/account/orders">
-                  <OrdersIcon/>
-                  Orders</Link>
-              </li>
-              <li>
-                <Link href="/account/liked">
-                  <HeartIcon/>
-                  Liked</Link>
-              </li>
-              <li>
-                <Link href="/account/settings">
-                  <SettingsIcon/>
-                  Settings</Link>
-              </li>
-              <li>
-                <button onClick={logout}>
-                  <LogoutIcon/>
-                  Logout</button>
-              </li>
-            </ul>
-          </Navigation>
-          <Content>
-            {props.children}
-          </Content>
-        </Row>
+        
+        {loading ? <PageLoading/> : (
+          <Row>
+            <Navigation>
+              <ul>
+                <li>
+                  <Link href="/account">
+                    <UserIcon/>
+                    Account</Link>
+                </li>
+                <li>
+                  <Link href="/account/orders">
+                    <OrdersIcon/>
+                    Orders</Link>
+                </li>
+                <li>
+                  <Link href="/account/liked">
+                    <HeartIcon/>
+                    Liked</Link>
+                </li>
+                <li>
+                  <Link href="/account/settings">
+                    <SettingsIcon/>
+                    Settings</Link>
+                </li>
+                <li>
+                  <button onClick={logout}>
+                    <LogoutIcon/>
+                    Logout</button>
+                </li>
+              </ul>
+            </Navigation>
+            <Content>
+              {props.children}
+            </Content>
+          </Row>
+        )}
       </Container>
       <Footer/>
     </>

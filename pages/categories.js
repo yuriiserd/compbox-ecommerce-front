@@ -5,23 +5,15 @@ import { Category } from "@/models/Category";
 import { mongooseConnect } from "@/lib/mongoose";
 import Title from "@/components/Title";
 import CategoriesGrid from "@/components/CategoriesGrid";
-import Footer from "@/components/Footer";
-import Head from "next/head";
+import Layout from "@/components/Layout";
 
 export default function CategoriesPage({categories}) {
   
   return (
-    <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-      <Header/>
-      <Container>
-        <Title>Categories</Title>
-        <CategoriesGrid categories={categories}/>
-      </Container>
-      <Footer/>
-    </>
+    <Layout>
+      <Title>Categories</Title>
+      <CategoriesGrid categories={categories}/>
+    </Layout>
   )
 }
 
