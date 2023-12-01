@@ -8,6 +8,7 @@ import Image from "next/image";
 
 const StyledFooter = styled.footer`
   margin-top: auto;
+  position: relative;
   &>div {
     background: linear-gradient(30deg, #2D1E1E 0%, #0A0A0A 100%);
     color: #fff;

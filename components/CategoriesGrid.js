@@ -30,6 +30,7 @@ export default function CategoriesGrid({categories, colums}) {
       color: ${url};
       text-decoration: none;
       text-align: center;
+      overflow: hidden;
       &:hover {
         text-decoration: underline;
       }

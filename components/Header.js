@@ -19,7 +19,7 @@ const StyledHeader = styled.header`
   background-color: #fff;
   border-bottom: 1px solid #ffffff;
   position: fixed;
-  z-index: 100;
+  z-index: 1001;
   top: 0;
   left: 0;
   width: 100%;
