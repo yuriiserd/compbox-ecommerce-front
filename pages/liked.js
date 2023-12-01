@@ -26,9 +26,6 @@ export default function Liked() {
       {products.length > 0 && (
         <ProductsGrid products={products}/>
       )}
-      {products.length === 0 && (
-        <NotFound>No products found &#9785;</NotFound>
-      )}
     </Layout>
   )
 }
