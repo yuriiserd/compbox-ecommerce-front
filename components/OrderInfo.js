@@ -11,7 +11,7 @@ const Flex = styled.div`
   gap: 0.7rem;
 `
 
-export default function OrderInfo({products}) {
+export default function OrderInfo({products, coupon}) {
 
   const [orderInfo, setOrderInfo] = useState({})
 
@@ -19,7 +19,7 @@ export default function OrderInfo({products}) {
   
 
   async function goToPayment() {
-    const data = {...orderInfo, products}; 
+    const data = {...orderInfo, products, coupon}; 
     const response = await axios.post('/api/checkout', data);
     if (response.data.url) {
       window.location = response.data.url

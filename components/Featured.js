@@ -10,12 +10,17 @@ const StyledDiv = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
+  gap: 2rem;
   h1 {
     margin-bottom: 20px;
   }
   p {
     margin-bottom: 20px;
     line-height: 1.7;
+  }
+  img {
+    max-height: 500px;
+    object-fit: contain;
   }
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -36,7 +41,7 @@ export default function Featured({product}) {
         <Button $white onClick={() => addToCart(product._id)}><CartIcon/>Buy Now</Button>
       </div>
       <div>
-        <Image src={product.images[0]} width={632} height={486} alt="macbook"/>
+        <Image src={product.images[0]} width={632} height={500} alt="macbook"/>
       </div>
     </StyledDiv>
   )

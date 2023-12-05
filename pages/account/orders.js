@@ -72,10 +72,13 @@ const Status = styled.span`
   margin-bottom: 0.4rem;
 `
 const Total = styled.h3`
-  display: flex;
-  justify-content: flex-end;
   margin-top: auto;
   margin-bottom: 0;
+  text-align: right;
+  span {
+    font-size: 1rem;
+    color: #797979;
+  }
 `
 
 
@@ -115,6 +118,9 @@ export default function OrdersPage() {
                   <p><b>Name:</b> {order.name}</p>
                   <p><b>Email:</b> {order.email}</p>
                   <p><b>Adress:</b> {order.country}, {order.city}, {order.address}</p>
+                  {order.coupon && (
+                    <p><b>Coupon:</b> {order.coupon.name} - {order.coupon.percent_off}%</p>
+                  )}
                 </div>
                 <div className="products">
                   <h3>Products</h3>
@@ -144,13 +150,22 @@ export default function OrdersPage() {
                             <div>
                               <p>Total</p>
                               {product.price_data.unit_amount / 100 * product.quantity}$
+                              
                             </div>
                           </div>
                         </OrderItem>
                       )
                     })}
                   </div>
-                  <Total>Total: {total}$</Total>
+                  {order.coupon ? (
+                      <Total>
+                        Total: <span>{total}$ - {order.coupon.percent_off}%</span> <br/> {total - total * order.coupon.percent_off / 100}$
+                      </Total>
+                    ) : (
+                      <Total>
+                        Total: {total}$
+                      </Total>
+                    )}
                 </div>
               </StyledOrder>
             )

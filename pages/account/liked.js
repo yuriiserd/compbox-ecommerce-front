@@ -46,7 +46,9 @@ export default function Liked() {
   return (
     <AccountLayout>
       <h2>Liked Products</h2>
-      <ProductsGrid products={products}/>
+      {products.length > 0 && (
+        <ProductsGrid products={products}/>
+      )}
     </AccountLayout>
   )
 }

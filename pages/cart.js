@@ -48,9 +48,14 @@ export default function CartPage() {
   const [products, setProducts] = useState([]);
   const [w, setW] = useState({}); //window object
   const [accountInfo, setAccountInfo] = useState(false);
+  const [coupon, setCoupon] = useState(null); //coupon object from CartList component
 
 
   const {data: session} = useSession();
+
+  useEffect(() => {
+    setW(window);
+  }, [])
 
   useEffect(() => {
     if (session?.user) {
@@ -79,10 +84,10 @@ export default function CartPage() {
     } else {
       setProducts([]);
     }
-    setW(window);
+    
   }, [cartProducts]);
 
-  if (w.location?.href.includes('success')) {
+  if (typeof w !== 'undefined' && w.location?.href.includes('success')) {
     if (cartProducts?.length > 0) {
       clearCart();
       w.localStorage.removeItem('cart');
@@ -111,11 +116,11 @@ export default function CartPage() {
         <StyledRow>
           <div>
             <h2>Cart</h2>
-            <CartList products={products} cart={cartProducts} />
+            <CartList products={products} cart={cartProducts} setCoupon={setCoupon}/>
           </div>
           <div>
             <h2>Order information</h2>
-            <OrderInfo products={cartProducts}/>
+            <OrderInfo products={cartProducts} coupon={coupon}/>
           </div>
         </StyledRow>
       )}
