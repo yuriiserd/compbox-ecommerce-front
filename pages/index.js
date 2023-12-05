@@ -47,11 +47,13 @@ export default function HomePage({
       <Header/>
       {loading ? <PageLoading/> : (
         <>
-          <Banner>
-            <Container>
-              <Featured product={featuredProduct}/>
-            </Container>
-          </Banner>
+          {featuredProduct && (
+            <Banner>
+              <Container>
+                <Featured product={featuredProduct}/>
+              </Container>
+            </Banner>
+          )}
           <Container>
             <Title>New Products</Title>
             <StyledLink href="/products/">

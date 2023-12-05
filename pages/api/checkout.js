@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   const {
     name, phone, email, city,
     zip, address, country,
-    products
+    products, coupon
   } = req.body;
 
   await mongooseConnect();
@@ -51,6 +51,7 @@ export default async function handler(req, res) {
     address, 
     country, 
     paid: false,
+    coupon: coupon,
     status: 'Pending'
   })
 
@@ -64,6 +65,7 @@ export default async function handler(req, res) {
     success_url: process.env.PUBLIC_URL + '/cart?success=1',
     cancel_url: process.env.PUBLIC_URL + '/cart?cancel=1',
     metadata: {orderId: orderDoc._id.toString()},
+    discounts: coupon ? [{coupon: coupon.id}] : []
   })
   
   res.json({
