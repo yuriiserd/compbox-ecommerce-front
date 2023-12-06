@@ -226,32 +226,28 @@ export async function getServerSideProps(context) {
   const category = await Category.findOne({_id: id});
   const categoryChildrens = await Category.find({_id: category.childrens}, null, {sort: {order: 1}});
 
-  //array for get products 
-  const productsIds = [];
-  //get products by current category 
-  const products = await Product.find({category});
-  products.forEach(product => {
-    productsIds.push(product._id)
-  })
-
-  //get products from children category
-  const productsChildrens = await Product.find({category: categoryChildrens});
-  productsChildrens.forEach(product => {
-    productsIds.push(product._id);
-  })
-
-  //get products from children of childrens categories LOL
-  await Promise.all(categoryChildrens.map(async cat => {
-    if (cat.childrens.length > 0) {
-      const deepLevelProducts = await Product.find({category: cat.childrens});
-      deepLevelProducts.forEach(product => {
-        productsIds.push(product._id);
-      })
-    }
-  }))
+  // Get product IDs from all levels of categories concurrently
+  const [products, productsChildrens, deepLevelProducts] = await Promise.all([
+    //get products by current category id
+    Product.find({category}, '_id'),
+    //get products from children category
+    Product.find({category: categoryChildrens}, '_id'),
+    //get products from children of childrens categories LOL
+    Promise.all(categoryChildrens.map(cat => {
+      if (cat.childrens.length > 0) {
+        return Product.find({category: cat.childrens}, '_id');
+      }
+    }))
+  ]);
+  // Combine all product IDs into one array
+  const productsIds = [
+    ...products.map(product => product._id),
+    ...productsChildrens.map(product => product._id),
+    ...deepLevelProducts.flat().map(product => product?._id)
+  ];
 
   //get all products from ids array
-  const allProducts = await Product.find({_id: productsIds}, null, {sort: {'_id': -1}});
+  const allProducts = await Product.find({_id: {$in: productsIds}}, null, {sort: {'_id': -1}});
 
   // get products from ids array , searchQuery , price range , limit
   const initialProducts = await Product.find(

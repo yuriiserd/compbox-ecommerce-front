@@ -20,7 +20,6 @@ export default function Layout({children}) {
       <Header />
         <Container>
           {loading ? <PageLoading/> : children}
-          {/* <PageLoadingContainer><Spinner/></PageLoadingContainer> */}
         </Container>
       <Footer />
     </>
