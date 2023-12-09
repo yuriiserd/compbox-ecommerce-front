@@ -2,9 +2,21 @@ import { useState } from "react";
 import styled from "styled-components";
 import StarIcon from "./icons/StarIcon";
 import Button from "./Button";
+import axios from "axios";
+import { red } from "@/lib/colors";
+import Spinner from "./Spinner";
+import { set } from "mongoose";
 
 const StyledReview = styled.div`
-  margin-top: 2rem;
+  margin-bottom: 2rem;
+  h3 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  .error {
+    margin-top: 1rem;
+    color: ${red};
+  }
   div {
     display: flex;
     flex-direction: column;
@@ -27,7 +39,7 @@ const StyledReview = styled.div`
     max-width: 100px;
   }
 `
-const Stars = styled.div`
+export const Stars = styled.div`
   display: flex;
   gap: 0.5rem;
   flex-direction: row !important;
@@ -35,15 +47,58 @@ const Stars = styled.div`
 
 export default function ReviewForm({ productId }) {
 
+  const [name, setName] = useState("");
   const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const [hover, setHover] = useState(0);
+
+  const [submitted, setSubmitted] = useState(false);
+
+  async function submitReview(e) {
+    e.preventDefault();
+    if (!name || !rating || !comment) {
+      setError("Please fill in all fields");
+      return;
+    } else {
+      setLoading(true);
+      setError("");
+      await axios.post("/api/reviews", {
+        userName: name,
+        rating,
+        comment,
+        productId
+      }).then(res => {
+        if (res?.status === 201) {
+          setSubmitted(true);
+          setLoading(false);
+        }
+      }).catch(err => {
+        console.log(err);
+        setSubmitted(false);
+        setError("Something went wrong, please try again");
+        setLoading(false);
+      });
+    }
+    
+  }
+  if (submitted) {
+    return (
+      <StyledReview>
+        <h3>Thank you for your review!</h3>
+        <p>Your review will be posted once it has been approved by our team.</p>
+      </StyledReview>
+    )
+  }
   
   return (
     <StyledReview>
       <div>
         <div>
           <label htmlFor="name">Name</label>
-          <input type="text" id="name" />
+          <input type="text" id="name" onChange={(e) => setName(e.target.value)}/>
         </div>
         {/* Stars rating */}
         <div>
@@ -79,10 +134,21 @@ export default function ReviewForm({ productId }) {
         </div>
         <div>
           <label htmlFor="comment">Comment</label>
-          <textarea id="comment"></textarea>
+          <textarea id="comment" onChange={(e) => setComment(e.target.value)}></textarea>
         </div>
-        <Button $white type="submit">Submit</Button>
+        {loading ? (
+          <Spinner/>
+        ) : (
+          <Button $white type="submit" onClick={() => {
+            submitReview(event);
+            
+          }}>Submit</Button>
+        )}
+        
       </div>
+      {error && (
+        <p className="error">{error}</p>
+      )}
     </StyledReview>
   );
 }

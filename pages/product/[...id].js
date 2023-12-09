@@ -14,7 +14,9 @@ import { Product } from "@/models/Product";
 import { useContext, useState } from "react";
 import styled from "styled-components";
 import Layout from "@/components/Layout";
-import ReviewForm from "@/components/ReviewFrom";
+import ReviewForm, { Stars } from "@/components/ReviewFrom";
+import { Review } from "@/models/Review";
+import StarIcon from "@/components/icons/StarIcon";
 
 
 const Row = styled.div`
@@ -126,16 +128,31 @@ const Properties = styled.ul`
 `
 const Reviews = styled.div`
   margin-bottom: 2rem;
+  p {
+    margin-bottom: 1rem;
+  }
+`
+const Flex = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    div,
+    p {
+      margin-bottom: 1.7rem;
+    }
+  }
 `
 
-export default function ProductPage({product}) {
-
-
- 
+export default function ProductPage({product, reviews}) {
   
   const {cartProducts, addToCart} = useContext(CartContext);
   const {likedProducts, addToLiked} = useContext(LikedContext);
   const [contentHidden, setContentHidden] = useState(true);
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   const liked = likedProducts.find(itemId => itemId === product._id);
   const cart = cartProducts.find(itemId => itemId === product._id);
@@ -147,12 +164,22 @@ export default function ProductPage({product}) {
         <div>
           <ImageGallary images={product.images}/>
           <hr/>
-          <Title>Reviews</Title>
-          <Reviews>
-            <ReviewForm productId={product._id}/>
-            <p>There are no reviews yet.</p>
-          </Reviews>
+          <Title>Description</Title>
+          <Description>
+            {product.description}
+            {contentHidden && (
+              <>
+                <span></span>
+                <button onClick={() => setContentHidden(false)}>read more</button>
+              </>
+            )}
+          
+          </Description>
+          {!contentHidden && (
+            <div dangerouslySetInnerHTML={{ __html: product.content }} />
+          )}
         </div>
+        
         <ProductInfo>
           <Title>{product.properties["Brand"]} {product.title}</Title>
 
@@ -189,19 +216,42 @@ export default function ProductPage({product}) {
           {!!Object.keys(product.properties).length && (
             <hr/>
           )}
-          <Description>
-            {product.description}
-            {contentHidden && (
-              <>
-                <span></span>
-                <button onClick={() => setContentHidden(false)}>read more</button>
-              </>
+          {/* reviews section */}
+          <Flex>
+            <div className="title">
+              <Title>Reviews</Title>
+              {reviews.length > 0 && (
+                <>
+                  <StarIcon fill="#ffc107"/>
+                  <p>({parseFloat(reviews.reduce((sum, review2) => sum + review2.rating, 0) / reviews.length).toFixed(1)}/5)</p>
+                </>
+              )}
+            </div>
+            {!showReviewForm && (
+              <Button $white $icon onClick={() => setShowReviewForm(true)}>
+                Add Review
+              </Button>
             )}
-
-          </Description>
-          {!contentHidden && (
-            <div dangerouslySetInnerHTML={{ __html: product.content }} />
+          </Flex>
+          {showReviewForm && (
+            <ReviewForm productId={product._id}/>
           )}
+          <Reviews>
+            {reviews.map(review => (
+              <div key={review._id}>
+                <Flex>
+                  <h3>{review.userName}</h3>
+                  <Stars>
+                    {Array(5).fill(0).map((_, i) => (
+                      <StarIcon key={i} fill={review.rating > i ? "#ffc107" : "none"}/>
+                    ))}
+                  </Stars>
+                </Flex>
+                <p>{review.comment}</p>
+                <hr/>
+              </div>
+            ))}
+          </Reviews>
         </ProductInfo>
       </Row>
     </Layout>
@@ -211,10 +261,13 @@ export default function ProductPage({product}) {
 export async function getServerSideProps(context) {
   await mongooseConnect();
   const id = context.query.id;
-  const product = await Product.findOne({_id: id})
+  const product = await Product.findOne({_id: id});
+  const reviews = await Review.find({productId: id, status: 'approved'}).sort({createdAt: -1}); //approved
+  console.log(reviews.map(review => review.rating));
   return {
     props: {
       product: JSON.parse(JSON.stringify(product)),
+      reviews: JSON.parse(JSON.stringify(reviews)),
     }
   }
 }
