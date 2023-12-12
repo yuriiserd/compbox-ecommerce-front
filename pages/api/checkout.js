@@ -55,7 +55,7 @@ export default async function handler(req, res) {
     status: 'Pending'
   })
 
-  //add oreder to customer
+  //add order to customer
   await Customer.updateOne({email}, {$push: {orders: orderDoc._id}})
 
   const session = await stripe.checkout.sessions.create({

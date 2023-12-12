@@ -23,7 +23,7 @@ export default function SettingsPage() {
   
   useEffect(() => {
     if (session?.user) {
-      axios.get('/api/account?email=' + session?.user?.email).then(response => {
+      axios.get('/api/customer?email=' + session?.user?.email).then(response => {
         setAccountInfo(response.data);
       })
     }
@@ -35,7 +35,7 @@ export default function SettingsPage() {
 
   async function saveInfo() {
 
-    await axios.post('/api/account', accountInfo).then(() => {
+    await axios.post('/api/customer', accountInfo).then(() => {
       setSaved(true);
     });
   }

@@ -21,7 +21,7 @@ export function LikedContextProvider({children}) {
       lStorage?.setItem('liked', JSON.stringify(likedProducts));
     }
     if (session?.user) {
-      axios.post('/api/account', {
+      axios.post('/api/customer', {
         email: session?.user?.email,
         likedProducts
       })

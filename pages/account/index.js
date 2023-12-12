@@ -42,6 +42,7 @@ const Status = styled.span`
 `
 const Flex = styled.div`
   display: flex;
+  gap: 0.5rem;
 `
 
 export default function AccountPage() {
@@ -54,12 +55,14 @@ export default function AccountPage() {
 
   useEffect(() => {
     if (session?.user) {
-      axios.get('/api/account?email=' + session?.user?.email).then(response => {
+      axios.get('/api/customer?email=' + session?.user?.email).then(response => {
         setAccountInfo(response.data);
         if (!response.data) {
-          axios.post('/api/account', {
+          //create customer
+          axios.post('/api/customer', {
             name: session?.user?.name,
             email: session?.user?.email,
+            image: session?.user?.image,
             orders: [],
             likedProducts: [],
           }).then(response => {

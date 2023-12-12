@@ -28,7 +28,7 @@ export default function OrderInfo({products, coupon}) {
 
   useEffect(() => {
     if (session?.user) {
-      axios.get('/api/account?email=' + session?.user?.email).then(response => {
+      axios.get('/api/customer?email=' + session?.user?.email).then(response => {
         const order = response.data;
         setOrderInfo({
           name: order.name,

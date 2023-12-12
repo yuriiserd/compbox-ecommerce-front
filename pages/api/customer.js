@@ -4,11 +4,16 @@ import { Customer } from "@/models/Customer";
 export default async function handler(req,res) {
   await mongooseConnect();
   const method = req.method;
+  
   if (method === 'POST') {
-    if (req.body?.email) {
+    if (req.body?.newUser) {
+      delete req.body.newUser;
+      const customer = await Customer.create({...req.body});
+      res.json(customer);
+    } else if (req.body?.email) {
       const customer = await Customer.updateOne({email: req.body.email}, {...req.body});
       res.json(customer);
-    } else {
+    }  else {
       const customer = await Customer.create({...req.body, orders: [], likedProducts: []});
       res.json(customer);
     }

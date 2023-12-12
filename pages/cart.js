@@ -59,11 +59,12 @@ export default function CartPage() {
 
   useEffect(() => {
     if (session?.user) {
-      axios.get('/api/account?email=' + session?.user?.email).then(response => {
+      axios.get('/api/customer?email=' + session?.user?.email).then(response => {
         setAccountInfo(response.data);
         if (!response.data) {
-          axios.post('/api/account', {
+          axios.post('/api/customer', {
             email: session?.user?.email,
+            image: session?.user?.image,
             name: session?.user?.name,
             orders: []
           }).then(response => {
