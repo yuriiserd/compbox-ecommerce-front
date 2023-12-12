@@ -5,6 +5,8 @@ import Link from "next/link";
 import github from "@/public/github.gif"
 import linkedin from "@/public/linkedin.gif"
 import Image from "next/image";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const StyledFooter = styled.footer`
   margin-top: auto;
@@ -48,6 +50,21 @@ const Social = styled.ul`
 `
 
 export default function Footer() {
+  const [categories, setCategories] = useState([]);
+  
+
+  useEffect(() => {
+    
+    getCategories();
+  }, []);
+
+  const getCategories = async () => {
+    await axios.get('/api/categories?parent=64bac2f697faffcc04671e3c').then(res => {
+      const data = res.data;
+      setCategories(data);
+    })
+  }
+
   return (
     <StyledFooter>
       <div>
@@ -56,11 +73,9 @@ export default function Footer() {
             <Col>
               <h3>Categories</h3>
               <ul>
-                <li><Link href={'/'}>Computers</Link></li>
-                <li><Link href={'/'}>Camera & Photo</Link></li>
-                <li><Link href={'/'}>Television & Video</Link></li>
-                <li><Link href={'/'}>Smartphones</Link></li>
-                <li><Link href={'/'}>Audio</Link></li>
+                {categories?.length > 0 && categories.map(category => (
+                  <li key={category._id}><Link href={`/categories/${category._id}`}>{category.name}</Link></li>
+                ))}
               </ul>
             </Col>
             <Col>

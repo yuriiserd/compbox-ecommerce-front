@@ -262,8 +262,7 @@ export async function getServerSideProps(context) {
   await mongooseConnect();
   const id = context.query.id;
   const product = await Product.findOne({_id: id});
-  const reviews = await Review.find({productId: id, status: 'approved'}).sort({createdAt: -1}); //approved
-  console.log(reviews.map(review => review.rating));
+  const reviews = await Review.find({productId: id, status: 'approved'}).sort({createdAt: -1});
   return {
     props: {
       product: JSON.parse(JSON.stringify(product)),

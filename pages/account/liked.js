@@ -16,7 +16,7 @@ export default function Liked() {
   
   useEffect(() => {
     if (session?.user) {
-      axios.get('/api/account?email=' + session?.user?.email).then(response => {
+      axios.get('/api/customer?email=' + session?.user?.email).then(response => {
         updateLikedProducts(response?.data?.likedProducts);
       })
     }
@@ -24,7 +24,7 @@ export default function Liked() {
   
   useEffect(() => {
     if (session?.user) {
-      axios.get('/api/account?email=' + session?.user?.email).then(response => {
+      axios.get('/api/customer?email=' + session?.user?.email).then(response => {
         const result = new Set([...response?.data?.likedProducts, ...likedProducts])
         setProductIds([...result]);
       })
