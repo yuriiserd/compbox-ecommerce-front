@@ -5,7 +5,6 @@ import Button from "./Button";
 import axios from "axios";
 import { red } from "@/lib/colors";
 import Spinner from "./Spinner";
-import { set } from "mongoose";
 
 const StyledReview = styled.div`
   margin-bottom: 2rem;

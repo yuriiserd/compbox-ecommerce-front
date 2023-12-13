@@ -16,4 +16,21 @@ export default async function handler(req, res) {
     await review.save();
     res.status(201).json(review);
   }
+  if (method === "GET") {
+    if (req.query.count) {
+      const { productId } = req.query;
+      const count = await Review.countDocuments({
+        productId,
+        status: "approved",
+      });
+      res.status(200).json(count);
+      return;
+    }
+    const { productId } = req.query;
+    const reviews = await Review.find({
+      productId,
+      status: "approved",
+    }).sort({ createdAt: -1 });
+    res.status(200).json(reviews);
+  }
 }

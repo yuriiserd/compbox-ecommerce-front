@@ -11,12 +11,13 @@ import CartIcon from "@/components/icons/CartIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
 import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import styled from "styled-components";
 import Layout from "@/components/Layout";
 import ReviewForm, { Stars } from "@/components/ReviewFrom";
 import { Review } from "@/models/Review";
 import StarIcon from "@/components/icons/StarIcon";
+import useCalcRating from "@/hooks/useCalcRating";
 
 
 const Row = styled.div`
@@ -154,6 +155,10 @@ export default function ProductPage({product, reviews}) {
   const [contentHidden, setContentHidden] = useState(true);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
+  const rating = useMemo(() => {
+    return useCalcRating(product._id);
+  });
+
   const liked = likedProducts.find(itemId => itemId === product._id);
   const cart = cartProducts.find(itemId => itemId === product._id);
   
@@ -223,7 +228,7 @@ export default function ProductPage({product, reviews}) {
               {reviews.length > 0 && (
                 <>
                   <StarIcon fill="#ffc107"/>
-                  <p>({parseFloat(reviews.reduce((sum, review2) => sum + review2.rating, 0) / reviews.length).toFixed(1)}/5)</p>
+                  <p>({rating}/5)</p>
                 </>
               )}
             </div>
