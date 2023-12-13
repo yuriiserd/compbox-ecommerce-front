@@ -74,7 +74,7 @@ export default function Footer() {
               <h3>Categories</h3>
               <ul>
                 {categories?.length > 0 && categories.map(category => (
-                  <li key={category._id}><Link href={`/categories/${category._id}`}>{category.name}</Link></li>
+                  <li key={category._id}><Link href={`/category/${category._id}`}>{category.name}</Link></li>
                 ))}
               </ul>
             </Col>
