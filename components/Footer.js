@@ -36,17 +36,35 @@ const StyledFooter = styled.footer`
     margin-top: 2rem;
     margin-bottom: 2rem;
   }
+  @media (max-width: 768px) {
+    .copy {
+      text-align: center;
+    }
+  }
 `
 const Col = styled.div`
   width: 25%;
+  @media (max-width: 768px) {
+    width: 50%;
+    &:last-child {
+      width: 100%;
+      margin-top: 3rem;
+    }
+  }
 `
 const Row = styled.div`
   display: flex;
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
 `
 const Social = styled.ul`
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `
 
 export default function Footer() {
@@ -98,7 +116,7 @@ export default function Footer() {
             </Col>
           </Row>
           <hr/>
-          <p>&#169;{new Date().getFullYear()} CompBox. All Rights Reserved.</p>
+          <p className="copy">&#169;{new Date().getFullYear()} CompBox. All Rights Reserved.</p>
         </Container>
       </div>
     </StyledFooter>

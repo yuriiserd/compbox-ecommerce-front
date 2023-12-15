@@ -27,6 +27,10 @@ const Head = styled.div`
   border-bottom: 1px solid #CCDBE4;
   text-transform: uppercase;
   font-size: 0.9rem;
+  @media (max-width: 576px) {
+    display: none;
+  
+  }
 `
 const Bottom = styled.div`
   ${RowSize}
@@ -111,6 +115,31 @@ const Item = styled.div`
   button {
     margin: 0 auto;
   }
+  @media (max-width: 576px) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 1rem;
+    a {
+      width: 100%;
+    }
+    div:nth-child(2) {
+      width: 100px;
+    }
+    div:nth-child(3) {
+      width: calc(20% - 1rem);
+    }
+    div:nth-child(4) {
+      width: auto;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+    }
+    button {
+      display: inline;
+      text-align: center;
+    }
+  }
 `
 const StyledQuantity = styled.div`
   border-radius: 50px;
@@ -137,6 +166,7 @@ const StyledQuantity = styled.div`
     padding-left: 1rem;
     padding-right: 0.4rem;
   }
+  
 `
 const DefaultThumbnail = styled.div`
   padding: 10px;
@@ -266,7 +296,7 @@ export default function CartList({products, cart, setCoupon}) {
                 <button onClick={() => increaseQuantity(product._id)}>+</button>
               </StyledQuantity>
             </div>
-            <div>
+            <div className="product-total">
               ${total}
             </div>
             <div>
@@ -278,17 +308,7 @@ export default function CartList({products, cart, setCoupon}) {
         )
       })}
       <Bottom className={couponDoc ? "totalProduct" : "totalPrice"}>
-        <div>
-          {enterCoupon ? (
-            <CouponInput>
-              <input type="text" value={couponCode} onChange={e => setCouponCode(e.target.value)}/>
-              <button onClick={getCoupon}>Apply</button>
-            </CouponInput>
-          ) : (
-            <CouponBtn onClick={() => setEnterCoupon(true)}>Enter Coupon Code</CouponBtn>
-          )}
-
-        </div>
+        <div></div>
         <div>{couponDoc ? "Products Total" : "Total"}</div>
         <div><b>${productTotalPrice}</b></div>
         <div></div>
@@ -306,8 +326,16 @@ export default function CartList({products, cart, setCoupon}) {
           </div>
           <div></div>
         </Bottom>
+        
       )}
-      
+      {enterCoupon ? (
+        <CouponInput>
+          <input type="text" value={couponCode} onChange={e => setCouponCode(e.target.value)}/>
+          <button onClick={getCoupon}>Apply</button>
+        </CouponInput>
+      ) : (
+        <CouponBtn onClick={() => setEnterCoupon(true)}>Enter Coupon Code</CouponBtn>
+      )}
     </>
   )
 }

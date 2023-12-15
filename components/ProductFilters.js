@@ -17,6 +17,14 @@ const StyledFilters = styled.div`
     color: ${primary};
     font-size: 1.2rem;
   }
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+    width: 250px;
+    height: 100vh;
+  }
 `
 const Filter = styled.div`
   position: relative;
@@ -159,6 +167,7 @@ export default function ProductFilters({properties, range, category, filterProdu
     filterProducts(products.data);
     setProductsCount(allProductsCount.data)
   } 
+
 
   return (
     <StyledFilters>

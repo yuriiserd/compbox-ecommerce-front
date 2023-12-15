@@ -77,12 +77,58 @@ const Navigation = styled.nav`
       max-width: 20px;
     }
   }
+  @media (max-width: 992px) {
+    min-width: 120px;
+  }
+  @media (max-width: 768px) {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    padding: 0.5rem 1rem 0.5rem 2rem;
+    left: 0;
+    width: calc(100% - 3rem);
+    background: #ffffff;
+    display: flex;
+    z-index: 100;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: 0px -2px 20px rgba(0,0,0,0.1);
+    ul {
+      display: flex;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+      justify-content: space-between;
+    }
+    li {
+      font-size: 0;
+      margin-bottom: 0;
+      svg {
+        width: 25px;
+        height: 25px;
+        max-width: 25px;
+      }
+      a,
+      button{
+        gap: 0;
+        padding: 0.5rem;
+      }
+      button:hover,
+      a:hover {
+        gap: 0;
+      }
+    }
+
+  }
 `;
 const Content = styled.div`
   width: 80%;
   h2 {
     color: ${primary};
     margin-bottom: 1rem;
+  }
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;
 
@@ -106,6 +152,7 @@ export default function AccountLayout(props) {
     <>
       <Header/>
       <Container>
+        <br/>
         <Title>Account</Title>
         
         {loading ? <PageLoading/> : (

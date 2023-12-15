@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import ProductCard from "./ProductCard"
+import { motion } from "framer-motion"
 
 const StyledGrid = styled.div`
     display: grid;
@@ -30,7 +31,17 @@ export default function ProductsGrid({products}) {
         <NotFound>No products found &#9785;</NotFound>
       )}
       <StyledGrid>
-        {products.map(product => <ProductCard key={product._id} product={product}/>)}
+        {products.map((product, i) => (
+          <motion.div
+            key={product._id}
+            initial={{ y: 200, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: i * 0.05 }}
+            viewport={{ once: true }}
+          >
+            <ProductCard product={product}/>
+          </motion.div>
+        ))}
       </StyledGrid>
     </>
   )

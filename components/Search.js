@@ -7,6 +7,7 @@ import axios from "axios"
 import Link from "next/link"
 import { NotFound } from "./ProductsGrid"
 import Image from "next/image"
+import { motion } from "framer-motion"
 
 const StyledDiv = styled.div`
   position: absolute;
@@ -21,11 +22,19 @@ const StyledDiv = styled.div`
   max-width: 350px;
   box-shadow: 0px 14px 34px rgba(71, 82, 94, 0.21);
   z-index: 101; // for SearchOverlay overlap
+  overflow: hidden;
   input {
     margin-top: 0;
-    & + a {
-      margin-top: 2rem;
+    & + div {
+      margin-top: 1rem;
     }
+  }
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: calc(100% - 3rem);
   }
 `
 const StyledProduct = styled(Link)`
@@ -80,11 +89,19 @@ export default function Search({focus}) {
       {noItemsFound && searchValue && (
         <NotFound>No products found &#9785;</NotFound>
       )}
-      {products && searchValue && products.map(product => (
-        <StyledProduct href={'/product/'+product._id}>
-          <Image src={product.images[0]} width={40} height={40} alt={product.title}/>
-          <p>{product.title}</p>
-        </StyledProduct>
+      {products && searchValue && products.map((product, i) => (
+        <motion.div
+          key={product._id}
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.4, delay: i * 0.05 }}
+          viewport={{ once: true }}
+        >
+          <StyledProduct href={'/product/'+product._id}>
+            <Image src={product.images[0]} width={40} height={40} alt={product.title}/>
+            <p>{product.title}</p>
+          </StyledProduct>
+        </motion.div>
       ))}
     </StyledDiv>
   )

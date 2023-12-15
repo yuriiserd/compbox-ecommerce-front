@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const StyledDiv = styled.div`
-  margin-top: 3rem;
   a {
     text-decoration: none;
     color: ${primary};
@@ -34,10 +33,10 @@ export default function Breadcrumbs({product}) {
     <StyledDiv>
       <Link href={'/'}> Home</Link> /
       <Link href={'/categories/'}> Categories</Link> / 
-      {parentCategory.name && (
-        <Link href={'/category/'+parentCategory._id}> {parentCategory.name}</Link>
+      {parentCategory.name && parentCategory.name !== "Product" && (
+        <><Link href={'/category/'+parentCategory._id}> {parentCategory.name}</Link> /</>
       )}
-      <Link href={'/category/'+product.category}> / {category.name}</Link> / 
+      <Link href={'/category/'+product.category}> {category.name}</Link> / 
       <Link href={'/category/'+product.category+'?Brand='+product.properties.Brand}> {product.properties.Brand} {category.name} </Link>
     </StyledDiv>
   )

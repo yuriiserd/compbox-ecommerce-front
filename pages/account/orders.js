@@ -30,7 +30,12 @@ const StyledOrder = styled.div`
     flex-direction: column;
     gap: 1rem;
   }
-  
+  @media (max-width: 992px) {
+    flex-direction: column;
+    .info, .products {
+      width: 100%;
+    }
+  }
 `
 const OrderItem = styled.div`
   border-bottom: 1px solid ${primaryLight};
@@ -102,7 +107,6 @@ export default function OrdersPage() {
   return (
     <AccountLayout>
       <h2>Orders</h2>
-      <p></p>
       {orders.length > 0 && (
         <>
           {orders.map(order => {
@@ -131,12 +135,12 @@ export default function OrdersPage() {
                       return (
                         <OrderItem key={item.id}>
                           <div className="productinfo">
-                          <Link href={'/product/'+item.id}>
-                            {item?.images && (
-                              <Image src={item.images[0]} width={50} height={50} alt={item.name}/>
-                            )}
-                            {item.name}
-                          </Link>
+                            <Link href={'/product/'+item.id}>
+                              {item?.images && (
+                                <Image src={item.images[0]} width={50} height={50} alt={item.name}/>
+                              )}
+                              {item.name}
+                            </Link>
                           </div>
                           <div className="total">
                             <div>
