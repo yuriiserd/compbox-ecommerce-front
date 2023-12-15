@@ -3,8 +3,9 @@ import Image from "next/image"
 import Link from "next/link"
 import styled from "styled-components"
 import ProductIcon from "./icons/ProductIcon";
+import { motion } from "framer-motion";
 
-export default function CategoriesGrid({categories, colums}) {
+export default function CategoriesGrid({categories, colums, disableAnimation = false}) {
 
   let columsString = '';
   for (let i = 0; i < colums; i++) {
@@ -41,6 +42,7 @@ export default function CategoriesGrid({categories, colums}) {
     }
     img {
       height: ${colums >= 6 ? '150px' : '200px'};
+      width: 100%;
       object-fit: contain;
       @media (max-width: 992px) {
         height: ${colums >= 6 ? '100px' : '150px'};
@@ -56,18 +58,47 @@ export default function CategoriesGrid({categories, colums}) {
   
   return (
     <StyledGrid>
-      {categories.map(category => (
-        <Link key={category._id} href={`/category/${category._id}`}>
-          {category.image && (
-            <Image src={category.image} width={400} height={400} alt={category.name}/>
+      
+      {categories.map((category, i) => (
+        
+        <>
+          {disableAnimation ? (
+            <div>
+              <Link key={category._id} href={`/category/${category._id}`}>
+                {category.image && (
+                  <Image src={category.image} width={400} height={400} alt={category.name}/>
+                )}
+                {!category.image && (
+                  <DefaultThambnail>
+                    <ProductIcon/>
+                  </DefaultThambnail>
+                )}
+                <h3>{category.name}</h3>
+              </Link>
+            </div>
+          ) : (
+            <motion.div
+              key={category._id}
+              initial={{ y: 200, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: i * 0.05 }}
+              viewport={{ once: true }}
+              style={{ overflow: 'hidden' }}
+            >
+              <Link key={category._id} href={`/category/${category._id}`}>
+                {category.image && (
+                  <Image src={category.image} width={400} height={400} alt={category.name}/>
+                )}
+                {!category.image && (
+                  <DefaultThambnail>
+                    <ProductIcon/>
+                  </DefaultThambnail>
+                )}
+                <h3>{category.name}</h3>
+              </Link>
+            </motion.div>
           )}
-          {!category.image && (
-            <DefaultThambnail>
-              <ProductIcon/>
-            </DefaultThambnail>
-          )}
-          <h3>{category.name}</h3>
-        </Link>
+        </>
       ))}
     </StyledGrid>
   )

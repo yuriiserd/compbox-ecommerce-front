@@ -28,6 +28,9 @@ const Main = styled.div`
   h3 {
     margin-bottom: 0.6rem;
   }
+  @media (max-width: 992px) {
+    flex-direction: column;
+  }
 `
 const OrderItem = styled.div`
   border: 1px solid ${primaryLight};

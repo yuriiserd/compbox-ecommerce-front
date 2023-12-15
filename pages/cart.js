@@ -30,6 +30,17 @@ const StyledRow = styled.div`
       width: 100%;
     }
   }
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+    &>div {
+      margin-bottom: 2rem;
+      padding: 1rem;
+    }
+    &>div:last-child {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+  }
 `
 const Notice = styled.div`
   height: calc(100vh - 85px);

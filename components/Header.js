@@ -6,7 +6,7 @@ import Container from "./Container";
 import CartIcon from "./icons/CartIcon";
 import UserIcon from "./icons/UserIcon";
 import { primary, primaryLight } from "@/lib/colors";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { CartContext } from "./CartContext";
 import SearchIcon from "./icons/SearchIcon";
 import Button from "./Button";
@@ -16,6 +16,7 @@ import LogoutIcon from "./icons/LogoutIcon";
 import HeartIcon from "./icons/HeartIcon";
 import bcrypt from "bcryptjs";
 import axios from "axios";
+import useWindowWidth from "@/hooks/useWindowWidth";
 
 const StyledHeader = styled.header`
   background-color: #fff;
@@ -28,49 +29,29 @@ const StyledHeader = styled.header`
   &>div {
     padding: 30px 0;
   }
-`;
-const StyledNav = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  font-size: 1rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  div {
-    display: flex;
-    gap: 1rem;
-    list-style: none;
-    align-items: center;
-    button {
-      margin-right: 0;
+  @media (max-width: 768px) {
+    padding: 0.5rem 0;
+    &>div {
       padding: 0;
-      border: none;
-      background: none;
-      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-  }
-  a {
-    text-decoration: none;
-    font-weight: 600;
-    color: #444444;
-    img {
-      border-radius: 30px;
-    }
-  }
-  svg {
-    width: 20px;
-    height: 20px;   
-    margin-left: 10px;
-    margin-right: 10px; 
-    
   }
 `;
+
 const Logo = styled(Link)`
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  @media (max-width: 768px) {
+    position: relative;
+    left: 0;
+    top: 0;
+    transform: translate(0%);
+    width: 110px;
+  }
 `;
 const Cart = styled(Link)`
   position: relative;
@@ -88,6 +69,14 @@ const Cart = styled(Link)`
     background: ${primary};
     color: #fff;
     font-weight: 400;
+  }
+  @media (max-width: 768px) {
+    padding-right: 0.5rem;
+    span {
+      width: 1.2rem;
+      height: 1.2rem;
+      font-size: 0.8rem;
+    }
   }
 `
 const SearchOverlay = styled.div`
@@ -122,8 +111,29 @@ const Profile = styled.div`
     opacity: 1;
     visibility: visible;
   }
-`;
-
+  @media (max-width: 768px) {
+    margin-right: 0;
+    img {
+      width: 40px;
+      height: 40px;
+    }
+    button {
+      visibility: visible;
+      opacity: 1;
+      border: none !important;
+      display: flex;
+      top: calc(-100% - 1rem);
+      font-weight: 600;
+      color: #444444;
+      font-size: 1rem;
+      align-items: center;
+      box-shadow: none !important;
+      padding-right: 0 !important;
+      right: 0;
+      
+    }
+  }
+`
 const modal = css`
   position: absolute;
   top: 100%;
@@ -138,6 +148,15 @@ const modal = css`
   padding: 1rem 1.5rem;
   z-index: 101;
   max-width: 250px;
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    min-width: 250px;
+    padding: 1rem 2rem;
+  }
   div.social {
     button {
       padding: 0.5rem 1rem;
@@ -196,6 +215,10 @@ const ModalOverlay = styled.div`
   left: 0;
   top: 0;
   z-index: 100;
+  @media (max-width: 768px) {
+    background: rgba(0,0,0,0.5);
+    
+  }
 `
 const Error = styled.div`
   background-color: #FEE2E2;
@@ -211,6 +234,140 @@ const Error = styled.div`
     width: 100%;
   }
 `
+const HamburgerMenu = styled.div`
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
+    position: relative;
+    z-index: 101;
+    width: 30px;
+    height: 22px;
+    cursor: pointer;
+    span {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: #444;
+        left: 0;
+        transition: all 0.3s;
+        &:nth-child(1) {
+          top: 0;
+        }
+        &:nth-child(2) {
+          opacity: 1;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        &:nth-child(3) {
+          bottom: 0;
+        }
+      }
+    &.active {
+      span {
+        &:nth-child(1) {
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(45deg);
+        }
+        &:nth-child(2) {
+          opacity: 0;
+          transform: translate(-100%, -50%);
+        }
+        &:nth-child(3) {
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(-45deg);
+        }
+      }
+    }
+    
+  }
+`
+const StyledNav = styled.nav`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  box-sizing: border-box;
+  div {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+    align-items: center;
+    button {
+      margin-right: 0;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+  }
+  a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #444444;
+    img {
+      border-radius: 30px;
+    }
+  }
+  svg {
+    width: 20px;
+    height: 20px;   
+    margin-left: 10px;
+    margin-right: 10px; 
+  }
+  @media (max-width: 768px) {
+    justify-content: space-between;
+    position: absolute;
+    padding: 5rem 1rem 1rem;
+    top: 0;
+    width: auto;
+    right: -100%;  
+    height: 100vh;
+    margin-right: -1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    background: #fff;
+    z-index: 100;
+    transition: all 0.5s;
+    box-shadow: 0px 5px 10px rgba(71, 82, 94, 0.1);
+    div:first-child {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    div:last-child {
+      position: sticky;
+      bottom: 1rem;
+      svg {
+        width: 25px;
+        height: 25px;
+      }
+    }
+    &.active {
+      right: 0;
+    }
+  }
+`
+const MobileMenu = styled.div`
+  display: none;
+  align-items: center;
+  gap: 2.5rem;
+  svg {
+    width: 25px;
+    height: 25px;
+    color: #444444;
+  }
+  @media (max-width: 768px) {
+    display: flex;
+  }
+`
+
 
 export default function Header() {
 
@@ -221,11 +378,13 @@ export default function Header() {
   const [registerModal, setRegisterModal] = useState(false);
   const [loginMessage, setLoginMessage] = useState('Sign in to your account');
   const [error, setError] = useState('');
+  const [headerHeight, setHeaderHeight] = useState(0);
 
-
+  const mobile = useWindowWidth() < 768;
 
   const headerRef = useRef(null); // for sticky header
-  
+  const mobileMenu = useRef(null); // for mobile menu
+  const hamburgerRef = useRef(null); // for hamburger menu
   
   async function login(provider) {
     await signIn(provider, {callbackUrl: '/account'});
@@ -276,9 +435,12 @@ export default function Header() {
     });
   }
 
+  useEffect(() => {
+    setHeaderHeight(headerRef.current?.offsetHeight || 95);
+  }, []);
   //set margin height base on header height
   const StyledMargin = styled.div`
-    height: ${headerRef.current?.offsetHeight || 95}px;
+    height: ${headerHeight}px;
   `
 
   return (
@@ -288,7 +450,7 @@ export default function Header() {
           <Logo href={"/"} >
             <Image src={logo} width={150} height={60} alt="CompBox"/>
           </Logo>
-          <StyledNav>
+          <StyledNav ref={mobileMenu}>
             <div>
               <Link href={"/products/"}>New Products</Link>
               <Link href={"/categories/"}>Categories</Link>
@@ -305,7 +467,7 @@ export default function Header() {
               </Cart>
               <Link href={session?.user ? "/account/liked/" : "/liked/"}><HeartIcon/></Link>
               {session ? (
-                <Profile>
+                <Profile className="profile">
                   <Link href={"/account/"}><Image src={session?.user?.image} width={30} height={30} alt={session?.user?.name}/></Link>
                   <button onClick={logout}>
                     <LogoutIcon/>
@@ -334,10 +496,10 @@ export default function Header() {
                           <Button onClick={() => login('facebook')}>Facebook</Button>
                           <Button onClick={() => login('google')}>Google</Button>
                         </div>
-                        <p><small>Don't have an account?</small> <button onClick={() => {
+                        <div><small>Don't have an account?</small> <button onClick={() => {
                           setLoginModal(false);
                           setRegisterModal(true);
-                        }}><strong>Register</strong></button></p>
+                        }}><strong>Register</strong></button></div>
                       </LoginModal>
                       <ModalOverlay onClick={() => setLoginModal(false)}></ModalOverlay>
                     </>
@@ -359,19 +521,34 @@ export default function Header() {
                           <Button onClick={() => login('facebook')}>Facebook</Button>
                           <Button onClick={() => login('google')}>Google</Button>
                         </div>
-                        <p><small>Already have an account?</small> <button onClick={() => {
+                        <div><small>Already have an account?</small> <button onClick={() => {
                           setLoginModal(true);
                           setRegisterModal(false);
-                        }}><strong>Login</strong></button></p>
+                        }}><strong>Login</strong></button></div>
                       </RegisterModal>
                       <ModalOverlay onClick={() => setRegisterModal(false)}></ModalOverlay>
                     </>
                   )}
                 </>
               )}
-              
             </div>
           </StyledNav>
+          <MobileMenu>
+            <Cart href={"/cart/"}>
+              <CartIcon/>
+              {cartProducts.length > 0 && (
+                <span>{cartProducts.length}</span>
+              )}
+            </Cart>
+            <HamburgerMenu ref={hamburgerRef} onClick={() => {
+              hamburgerRef.current.classList.toggle('active');
+              mobileMenu.current.classList.toggle('active');
+            }}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </HamburgerMenu>
+          </MobileMenu>
           {showSearch && <Search focus/>}
           {showSearch && <SearchOverlay onClick={() => setShowSearch(false)}></SearchOverlay>} {/* SearchOverlay close search if click target is not search */}
         </Container>

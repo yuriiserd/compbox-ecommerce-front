@@ -22,6 +22,7 @@ import { updateFilters } from "@/slices/filtersSlice";
 import useNormalizeFilterQuery from "@/hooks/useNormalizeFilterQuery";
 import Spinner from "@/components/Spinner";
 import LayoutNoPreloader from "@/components/LayoutNoPreloader";
+import useWindowWidth from "@/hooks/useWindowWidth";
 
 const StyledTitle = styled.div`
   a {
@@ -150,6 +151,8 @@ export default function CategoryPage({
     })
   }
 
+  const mobile = useWindowWidth() < 768;
+
   return (
     <LayoutNoPreloader>
       <StyledTitle>
@@ -161,19 +164,21 @@ export default function CategoryPage({
         )}
         <Title>{category.name}</Title>
       </StyledTitle>
-      <CategoriesGrid colums={7} categories={categoryChildrens}/>
+      <CategoriesGrid colums={7} categories={categoryChildrens} disableAnimation/>
       {!!category.childrens.length && (
         <Devider/>
       )}
-      <SelectedFilters
-        productsCount={productsCount}
-        setProductsCount={setProductsCount} 
-        category={category} 
-        filterProducts={filtered => {
-          setPageNumber(1)
-          setProducts(filtered)
-        }}
-      />
+      {!mobile && (
+        <SelectedFilters
+          productsCount={productsCount}
+          setProductsCount={setProductsCount} 
+          category={category} 
+          filterProducts={filtered => {
+            setPageNumber(1)
+            setProducts(filtered)
+          }}
+        />
+      )}
       <Row>
         {showFilters && (
           <ProductFilters 

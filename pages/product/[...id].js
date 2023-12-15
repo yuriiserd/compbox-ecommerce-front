@@ -18,6 +18,7 @@ import ReviewForm, { Stars } from "@/components/ReviewFrom";
 import { Review } from "@/models/Review";
 import StarIcon from "@/components/icons/StarIcon";
 import useCalcRating from "@/hooks/useCalcRating";
+import useWindowWidth from "@/hooks/useWindowWidth";
 
 
 const Row = styled.div`
@@ -32,8 +33,11 @@ const Row = styled.div`
     border: none;
     border-bottom: 1px solid #CCDBE4;
   }
-  @media (max-width: 800px) {
+  @media (max-width: 768px) {
     flex-wrap: wrap;
+    & > div {
+      width: 100%;
+    }
   }
 `
 const ProductInfo = styled.div`
@@ -53,6 +57,9 @@ const ProductInfo = styled.div`
 `
 const Description = styled.p`
   position: relative;
+  & + div {
+    margin-bottom: 2rem;
+  }
   span{
     position: absolute;
     left: 0;
@@ -155,38 +162,43 @@ export default function ProductPage({product, reviews}) {
   const [contentHidden, setContentHidden] = useState(true);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
-  const rating = useMemo(() => {
-    return useCalcRating(product._id);
-  });
+  const rating = useCalcRating(product._id);
 
   const liked = likedProducts.find(itemId => itemId === product._id);
   const cart = cartProducts.find(itemId => itemId === product._id);
+
+  const mobile = useWindowWidth() < 768;
+  
   
   return (
     <Layout>
+      <div style={{marginTop: "3rem"}}></div>
+      {mobile && <Title>{product.properties["Brand"]} {product.title}</Title>}
       <Breadcrumbs product={product}/>
       <Row>
         <div>
           <ImageGallary images={product.images}/>
-          <hr/>
-          <Title>Description</Title>
-          <Description>
-            {product.description}
-            {contentHidden && (
-              <>
-                <span></span>
-                <button onClick={() => setContentHidden(false)}>read more</button>
-              </>
-            )}
-          
-          </Description>
-          {!contentHidden && (
-            <div dangerouslySetInnerHTML={{ __html: product.content }} />
+          {!mobile && <hr/>}
+          {!mobile && (
+            <>
+              <Title>Description</Title>
+              <Description>
+                {product.description}
+                {contentHidden && (
+                  <>
+                    <span></span>
+                    <button onClick={() => setContentHidden(false)}>read more</button>
+                  </>
+                )}
+              </Description>
+              {!contentHidden && (
+                <div dangerouslySetInnerHTML={{ __html: product.content }} />
+              )}
+            </>
           )}
         </div>
-        
         <ProductInfo>
-          <Title>{product.properties["Brand"]} {product.title}</Title>
+          {!mobile && <Title>{product.properties["Brand"]} {product.title}</Title>}
 
           {product.salePrice && (
             <Sale><span>${product.price}</span>${product.salePrice}</Sale>
@@ -220,6 +232,23 @@ export default function ProductPage({product, reviews}) {
           </Properties>
           {!!Object.keys(product.properties).length && (
             <hr/>
+          )}
+          {mobile && (
+            <>
+              <Title>Description</Title>
+              <Description>
+                {product.description}
+                {contentHidden && (
+                  <>
+                    <span></span>
+                    <button onClick={() => setContentHidden(false)}>read more</button>
+                  </>
+                )}
+              </Description>
+              {!contentHidden && (
+                <div dangerouslySetInnerHTML={{ __html: product.content }} />
+              )}
+            </>
           )}
           {/* reviews section */}
           <Flex>

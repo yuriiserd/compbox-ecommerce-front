@@ -26,6 +26,7 @@ const StyledCard = styled(Link)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: calc(100% - 40px);
   .sale {
     position: absolute;
     top: 0;
@@ -152,7 +153,7 @@ export default function ProductCard({product}) {
             </>
           )}
           </div>
-          <span>{reviewsCount} reviews</span>
+          <span>{reviewsCount === 1 ? reviewsCount + " review" : reviewsCount + " reviews"} </span>
         </Rating>
       )}
       

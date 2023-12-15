@@ -2,6 +2,9 @@ import Image from "next/image"
 import { useState } from "react"
 import styled from "styled-components"
 import ProductIcon from "./icons/ProductIcon"
+import useWindowWidth from "@/hooks/useWindowWidth";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css'
 
 export default function ImageGallary({images}) {
 
@@ -49,25 +52,53 @@ export default function ImageGallary({images}) {
       }
     }
   `
+  const Slider = styled.div`
+    img {
+      max-height: 400px;
+      object-fit: contain;
+      width: 100%;
+    }
+  `
+  const windowWidth = useWindowWidth();
   return (
     <div>
-      <MainImage>
-        {!images.length && (
-          <div>
-            <ProductIcon/>
-          </div>
-        )}
-        {!!images.length && (
-          <Image src={mainImage} width={400} height={400} alt="main image"/>
-        )}
-      </MainImage>
-      <ImageButtons>
-        {images.map((image => (
-          <button key={image} onMouseOver={() => setMainImage(image)}>
-            <Image src={image} width={70} height={70} alt="gallary image"/>
-          </button>
-        )))}
-      </ImageButtons>
+      {windowWidth < 768 ? (
+        <Slider>
+          <Swiper>
+            {!images.length && (
+              <div>
+                <ProductIcon/>
+              </div>
+            )}
+            {!!images.length && images.map(image => (
+              <SwiperSlide key={image}>
+                <Image src={image} width={400} height={400} alt="main image"/>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </Slider>
+      ) : (
+        <>
+          <MainImage>
+            {!images.length && (
+              <div>
+                <ProductIcon/>
+              </div>
+            )}
+            {!!images.length && (
+              <Image src={mainImage} width={400} height={400} alt="main image"/>
+            )}
+          </MainImage>
+          <ImageButtons>
+            {images.map((image => (
+              <button key={image} onMouseOver={() => setMainImage(image)}>
+                <Image src={image} width={70} height={70} alt="gallary image"/>
+              </button>
+            )))}
+          </ImageButtons>
+        </>
+      )}
+      
     </div>
   )
 }

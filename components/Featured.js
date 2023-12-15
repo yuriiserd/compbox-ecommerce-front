@@ -5,6 +5,7 @@ import ButtonLink from "./ButtonLink";
 import CartIcon from "./icons/CartIcon";
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
+import { motion } from "framer-motion";
 
 const StyledDiv = styled.div`
   display: grid;
@@ -34,15 +35,23 @@ export default function Featured({product}) {
 
   return (
     <StyledDiv>
-      <div>
+      <motion.div 
+        initial={{ x: -200, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <h1>{product.properties["Brand"]} {product.title}</h1>
         <p>{product.description}</p>
         <ButtonLink href={`/product/${product._id}`} $transparent>Read More</ButtonLink>
         <Button $white onClick={() => addToCart(product._id)}><CartIcon/>Buy Now</Button>
-      </div>
-      <div>
+      </motion.div>
+      <motion.div
+        initial={{ y: 200, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <Image src={product.images[0]} width={632} height={500} alt="macbook"/>
-      </div>
+      </motion.div>
     </StyledDiv>
   )
 }
