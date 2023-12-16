@@ -8,8 +8,7 @@ import LoadMoreBtn from "@/components/LoadMoreBtn";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
-import LayoutNoPreloader from "@/components/LayoutNoPreloader";
-import usePreloader from "@/hooks/usePreloader";
+import Layout from "@/components/Layout";
 
 export default function ProductsPage({products}) {
 
@@ -59,7 +58,7 @@ export default function ProductsPage({products}) {
   }
   
   return (
-    <LayoutNoPreloader>
+    <Layout noPreloader>
       <Title>New Products</Title>
       <ProductsGrid products={productsToShow}/>
       {productsCount > productsToShow.length && (
@@ -67,7 +66,7 @@ export default function ProductsPage({products}) {
           {loading ? <Spinner/> : <LoadMoreBtn onClick={LoadProducts}>Load More</LoadMoreBtn>}
         </>
       )}
-    </LayoutNoPreloader>
+    </Layout>
   )
 }
 

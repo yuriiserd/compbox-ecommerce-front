@@ -78,6 +78,12 @@ const Bottom = styled.div`
     display: block;
     color: ${red};
   }
+  @media (max-width: 768px) {
+    grid-template-columns: 0.5fr 0.5fr 0.5fr;
+  }
+  @media (max-width: 576px) {
+    grid-template-columns: 0.01fr 0.5fr 0.5fr;
+  }
 `
 const Item = styled.div`
   ${RowSize}
@@ -188,6 +194,8 @@ const CouponBtn = styled.button`
   align-items: center;
   font-size: 1rem;
   cursor: pointer;
+  width: auto !important;
+  
 `
 const CouponInput = styled.div`
   position: relative;

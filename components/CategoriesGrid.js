@@ -82,7 +82,7 @@ export default function CategoriesGrid({categories, colums, disableAnimation = f
               initial={{ y: 200, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: i * 0.05 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "200px" }}
               style={{ overflow: 'hidden' }}
             >
               <Link key={category._id} href={`/category/${category._id}`}>

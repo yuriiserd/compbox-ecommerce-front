@@ -11,7 +11,7 @@ import PageLoading from "./PageLoading";
 
 
 
-export default function Layout({children}) {
+export default function Layout({children, noPreloader}) {
 
   const loading = usePreloader();
 
@@ -19,7 +19,15 @@ export default function Layout({children}) {
     <>
       <Header />
         <Container>
-          {loading ? <PageLoading/> : children}
+          {noPreloader ? (
+            <>
+              {children}
+            </>
+          ) : (
+            <>
+              {loading ? <PageLoading/> : children}
+            </>
+          )}
         </Container>
       <Footer />
     </>

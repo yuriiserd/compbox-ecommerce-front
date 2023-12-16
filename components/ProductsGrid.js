@@ -37,7 +37,7 @@ export default function ProductsGrid({products}) {
             initial={{ y: 200, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: i * 0.05 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "200px" }}
           >
             <ProductCard product={product}/>
           </motion.div>
