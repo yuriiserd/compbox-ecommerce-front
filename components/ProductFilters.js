@@ -12,18 +12,16 @@ const StyledFilters = styled.div`
   background-color: #f4f4f4;
   border-radius: 1rem;
   padding: 1rem;
+  box-sizing: border-box;
   h4 {
     margin-bottom: 0.5rem;
     color: ${primary};
     font-size: 1.2rem;
   }
   @media (max-width: 768px) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1001;
-    width: 250px;
+    padding: 4rem 1rem;
     height: 100vh;
+    overflow-y: auto;
   }
 `
 const Filter = styled.div`
@@ -32,6 +30,7 @@ const Filter = styled.div`
 `
 const Checkbox = styled.div`
   display: flex;
+  align-items: center;
   label {
     position: relative;
     cursor: pointer;
@@ -77,6 +76,9 @@ const Checkbox = styled.div`
       color: ${primary}
     }
   }
+  @media (max-width: 768px) {
+    margin-bottom: 0.5rem;
+  }
 `
 const MoreBtn = styled.button`
   border: none;
@@ -89,7 +91,7 @@ const MoreBtn = styled.button`
   cursor: pointer;
 `
 
-export default function ProductFilters({properties, range, category, filterProducts, setProductsCount}) {
+export default function ProductFilters({properties, range, category, filterProducts, setProductsCount, children}) {
 
   
   const [allFilters, setAllFilters] = useState({});
@@ -183,7 +185,6 @@ export default function ProductFilters({properties, range, category, filterProdu
             if (!!selectedFilters[filter]?.length) {
               checked = selectedFilters[filter].includes(item);
             } 
-            // const checked = false;
             return (
               <Checkbox key={item + i}>
                 <input type="checkbox" checked={checked} onChange={() => runFilter(filter, item)} id={item + i}/>
@@ -197,7 +198,7 @@ export default function ProductFilters({properties, range, category, filterProdu
               checked = selectedFilters[filter].includes(item);
             } 
             return (
-              <Checkbox key={item}>
+              <Checkbox key={item + i}>
                 <input type="checkbox" checked={checked} onChange={() => runFilter(filter, item)} id={item + i}/>
                 <label htmlFor={item}>{item}</label>
               </Checkbox>
@@ -208,7 +209,7 @@ export default function ProductFilters({properties, range, category, filterProdu
           )}
         </Filter>
       ))}
-      
+      {children}
     </StyledFilters>
   )
 }

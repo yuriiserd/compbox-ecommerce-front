@@ -30,16 +30,15 @@ const StyledHeader = styled.header`
     padding: 30px 0;
   }
   @media (max-width: 768px) {
-    padding: 0.5rem 0;
     &>div {
-      padding: 0;
+      padding: 0.5rem 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      height: 50px;
     }
   }
-`;
-
+`
 const Logo = styled(Link)`
   position: absolute;
   left: 50%;
@@ -52,7 +51,7 @@ const Logo = styled(Link)`
     transform: translate(0%);
     width: 110px;
   }
-`;
+`
 const Cart = styled(Link)`
   position: relative;
   span {
@@ -335,13 +334,13 @@ const StyledNav = styled.nav`
     z-index: 100;
     transition: all 0.5s;
     box-shadow: 0px 5px 10px rgba(71, 82, 94, 0.1);
-    div:first-child {
+    &>div:first-child {
       flex-direction: column;
       align-items: flex-end;
       gap: 1rem;
       margin-bottom: 2rem;
     }
-    div:last-child {
+    &>div:last-child {
       position: sticky;
       bottom: 1rem;
       svg {
@@ -442,6 +441,7 @@ export default function Header() {
   const StyledMargin = styled.div`
     height: ${headerHeight}px;
   `
+  console.log(headerHeight)
 
   return (
     <>

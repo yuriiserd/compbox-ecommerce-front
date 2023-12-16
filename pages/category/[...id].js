@@ -12,8 +12,8 @@ import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
 import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import styled from "styled-components";
+import { useEffect, useRef, useState } from "react";
+import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
 import SelectedFilters from "@/components/SelectedFilters";
 import LoadMoreBtn from "@/components/LoadMoreBtn";
@@ -21,8 +21,10 @@ import { useDispatch } from "react-redux";
 import { updateFilters } from "@/slices/filtersSlice";
 import useNormalizeFilterQuery from "@/hooks/useNormalizeFilterQuery";
 import Spinner from "@/components/Spinner";
-import LayoutNoPreloader from "@/components/LayoutNoPreloader";
 import useWindowWidth from "@/hooks/useWindowWidth";
+import Button from "@/components/Button";
+import FiltersIcon from "@/components/icons/FiltersIcon";
+import Layout from "@/components/Layout";
 
 const StyledTitle = styled.div`
   a {
@@ -50,6 +52,66 @@ const Row = styled.div`
   grid-gap: 1.3rem;
   align-items: flex-start;
   margin-bottom: 3rem;
+  @media(max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`
+const FiltersColumn = styled.div`
+  
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    bottom: 0;
+    z-index: 1001;
+    width: 100%;
+    transition: all 0.3s;
+    display: flex;
+    &>div:first-child {
+      height: 100%;
+      width: 250px;
+      z-index: 1002;
+    }
+    &.active {
+      left: 0;
+    }
+  }
+`
+const FiltersOverlay = styled.div`
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
+    /* background-color: rgba(0,0,0,0.4); */
+    width: calc(100% - 250px);
+    backdrop-filter: blur(5px);
+  }
+`
+const btn = css`
+  border: none;
+  background: ${url};
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  border-radius: 0.4rem;
+  margin-bottom: 1rem;
+  margin-left: auto;
+  svg {
+    width: 1.2rem;
+    margin-right: 0.5rem;
+  }
+`
+const FiltersBtn = styled.button`
+  ${btn};
+`
+const ShowFilteredProducts = styled.button`
+  ${btn};
+  position: absolute;
+  bottom: 0;
+  padding: 1rem 2rem;
+  width: calc(250px - 2rem);
+  display: flex;
+  justify-content: center;
 `
 
 export default function CategoryPage({
@@ -70,6 +132,8 @@ export default function CategoryPage({
   const [loading, setLoading] = useState(false);
   
   const router = useRouter();
+
+  const filtersRef = useRef(null);
   
   const [pageNumber, setPageNumber] = useState(router.query.page || 1);
   
@@ -154,7 +218,7 @@ export default function CategoryPage({
   const mobile = useWindowWidth() < 768;
 
   return (
-    <LayoutNoPreloader>
+    <Layout noPreloader>
       <StyledTitle>
         {category.parent === topLevelCategoryId && (
           <Link href={`/categories`}><BackArrowIcon/> Back</Link>
@@ -168,6 +232,14 @@ export default function CategoryPage({
       {!!category.childrens.length && (
         <Devider/>
       )}
+      {mobile && (
+        <FiltersBtn onClick={() => {
+          filtersRef.current.classList.toggle('active');
+        }}>
+          <FiltersIcon/>
+          Filters
+        </FiltersBtn>
+      )}
       {!mobile && (
         <SelectedFilters
           productsCount={productsCount}
@@ -180,17 +252,32 @@ export default function CategoryPage({
         />
       )}
       <Row>
-        {showFilters && (
-          <ProductFilters 
-            range={priceRange} 
-            setProductsCount={setProductsCount} 
-            properties={properties} 
-            category={category} 
-            filterProducts={filtered => {
-              setPageNumber(1)
-              setProducts(filtered)
-            }}
-          />
+      {showFilters && (
+          <FiltersColumn 
+            // className="active" 
+            ref={filtersRef}>
+            <ProductFilters 
+              range={priceRange} 
+              setProductsCount={setProductsCount} 
+              properties={properties} 
+              category={category} 
+              filterProducts={filtered => {
+                setPageNumber(1)
+                setProducts(filtered)
+              }}
+            >
+              {mobile && (
+                <ShowFilteredProducts onClick={() => {
+                  filtersRef.current.classList.remove('active');
+                }}>Show {productsCount} Products</ShowFilteredProducts>
+              )}
+            </ProductFilters>
+            {mobile && (
+              <FiltersOverlay onClick={() => {
+                filtersRef.current.classList.remove('active');
+              }}></FiltersOverlay>
+            )}
+          </FiltersColumn>
         )}
         <div>
           <ProductsGrid products={products}/>
@@ -201,7 +288,7 @@ export default function CategoryPage({
           )}
         </div>
       </Row>
-    </LayoutNoPreloader>
+    </Layout>
   )
 }
 
