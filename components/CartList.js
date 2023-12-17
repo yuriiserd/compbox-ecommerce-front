@@ -9,6 +9,7 @@ import Link from "next/link"
 import { red, url } from "@/lib/colors"
 import axios from "axios"
 import { set } from "mongoose"
+import Error from "next/error"
 
 const RowSize = css`
   display: grid;
@@ -199,14 +200,15 @@ const CouponBtn = styled.button`
 `
 const CouponInput = styled.div`
   position: relative;
-  display: flex;
   max-width: 300px;
+  margin-bottom: 1rem;
   input {
     border: 1px solid #CCDBE4;
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
     margin-right: 1rem;
     font-size: 1rem;
+    width: calc(100% - 2rem) !important;
     &:focus {
       outline: none;
     }
@@ -216,6 +218,7 @@ const CouponInput = styled.div`
     right: 0;
     top: 50%;
     transform: translateY(-50%);
+    height: calc(100% - 2px);
     bottom: 0;
     border: none;
     background: none;
@@ -224,10 +227,17 @@ const CouponInput = styled.div`
     color: ${url};
     align-items: center;
     font-size: 1rem;
-    max-width: 100px;
+    max-width: auto;
+    width: auto !important;
     cursor: pointer;
     justify-content: center;
+    padding: 0 1rem;
+    border-radius: 0.5rem;
+    background: #ffffff;
   }
+`
+const CouponError = styled.div`
+  color: ${red};
 `
 
 export default function CartList({products, cart, setCoupon}) {
@@ -238,6 +248,7 @@ export default function CartList({products, cart, setCoupon}) {
   const [totalPrice, setTotalPrice] = useState(0);
   const [productTotalPrice, setProductTotalPrice] = useState(0);
   const [couponDoc, setCouponDoc] = useState(null);
+  const [couponError, setCouponError] = useState(null);
 
   useEffect(() => {
     calculateTotalPrice()
@@ -264,8 +275,16 @@ export default function CartList({products, cart, setCoupon}) {
     removeItemFromCart(id);
   }
   async function getCoupon() {
+    if (!couponCode) {
+      setCouponError('Please enter coupon code');
+      return
+    };
     const coupon = await axios.get('/api/coupon?name=' + couponCode);
-    console.log(coupon.data)
+    setCouponError(null);
+    if (!coupon.data) {
+      setCouponError('Coupon code is not valid');
+      return
+    }
     setCoupon(coupon.data);
     setCouponDoc(coupon.data);
     setCouponCode('');
@@ -337,10 +356,14 @@ export default function CartList({products, cart, setCoupon}) {
         
       )}
       {enterCoupon ? (
-        <CouponInput>
-          <input type="text" value={couponCode} onChange={e => setCouponCode(e.target.value)}/>
-          <button onClick={getCoupon}>Apply</button>
-        </CouponInput>
+        <>
+          <CouponInput>
+            <input type="text" value={couponCode} onChange={e => setCouponCode(e.target.value)}/>
+            <button onClick={getCoupon}>Apply</button>
+            
+          </CouponInput>
+          <CouponError>{couponError}</CouponError>
+        </>
       ) : (
         <CouponBtn onClick={() => setEnterCoupon(true)}>Enter Coupon Code</CouponBtn>
       )}

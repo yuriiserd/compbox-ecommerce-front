@@ -298,6 +298,9 @@ const StyledNav = styled.nav`
     align-items: center;
     button {
       margin-right: 0;
+    }
+    &>button {
+      margin-right: 0;
       padding: 0;
       border: none;
       background: none;
@@ -441,7 +444,6 @@ export default function Header() {
   const StyledMargin = styled.div`
     height: ${headerHeight}px;
   `
-  console.log(headerHeight)
 
   return (
     <>
