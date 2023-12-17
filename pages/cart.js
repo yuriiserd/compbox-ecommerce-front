@@ -19,15 +19,8 @@ const StyledRow = styled.div`
     border: 1px solid #CCDBE4;
     border-radius: 1rem;
     box-shadow: 0px 14px 34px rgba(71, 82, 94, 0.2);
-    padding: 1.5rem;
     h2 {
       margin-bottom: 20px;
-    }
-    input {
-      width: 100%;
-    }
-    button {
-      width: 100%;
     }
   }
   @media (max-width: 992px) {
@@ -35,10 +28,6 @@ const StyledRow = styled.div`
     &>div {
       margin-bottom: 2rem;
       padding: 1rem;
-    }
-    &>div:last-child {
-      max-width: 500px;
-      margin: 0 auto;
     }
   }
 `
@@ -51,6 +40,24 @@ const Notice = styled.div`
   h2 {
     margin-bottom: 1rem;
   }
+`
+const StyledInfo = styled.div`
+  padding: 2rem 1.5rem 3rem !important;
+  button {
+    width: 100%;
+    margin-top: 1rem;
+  }
+  @media (max-width: 992px) {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+`
+const StyledList = styled.div`
+  padding: 1.5rem;
+  input {
+    width: 100%;
+  }
+  
 `
 
 export default function CartPage() {
@@ -126,14 +133,14 @@ export default function CartPage() {
       )}
       {!!products?.length && (
         <StyledRow>
-          <div>
+          <StyledList>
             <h2>Cart</h2>
             <CartList products={products} cart={cartProducts} setCoupon={setCoupon}/>
-          </div>
-          <div>
+          </StyledList>
+          <StyledInfo>
             <h2>Order information</h2>
             <OrderInfo products={cartProducts} coupon={coupon}/>
-          </div>
+          </StyledInfo>
         </StyledRow>
       )}
     </Layout>
