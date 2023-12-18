@@ -498,7 +498,7 @@ export default function Header() {
                           <Button onClick={() => login('facebook')}>Facebook</Button>
                           <Button onClick={() => login('google')}>Google</Button>
                         </div>
-                        <div><small>Don't have an account?</small> <button onClick={() => {
+                        <div><small>Don&apos;t have an account?</small> <button onClick={() => {
                           setLoginModal(false);
                           setRegisterModal(true);
                         }}><strong>Register</strong></button></div>

@@ -141,10 +141,12 @@ export default function CategoryPage({
 
   const dispatch = useDispatch();
 
+  const newQuery = useNormalizeFilterQuery(router?.query);
+
   useEffect(() => {
 
     // check info in hook file
-    const newQuery = useNormalizeFilterQuery(router?.query); 
+     
     
     dispatch(updateFilters(newQuery)) // set filters from query
 

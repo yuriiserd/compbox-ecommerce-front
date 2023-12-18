@@ -64,6 +64,7 @@ export default function SettingsPage() {
           <Input placeholder=" " type="email" name="Email" onChange={(event) => setAccountInfo(info => {
             return {...info, email: event.target.value}
           })}
+          disabled={accountInfo?.email}
           value={accountInfo?.email || ''}
           />
           <label>Email</label>

@@ -135,7 +135,7 @@ export default function ProductFilters({properties, range, category, filterProdu
     })
   }
 
-  async function runFilter(filter, item) {
+  async function RunFilter(filter, item) {
     
     const filters = useUpdateFilters(selectedFilters, filter, item);
 
@@ -175,7 +175,7 @@ export default function ProductFilters({properties, range, category, filterProdu
     <StyledFilters>
       <Filter>
         <h4>Price</h4>
-        <Range range={range} filter={runFilter}/>
+        <Range range={range} filter={RunFilter}/>
       </Filter>
       {Object.keys(allFilters).map(filter => (
         <Filter key={filter}>
@@ -187,7 +187,7 @@ export default function ProductFilters({properties, range, category, filterProdu
             } 
             return (
               <Checkbox key={item + i}>
-                <input type="checkbox" checked={checked} onChange={() => runFilter(filter, item)} id={item + i}/>
+                <input type="checkbox" checked={checked} onChange={() => RunFilter(filter, item)} id={item + i}/>
                 <label htmlFor={item + i}>{item}</label>
               </Checkbox>
             )
@@ -199,7 +199,7 @@ export default function ProductFilters({properties, range, category, filterProdu
             } 
             return (
               <Checkbox key={item + i}>
-                <input type="checkbox" checked={checked} onChange={() => runFilter(filter, item)} id={item + i}/>
+                <input type="checkbox" checked={checked} onChange={() => RunFilter(filter, item)} id={item + i}/>
                 <label htmlFor={item}>{item}</label>
               </Checkbox>
             )

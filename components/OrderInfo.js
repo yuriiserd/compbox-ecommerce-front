@@ -65,6 +65,7 @@ export default function OrderInfo({products, coupon}) {
         <Input placeholder=" " type="email" name="Email" onChange={(event) => setOrderInfo(info => {
           return {...info, email: event.target.value}
         })}
+        disabled={orderInfo.email}
         value={orderInfo.email || ''}/>
         <label>Email</label>
       </div>

@@ -9,6 +9,7 @@ import OrderInfo from "@/components/OrderInfo"
 import Footer from "@/components/Footer"
 import { useSession } from "next-auth/react"
 import Layout from "@/components/Layout"
+import Link from "next/link"
 
 const StyledRow = styled.div`
   display: grid;
@@ -117,7 +118,7 @@ export default function CartPage() {
           <h2>Thanks for your order!</h2>
           <p>We will email you when your order will be sent.</p>
           {accountInfo && (
-            <p>You can also check your order in your <a href="/account/orders">account</a>.</p>
+            <p>You can also check your order in your <Link href="/account/orders">account</Link>.</p>
           )}
         </Notice>
       </Layout>
