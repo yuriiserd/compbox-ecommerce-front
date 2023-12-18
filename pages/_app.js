@@ -8,6 +8,8 @@ import { LikedContextProvider } from "@/components/LikedContext";
 import { SessionProvider } from "next-auth/react";
 import { store } from "@/store";
 import Head from "next/head";
+import { useEffect } from "react";
+import { initGA, logPageView } from "@/services/analytics";
 
 const montserrat = Montserrat({
   weight: ['400', '500', '700'],
@@ -44,6 +46,12 @@ const GlobalStyles = createGlobalStyle`
 `
 
 export default function App({ Component, pageProps: {session, ...pageProps} }) {
+
+  useEffect(() => {
+    initGA();
+    logPageView();
+  }, [])
+
   return (
     <>
       <GlobalStyles/>
