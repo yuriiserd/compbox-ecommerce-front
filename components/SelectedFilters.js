@@ -41,7 +41,7 @@ export default function SelectedFilters({productsCount, category, filterProducts
 
   
 
-  async function RemoveFilterItem(filter, item) {
+  function RemoveFilterItem(filter, item) {
 
     const filters = useUpdateFilters(selectedFilters, filter, item);
 
@@ -71,13 +71,17 @@ export default function SelectedFilters({productsCount, category, filterProducts
     { shallow: true },
     )
 
+    getProductsByFilters(queryFilters)
+    
+  } 
+
+  async function getProductsByFilters(queryFilters) {
     const products = await axios.post('/api/products/', {query: queryFilters, category})
     const allProductsCount = await axios.post('/api/products/', {query: queryFilters, category, all: true})
 
     filterProducts(products.data);
     setProductsCount(allProductsCount.data)
-    
-  } 
+  }
 
   return (
     <Selected>
