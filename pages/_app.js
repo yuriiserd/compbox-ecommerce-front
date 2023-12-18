@@ -7,6 +7,7 @@ import { CartContextProvider } from "@/components/CartContext";
 import { LikedContextProvider } from "@/components/LikedContext";
 import { SessionProvider } from "next-auth/react";
 import { store } from "@/store";
+import Head from "next/head";
 
 const montserrat = Montserrat({
   weight: ['400', '500', '700'],
