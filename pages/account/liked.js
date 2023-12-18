@@ -20,7 +20,7 @@ export default function Liked() {
         updateLikedProducts(response?.data?.likedProducts);
       })
     }
-  }, [])
+  }, [session?.user])
   
   useEffect(() => {
     if (session?.user) {

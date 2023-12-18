@@ -41,7 +41,7 @@ export default function SelectedFilters({productsCount, category, filterProducts
 
   
 
-  async function removeFilterItem(filter, item) {
+  async function RemoveFilterItem(filter, item) {
 
     const filters = useUpdateFilters(selectedFilters, filter, item);
 
@@ -84,9 +84,9 @@ export default function SelectedFilters({productsCount, category, filterProducts
       <span>Selected {productsCount} products</span>
       {selectedFilters && Object.keys(selectedFilters).map(filter => (
             <span key={filter}>
-              {selectedFilters[filter].map(item => {
+              {selectedFilters[filter].map((item, i) => {
                 return (
-                  <Button $filter onClick={() => removeFilterItem(filter, item)}>
+                  <Button key={item + i} $filter onClick={() => RemoveFilterItem(filter, item)}>
                     {item}
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

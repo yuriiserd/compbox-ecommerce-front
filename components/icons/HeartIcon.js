@@ -1,7 +1,7 @@
 import { url } from "@/lib/colors";
 import { useEffect, useState } from "react"
 
-export default function({liked}) {
+export default function HeartIcon({liked}) {
 
   const [color, setColor] = useState('none');
 
