@@ -1,0 +1,6 @@
+{
+  "name": "Ecommerce CompBox Application",
+  "short_name": "CompBox",
+  "description": "An ecommerce application built with Next.js",
+  "start_url": "/"
+}
