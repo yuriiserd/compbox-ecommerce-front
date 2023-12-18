@@ -23,6 +23,9 @@ const StyledInput = styled.input`
     top: -3.2rem;
     font-size: 0.9rem;
   } 
+  &:disabled {
+    color: #8793B0;
+  }
 `
 
 export default function Input(props) {
