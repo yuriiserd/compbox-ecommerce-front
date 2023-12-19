@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   
   try {
     const buf = await buffer(req);
-    event = stripe.webhooks.constructEvent(buf.toString(), sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (err) {
     console.log(err.message)
     res.status(400).send(`Webhook Error: ${err.message}`);
@@ -43,6 +43,6 @@ export default async function handler(req, res) {
 
 //account id => acct_1NvlidE4pCafpGtV
 
-export const config = {
-  api: {bodyParser: false}
-}
+// export const config = {
+//   api: {bodyParser: false}
+// }
