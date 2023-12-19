@@ -39,6 +39,6 @@ export default async function handler(req, res) {
 
 //account id => acct_1NvlidE4pCafpGtV
 
-// export const config = {
-//   api: {bodyParser: false}
-// }
+export const config = {
+  api: {bodyParser: false}
+}
