@@ -15,9 +15,8 @@ export default async function handler(req, res) {
   
   try {
     const buf = await buffer(req);
-    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(buf.toString(), sig, endpointSecret);
   } catch (err) {
-    console.log(err.message)
     res.status(400).send(`Webhook Error: ${err.message}`);
     return;
   }
@@ -29,10 +28,7 @@ export default async function handler(req, res) {
       const orderId = paymentComplited.metadata.orderId;
       const paid = paymentComplited.payment_status === 'paid';
       if (orderId && paid) {
-        console.log("order update start")
         await Order.updateOne({_id: orderId}, {paid: true})
-          .then(() => console.log("order update success"))
-          .catch(err => console.log(err))
       }
       break;
     default:
@@ -43,6 +39,6 @@ export default async function handler(req, res) {
 
 //account id => acct_1NvlidE4pCafpGtV
 
-// export const config = {
-//   api: {bodyParser: false}
-// }
+export const config = {
+  api: {bodyParser: false}
+}
