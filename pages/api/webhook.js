@@ -28,7 +28,10 @@ export default async function handler(req, res) {
       const orderId = paymentComplited.metadata.orderId;
       const paid = paymentComplited.payment_status === 'paid';
       if (orderId && paid) {
+        console.log("order update start")
         await Order.updateOne({_id: orderId}, {paid: true})
+          .then(() => console.log("order update success"))
+          .catch(err => console.log(err))
       }
       break;
     default:
