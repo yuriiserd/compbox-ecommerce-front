@@ -7,6 +7,8 @@ import { CartContextProvider } from "@/components/CartContext";
 import { LikedContextProvider } from "@/components/LikedContext";
 import { SessionProvider } from "next-auth/react";
 import { store } from "@/store";
+import { initGA, logPageView } from "@/services/analytics";
+import { useEffect } from "react";
 
 const montserrat = Montserrat({
   weight: ['400', '500', '700'],
@@ -43,6 +45,11 @@ const GlobalStyles = createGlobalStyle`
 `
 
 export default function App({ Component, pageProps: {session, ...pageProps} }) {
+
+  useEffect(() => {
+    initGA();
+    logPageView();
+  }, [])
 
   return (
     <>
