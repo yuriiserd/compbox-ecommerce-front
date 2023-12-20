@@ -5,7 +5,7 @@ export const initGA = () => {
 };
 
 export const logPageView = () => {
-  console.log(`Logging pageview for ${window.location.pathname}`)
-  ReactGA.set({ page: window.location.pathname });
-  ReactGA.pageview(window.location.pathname);
+  console.log(`Logging pageview for ${process.env.NEXT_PUBLIC_URL + window.location.pathname}`)
+  ReactGA.set({ page: process.env.NEXT_PUBLIC_URL + window.location.pathname });
+  ReactGA.pageview(process.env.NEXT_PUBLIC_URL + window.location.pathname);
 }
