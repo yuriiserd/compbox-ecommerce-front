@@ -1,11 +1,13 @@
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 
 export const initGA = () => {
-  ReactGA.initialize(process.env.NEXT_PUBLIC_GA_TRACKING_ID);
+  ReactGA.initialize([
+    {
+      trackingId: process.env.NEXT_PUBLIC_GA_TRACKING_ID,
+    },
+  ]);
 };
 
 export const logPageView = () => {
-  console.log(`Logging pageview for ${process.env.NEXT_PUBLIC_URL + window.location.pathname}`)
-  ReactGA.set({ page: process.env.NEXT_PUBLIC_URL + window.location.pathname });
-  ReactGA.pageview(process.env.NEXT_PUBLIC_URL + window.location.pathname);
+  ReactGA.send({ hitType: "pageview", page: window.location.pathname });
 }
