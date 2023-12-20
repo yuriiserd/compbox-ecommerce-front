@@ -61,7 +61,7 @@ export default function CategoriesGrid({categories, colums, disableAnimation = f
       
       {categories.map((category, i) => (
         
-        <>
+        <div key={category._id}>
           {disableAnimation ? (
             <div>
               <Link key={category._id} href={`/category/${category._id}`}>
@@ -98,7 +98,7 @@ export default function CategoriesGrid({categories, colums, disableAnimation = f
               </Link>
             </motion.div>
           )}
-        </>
+        </div>
       ))}
     </StyledGrid>
   )
