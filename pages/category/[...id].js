@@ -234,7 +234,8 @@ export default function CategoryPage({
       {!!category.childrens.length && (
         <Devider/>
       )}
-      {mobile && (
+      
+      {showFilters && mobile && (
         <FiltersBtn onClick={() => {
           filtersRef.current.classList.toggle('active');
         }}>
