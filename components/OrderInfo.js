@@ -44,30 +44,32 @@ export default function OrderInfo({products, coupon}) {
   }, [])
 
   
-
   return (
-    <>
+    <form onSubmit={(event) => {
+      event.preventDefault();
+      goToPayment();
+    }}>
       <div>
-        <Input placeholder=" " type="text" name="Name" onChange={(event) => setOrderInfo(info => {
+        <Input placeholder=" " type="text" name="Name" required onChange={(event) => setOrderInfo(info => {
           return {...info, name: event.target.value}
         })}
         value={orderInfo.name || ''}/>
-        <label>Name</label>
+        <label>Name *</label>
       </div>
       <div>
-        <Input placeholder=" " type="email" name="Phone" onChange={(event) => setOrderInfo(info => {
+        <Input placeholder=" " type="text" name="Phone" required onChange={(event) => setOrderInfo(info => {
           return {...info, phone: event.target.value}
         })}
         value={orderInfo.phone || ''}/>
-        <label>Phone</label>
+        <label>Phone *</label>
       </div>
       <div>
-        <Input placeholder=" " type="email" name="Email" onChange={(event) => setOrderInfo(info => {
+        <Input placeholder=" " type="email" name="Email" required onChange={(event) => setOrderInfo(info => {
           return {...info, email: event.target.value}
         })}
         disabled={session?.user?.email}
         value={orderInfo.email || ''}/>
-        <label>Email</label>
+        <label>Email *</label>
       </div>
       <Flex>
         <div>
@@ -99,7 +101,7 @@ export default function OrderInfo({products, coupon}) {
         value={orderInfo.country || ''}/>
         <label>Country</label>
       </div>
-      <Button onClick={() => goToPayment()}>Continue to payment</Button>
-    </>
+      <Button type="submit">Continue to payment</Button>
+    </form>
   )
 }
