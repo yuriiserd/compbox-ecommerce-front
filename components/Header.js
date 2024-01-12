@@ -17,6 +17,7 @@ import HeartIcon from "./icons/HeartIcon";
 import bcrypt from "bcryptjs";
 import axios from "axios";
 import useWindowWidth from "@/hooks/useWindowWidth";
+import Spinner from "./Spinner";
 
 const StyledHeader = styled.header`
   background-color: #fff;
@@ -203,6 +204,10 @@ const modal = css`
 `
 const LoginModal = styled.div`
   ${modal}
+  .spinner {
+    width: 50px;
+    height: 50px;
+  }
 `
 const RegisterModal = styled.div`
   ${modal};
@@ -381,6 +386,7 @@ export default function Header() {
   const [loginMessage, setLoginMessage] = useState('Sign in to your account');
   const [error, setError] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [loadingLogin, setLoadingLogin] = useState(false);
 
   const mobile = useWindowWidth() < 768;
 
@@ -396,6 +402,7 @@ export default function Header() {
   }
   async function handleLogin(event) {
     event.preventDefault();
+    setLoadingLogin(true);
     const data = new FormData(event.currentTarget);
     const body = {
       email: data.get('email'),
@@ -411,6 +418,7 @@ export default function Header() {
       setLoginModal(false);
       setError('');
     }
+    setLoadingLogin(false);
   }
 
   async function handleRegister(event) {
@@ -425,7 +433,7 @@ export default function Header() {
       password,
       orders: [], 
       likedProducts: [],
-      image: "https://scontent.fifo5-1.fna.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c15.0.50.50a_cp0_dst-jpg_p50x50&_nc_cat=1&ccb=1-7&_nc_sid=810bd0&_nc_ohc=mnbLMYH6n8gAX8aASn5&_nc_ht=scontent.fifo5-1.fna&edm=AP4hL3IEAAAA&oh=00_AfA5KS3an71MRWrQdoL5dMzFokh1uXWChCEGDZZb91VySA&oe=658BB359",
+      image: "https://freedom-ecommerce.s3.amazonaws.com/1705071057621.png",
     }
     console.log(body)
     await axios.post('/api/customer', body).then((res) => {
@@ -491,7 +499,13 @@ export default function Header() {
                               <p>{error}</p>
                             </Error>
                           )}
-                          <Button $white type="submit">Sign in</Button>
+                          {loadingLogin ? (
+                            <div className="spinner">
+                              <Spinner/>
+                            </div>
+                          ) : (
+                            <Button $white type="submit">Sign in</Button>
+                          )}
                         </form>
                         <p>or Sign in with:</p>
                         <div className="social">
