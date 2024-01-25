@@ -255,7 +255,7 @@ export default function CategoryPage({
         />
       )}
       <Row>
-      {showFilters && (
+        {showFilters && (
           <FiltersColumn 
             // className="active" 
             ref={filtersRef}>

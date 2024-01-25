@@ -167,11 +167,10 @@ export default function ProductFilters({properties, range, category, filterProdu
   } 
 
   async function getProductsByFilters(queryFilters) {
-    const products = await axios.post('/api/products/', {query: queryFilters, category})
-    const allProductsCount = await axios.post('/api/products/', {query: queryFilters, category, all: true})
+    const products = await axios.post('/api/products/', {query: queryFilters, category, all: true})
 
-    filterProducts(products.data);
-    setProductsCount(allProductsCount.data)
+    filterProducts(products.data.products);
+    setProductsCount(products.data.count)
   }
 
 
