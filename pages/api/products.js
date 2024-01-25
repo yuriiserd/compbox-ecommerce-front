@@ -1,7 +1,6 @@
 import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
 import { Category } from "@/models/Category";
-import ProductPage from "../product/[...id]";
 
 export default async function handler(req,res) {
   await mongooseConnect();
@@ -10,22 +9,19 @@ export default async function handler(req,res) {
     if (req.query?.count) {
       const productsCount = await Product.count();
       res.json(productsCount)
-    }
-    if (req.query?.search) {
+    } else if (req.query?.search) {
       const search = req.query.search;
       const regex = new RegExp(search,'i'); // make case-insensitive query
 
       res.json(await Product.find({searchQuery: {$regex: regex}}, null, {sort: {'createdAt': -1}}).populate('category'));
-    }
-    if (req.query?.page) {
+    } else if (req.query?.page) {
       const limit = process.env.PRODUCTS_PER_PAGE;
       const skip = parseInt(req.query.page) * limit;
       
       const products = await Product.find().sort({'_id': -1}).limit(limit).skip(skip);
 
       res.json(products);
-    }
-    if (req.query?.ids) {
+    } else if (req.query?.ids) {
       const ids = req.query.ids.split(',');
       const products = await Product.find({_id: {$in: ids}});
       res.json(products);
@@ -63,7 +59,34 @@ export default async function handler(req,res) {
     }
     //send all queried products count to show count and hide load more
     if (req.body.all) {
-      res.json(await Product.find({ 
+      res.json({
+        count: await Product.find({ 
+          category: { $in: categories}, 
+          ...query, 
+          $and: [{ 
+            $or: [{salePrice: {$gte: min}}, {price: {$gte: min}},] 
+          },{ 
+            $or: [{salePrice: {$lte: max}}, {price: {$lte: max}},] 
+          }]
+        }, 
+        null, 
+        {sort: {'_id': -1}}
+        ).count(),
+        products: await Product.find({ 
+          category: { $in: categories}, 
+          ...query, 
+          $and: [{ 
+            $or: [{salePrice: {$gte: min}}, {price: {$gte: min}},] 
+          },{ 
+            $or: [{salePrice: {$lte: max}}, {price: {$lte: max}},] 
+          }]
+        }, 
+        null, 
+        {sort: {'_id': -1}}
+        ).limit(limit).skip(skip)
+      });
+    } else {
+      res.json({products: await Product.find({ 
         category: { $in: categories}, 
         ...query, 
         $and: [{ 
@@ -74,20 +97,9 @@ export default async function handler(req,res) {
       }, 
       null, 
       {sort: {'_id': -1}}
-      ).count());
+      ).limit(limit).skip(skip)})
     }
     //send queried products
-    res.json(await Product.find({ 
-      category: { $in: categories}, 
-      ...query, 
-      $and: [{ 
-        $or: [{salePrice: {$gte: min}}, {price: {$gte: min}},] 
-      },{ 
-        $or: [{salePrice: {$lte: max}}, {price: {$lte: max}},] 
-      }]
-    }, 
-    null, 
-    {sort: {'_id': -1}}
-    ).limit(limit).skip(skip));
+    res.json();
   }
 }
