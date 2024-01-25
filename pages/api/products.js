@@ -99,7 +99,5 @@ export default async function handler(req,res) {
       {sort: {'_id': -1}}
       ).limit(limit).skip(skip)})
     }
-    //send queried products
-    res.json();
   }
 }
