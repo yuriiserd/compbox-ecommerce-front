@@ -210,7 +210,7 @@ export default function CategoryPage({
       setProducts(prev => {
         return [
           ...prev,
-          ...res.data
+          ...res.data.products
         ]
       })
       setLoading(false);
